@@ -1,0 +1,87 @@
+name: Manifests Validation
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - "*"
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+  lint-kustomize:
+    runs-on: ubuntu-latest
+    env:
+      KUSTOMIZE_VERSION: 4.5.7
+      KUSTOMIZE_URL: https://github.com/kubernetes-sigs/kustomize/releases/download/v${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_amd64
+      BIN_PATH: /usr/bin
+    steps:
+      - name: Install Kustomize
+        run: |
+          sudo curl "${KUSTOMIZE_URL}" -L -o ${BIN_PATH}/kustomize
+          sudo chmod +x ${BIN_PATH}/kustomize
+      - name: Code Checkout
+        uses: actions/checkout@v3
+      - name: Validate Manifests
+        run: |
+          touch bootstrap/base/sealed-secrets-secret.yaml
+          ./scripts/validate_manifests.sh
+
+  lint-yaml:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v3
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+          architecture: 'x64'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install yamllint
+      - name: Validate Manifests
+        run: yamllint . -f github
+
+  lint-helm:
+    runs-on: ubuntu-latest
+    env:
+      HELM_VERSION: 3.9.4
+      HELM_DIRS: .
+    steps:
+      - name: Install Helm
+        run: |
+          sudo curl -L -o /usr/bin/helm https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz
+          sudo chmod +x /usr/bin/helm
+      - name: Code Checkout
+        uses: actions/checkout@v3
+      - name: Validate Charts
+        run: |
+          for i in `find "${HELM_DIRS}" -name "Chart.yaml" -exec dirname {} \;`;
+          do
+
+            echo
+            echo "Validating $i"
+            echo
+
+            helm lint $i
+
+            build_response=$?
+
+            if [ $build_response -ne 0 ]; then
+              echo "Error linting $i"
+              exit 1
+            fi
+
+          done
+
+          echo
+          echo "Charts successfully validated!"
+
+  check-spelling:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v3
+      - name: Spellcheck
+        uses: rojopolis/spellcheck-github-actions@0.27.0

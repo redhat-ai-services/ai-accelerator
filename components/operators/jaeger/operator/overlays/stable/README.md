@@ -1,0 +1,1 @@
+Installs the *stable* channel version of the OpenShift Jaeger Operator with the latest version
