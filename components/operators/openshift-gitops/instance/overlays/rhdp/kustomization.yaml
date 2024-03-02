@@ -9,9 +9,9 @@ resources:
 components:
   - ../../components/annotation-resource-tracking
   - ../../components/application-controller-cluster-admin
-  - ../../components/gitops-admins
   - ../../components/edge-termination
   - ../../components/enable-notifications
+  - ../../components/gitops-admins
   - ../../components/health-check-odf
   - ../../components/health-check-olm
   - ../../components/health-check-openshift-builds
