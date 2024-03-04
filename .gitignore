@@ -1,0 +1,10 @@
+.DS_Store
+
+.idea/
+manifest.yaml
+venv/
+dictionary.dic
+tmp/
+
+# Sealed secret key
+bootstrap/base/sealed-secrets-secret.yaml
