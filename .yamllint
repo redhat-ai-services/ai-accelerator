@@ -2,10 +2,9 @@ extends: default
 
 rules:
   document-start: disable
+  indentation:
+    indent-sequences: whatever
   line-length: disable
-  comments-indentation: disable
-  braces:
-    ignore: /grafana-operator/base/instance/grafana.yaml
   truthy:
     ignore: .github/workflows/
   comments-indentation: disable
