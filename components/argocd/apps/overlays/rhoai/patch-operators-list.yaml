@@ -20,7 +20,8 @@ spec:
         url: https://kubernetes.default.svc
         values:
           name: openshift-ai-operator
-          path: components/operators/openshift-ai/aggregate/overlays/default
+          # path: components/operators/openshift-ai/aggregate/overlays/default
+          path: components/operators/openshift-ai/operator/overlays/fast
       - cluster: local
         url: https://kubernetes.default.svc
         values:
