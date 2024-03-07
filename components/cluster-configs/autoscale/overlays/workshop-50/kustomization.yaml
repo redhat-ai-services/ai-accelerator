@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+patches:
+  - target:
+      group: autoscaling.openshift.io
+      kind: ClusterAutoscaler
+      name: default
+    patch: |-
+      - op: replace
+        path: /spec/resourceLimits/maxNodesTotal
+        value: 33
+      - op: replace
+        path: /spec/resourceLimits/cores
+        value:
+          min: 0
+          max: 528
+      - op: replace
+        path: /spec/resourceLimits/memory
+        value:
+          min: 0
+          max: 2112

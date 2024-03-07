@@ -1,0 +1,76 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: nvidia-gpu-dashboard-setup
+  namespace: openshift-config-managed
+rules:
+- apiGroups:
+  - ''
+  resources:
+  - configmaps
+  verbs:
+  - '*'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: nvidia-gpu-dashboard-setup
+  namespace: openshift-config-managed
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: nvidia-gpu-dashboard-setup
+subjects:
+  - kind: ServiceAccount
+    name: nvidia-gpu-dashboard-setup
+    namespace: nvidia-gpu-operator
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: nvidia-gpu-dashboard-setup
+  namespace: nvidia-gpu-operator
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    # argocd.argoproj.io/hook-delete-policy: HookSucceeded
+  generateName: nvidia-gpu-dashboard-setup-
+  name: nvidia-gpu-dashboard-setup
+  namespace: nvidia-gpu-operator
+spec:
+  template:
+    spec:
+      containers:
+        - name: nvidia-gpu-dashboard-setup
+          image: image-registry.openshift-image-registry.svc:5000/openshift/tools:latest
+          env:
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          command:
+            - /bin/bash
+            - -c
+            - |
+              #!/usr/bin/env bash
+              cd /tmp
+
+              nvidia_setup_dashboard_monitor(){
+                curl -sLfO https://github.com/NVIDIA/dcgm-exporter/raw/main/grafana/dcgm-exporter-dashboard.json
+                oc -n openshift-config-managed create configmap nvidia-dcgm-exporter-dashboard --from-file=dcgm-exporter-dashboard.json || true
+                oc -n openshift-config-managed label configmap nvidia-dcgm-exporter-dashboard "console.openshift.io/dashboard=true" --overwrite
+                oc -n openshift-config-managed label configmap nvidia-dcgm-exporter-dashboard "console.openshift.io/odc-dashboard=true" --overwrite
+                oc -n openshift-config-managed get cm nvidia-dcgm-exporter-dashboard --show-labels
+                rm dcgm-exporter-dashboard.json
+              }
+
+              nvidia_setup_dashboard_monitor
+
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 30
+      serviceAccount: nvidia-gpu-dashboard-setup
+      serviceAccountName: nvidia-gpu-dashboard-setup

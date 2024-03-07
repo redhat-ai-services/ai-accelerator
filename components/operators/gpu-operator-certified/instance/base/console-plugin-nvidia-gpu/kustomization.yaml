@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: nvidia-gpu-operator
+
+resources:
+  - templates/configmap.yaml
+  - templates/consoleplugin.yaml
+  - templates/deployment.yaml
+  - templates/service.yaml
