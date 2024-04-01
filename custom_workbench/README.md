@@ -1,3 +1,8 @@
+The Dockerfile uses an existing workbench image and installs new packages from the requirements.txt file.
+The openshift tekton pipeline has two tasks: git-clone and buildah
+The first task git clones this repository so we can use the Dockerfile and the requirements.txt.
+The second task uses buildah to build the Dockerfile (in this folder and uses the requirements.txt file) and pushes the container image to the openshift registry.
+
 
 Enable openshift image registry so we can push custom notebook image to openshift image registry.
 1. Expose openshift image registry route.
