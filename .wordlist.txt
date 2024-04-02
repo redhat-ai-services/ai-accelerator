@@ -36,6 +36,7 @@ Hashicorp
 IAM
 IOV
 IgnoreExtraneous
+ImageStreams
 Jaeger
 Jenkins
 Kafka
@@ -68,11 +69,14 @@ OperatorGroup
 PV
 PolicyReport
 Prometheus
+Quarkus
 RBAC
 README
 RHACM
+RHOAI
 Rollout
 SAR
+SaaS
 SNO
 SSO
 Sagemaker
@@ -81,6 +85,7 @@ SecureCluster
 ServiceMesh
 Skupper
 SonarQube
+SpringBoot
 Stackrox
 StorageCluster
 StorageSystem
@@ -106,6 +111,7 @@ argocd
 argoproj
 arn
 aws
+buildah
 canada
 ceph
 che
@@ -127,6 +133,7 @@ devworkspaces
 disableNameSuffixHash
 dn
 dns
+dockerfile
 dotnet
 ec
 elasticsearch
@@ -153,6 +160,7 @@ installplans
 io
 jaeger
 jenkins
+js
 kafka
 kataconfig
 kiali
@@ -165,6 +173,7 @@ letsencrypt
 libvirt
 lifecycle
 linux
+microservices
 namespace
 namespaces
 newman
@@ -192,9 +201,11 @@ redistributions
 repo
 rhel
 rhpds
+rollout
 runtime
 sagemaker
 sandboxed
+scalability
 seldon
 selectable
 serverless
@@ -208,6 +219,8 @@ templating
 thanos
 traefik
 truly
+txt
+url
 vSphere
 vscode
 vsphere
