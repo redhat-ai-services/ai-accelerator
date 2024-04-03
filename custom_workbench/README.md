@@ -1,5 +1,7 @@
+Create a Custom Workbench for RHOAI
+
 The Dockerfile uses an existing workbench image and installs new packages from the requirements.txt file.
-The openshift tekton pipeline has two tasks: git-clone and buildah
+The Openshift Tekton pipeline has two tasks: git-clone and buildah
 The first task git clones this repository so we can use the Dockerfile and the requirements.txt.
 The second task uses buildah to build the Dockerfile (in this folder and uses the requirements.txt file) and pushes the container image to the openshift registry.
 
@@ -17,14 +19,24 @@ Enable openshift image registry so we can push custom notebook image to openshif
 4. Create PVC for pipeline:
 `oc apply -f pvc.yaml `
 
-5. Change url to image registry url in buildah task in pipeline.yaml.
-6. Apply pipeline.yaml and run pipeline. Choose newly created PVC for pipeline.
+5. Change url to image registry url in buildah task in `pipeline.yaml`.
+![pipeline.yaml](./readme_images/buildah_change_image_url.png "Change image url")
+6. Apply pipeline.yaml and run pipeline. 
+![Pipeline](./readme_images/pipeline.png "Pipeline")
+Choose newly created PVC for pipeline.
+![Start pipeline with correct pvc](./readme_images/start_pipeline.png "Start pipeline")
 7. Go into RHOAI dashboard.
 8. Settings > Notebook Images > Import new image > Image location
+![RHOAI Settings](./readme_images/rhoai_settings.png "RHOAI Settings")
 Enter image location. In Openshift > Builds > ImageStreams > custom-wb, we can get the location:
 `image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/custom-wb`
 
+![RHOAI Import Notebook](./readme_images/import_notebook_image.png "RHOAI Import Notebook")
+
 9. Create data science project.
+
 10. Create workbench and choose your new custom notebook.
+![RHOAI Create Workbench](./readme_images/create_workbench.png "RHOAI Create workbench with custom notebook")
+
 11. Launch workbench
 
