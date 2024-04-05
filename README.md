@@ -8,6 +8,14 @@ Run `./bootstrap.sh` to install GitOps, RHOAI, and other operators.
 ## Pipelines:
 https://rh-aiservices-bu.github.io/rhoai-rh1-testdrive/modules/setup/enabling-data-science-pipelines.html
 
+## Notebook Culling:
+https://access.redhat.com/documentation/vi-vn/red_hat_openshift_data_science/1/html/managing_users_and_user_resources/managing_notebook_servers 
+
+## Default Jupyter PVC size:
+https://access.redhat.com/documentation/vi-vn/red_hat_openshift_data_science/1/html/managing_users_and_user_resources/configuring-the-default-pvc-size-for-your-cluster_user-mgmt 
+
+## Configuring additional model serving runtimes:
+https://access.redhat.com/documentation/en-us/red_hat_openshift_ai_self-managed/2.6/html/serving_models/serving-small-and-medium-sized-models_model-serving
 
 
 ## Rolebased Access Controls for RHOAI:
