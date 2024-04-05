@@ -1,9 +1,11 @@
+
+## Install GITOPS RHOAI and operators:
 `oc login` into cluster
 
 Run `./bootstrap.sh` to install GitOps, RHOAI, and other operators.
-May need to run bootstrap.sh again if installing components is slow.
+(May need to run bootstrap.sh again if installing components are slow)
 
-
+## Pipelines:
 https://rh-aiservices-bu.github.io/rhoai-rh1-testdrive/modules/setup/enabling-data-science-pipelines.html
 
 
