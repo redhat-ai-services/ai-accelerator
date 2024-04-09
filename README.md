@@ -1,4 +1,3 @@
-
 ## Install GITOPS RHOAI and operators:
 `oc login` into cluster
 
@@ -74,3 +73,19 @@ RHOAI Dashboard > Settings > User Management:
 Documentation:
 https://access.redhat.com/documentation/en-us/red_hat_openshift_ai_self-managed/2-latest/html-single/managing_users/index
 https://ai-on-openshift.io/odh-rhoai/openshift-group-management/
+
+
+## Non-GitOps Installation
+
+1. Apply _rhoai-pipeline-operator.yaml_ first. 
+    This installs OpenShift Pipelines operator.
+    Creates the `redhat-ods-operator` namespace for the RHOAI operator.
+    And installs the RHOAI operator.
+
+2. Apply the _datasciencecluster.yaml_.
+    This creates a DataScienceCluster instance for RHOAI.
+    This also creates the DSCInitialization instance for RHOAI.
+
+3. Apply the _ds-sample-project-ns.yaml_.
+    This creates a DataScience project in RHOAI.
+    This is a namespace manifest with the label: `opendatahub.io/dashboard: 'true'`
