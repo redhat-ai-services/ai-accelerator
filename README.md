@@ -10,7 +10,10 @@ https://rh-aiservices-bu.github.io/rhoai-rh1-testdrive/modules/setup/enabling-da
 ## Notebook Culling:
 https://access.redhat.com/documentation/vi-vn/red_hat_openshift_data_science/1/html/managing_users_and_user_resources/managing_notebook_servers
 
-ConfigMap in `redhat-ods-applications`.
+In RHOAI Dashboard>Settings>Cluster Settings>Stop idle notebooks:
+When enabled is selected and saved, the ConfigMap below will be created. You can enable culling outside of RHOAI Dashboard by applying this ConfigMap to `redhat-ods-applications` namespace.
+
+Apply ConfigMap in `redhat-ods-applications`.
 __CULL_IDLE_TIME__ and __IDLENESS_CHECK_PERIOD__ is in minutes. __ENABLE_CULLING__ is false by default.
 
 ```
@@ -26,6 +29,9 @@ data:
   ENABLE_CULLING: 'true'
   IDLENESS_CHECK_PERIOD: '1'
 ```
+
+NOTE: In RHOAI Dashboard>Settings>Cluster Settings>Stop idle notebooks
+If culling is enabled by ConfigMap, but then disabled in RHOAI Dashboard settings. The ConfigMap `notebook-controller-culler-config` will be deleted. 
 
 ## Default Jupyter PVC size:
 https://access.redhat.com/documentation/vi-vn/red_hat_openshift_data_science/1/html/managing_users_and_user_resources/configuring-the-default-pvc-size-for-your-cluster_user-mgmt 
