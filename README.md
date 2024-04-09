@@ -8,7 +8,24 @@ Run `./bootstrap.sh` to install GitOps, RHOAI, and other operators.
 https://rh-aiservices-bu.github.io/rhoai-rh1-testdrive/modules/setup/enabling-data-science-pipelines.html
 
 ## Notebook Culling:
-https://access.redhat.com/documentation/vi-vn/red_hat_openshift_data_science/1/html/managing_users_and_user_resources/managing_notebook_servers 
+https://access.redhat.com/documentation/vi-vn/red_hat_openshift_data_science/1/html/managing_users_and_user_resources/managing_notebook_servers
+
+ConfigMap in `redhat-ods-applications`.
+__CULL_IDLE_TIME__ and __IDLENESS_CHECK_PERIOD__ is in minutes. __ENABLE_CULLING__ is false by default.
+
+```
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: notebook-controller-culler-config
+  namespace: redhat-ods-applications
+  labels:
+    opendatahub.io/dashboard: 'true'
+data:
+  CULL_IDLE_TIME: '60'
+  ENABLE_CULLING: 'true'
+  IDLENESS_CHECK_PERIOD: '1'
+```
 
 ## Default Jupyter PVC size:
 https://access.redhat.com/documentation/vi-vn/red_hat_openshift_data_science/1/html/managing_users_and_user_resources/configuring-the-default-pvc-size-for-your-cluster_user-mgmt 
