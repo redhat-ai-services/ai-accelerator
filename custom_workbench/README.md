@@ -7,6 +7,7 @@ The second task uses buildah to build the Dockerfile (in this folder and uses th
 
 
 Enable openshift image registry so we can push custom notebook image to openshift image registry.
+(if using an external registry, you can skip using the openshift registry)
 1. Expose openshift image registry route.
 `oc patch configs.imageregistry.operator.openshift.io/cluster --patch '{"spec":{"defaultRoute":true}}' --type=merge`
 
@@ -31,6 +32,8 @@ Choose newly created PVC for pipeline.
 
 Enter image location. In Openshift > Builds > ImageStreams > custom-wb, we can get the location:
 `image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/custom-wb`
+
+(If using external registry, please use that url)
 
 ![RHOAI Import Notebook](./readme_images/import_notebook_image.png "RHOAI Import Notebook")
 
