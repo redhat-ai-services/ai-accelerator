@@ -34,24 +34,24 @@ spec:
     datasciencepipelines:
       managementState: Managed
 
----
-apiVersion: dscinitialization.opendatahub.io/v1
-kind: DSCInitialization
-metadata:
-  finalizers:
-    - dscinitialization.opendatahub.io/finalizer
-  name: default-dsci
-spec:
-  applicationsNamespace: redhat-ods-applications
-  monitoring:
-    managementState: Managed
-    namespace: redhat-ods-monitoring
-  serviceMesh:
-    controlPlane:
-      metricsCollection: Istio
-      name: data-science-smcp
-      namespace: istio-system
-    managementState: Managed
-  trustedCABundle:
-    customCABundle: ''
-    managementState: Managed
+# ---
+# apiVersion: dscinitialization.opendatahub.io/v1
+# kind: DSCInitialization
+# metadata:
+#   finalizers:
+#     - dscinitialization.opendatahub.io/finalizer
+#   name: default-dsci
+# spec:
+#   applicationsNamespace: redhat-ods-applications
+#   monitoring:
+#     managementState: Managed
+#     namespace: redhat-ods-monitoring
+#   serviceMesh:
+#     controlPlane:
+#       metricsCollection: Istio
+#       name: data-science-smcp
+#       namespace: istio-system
+#     managementState: Managed
+#   trustedCABundle:
+#     customCABundle: ''
+#     managementState: Managed

@@ -1,0 +1,23 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: conditional-execution-pipeline
+  annotations:
+    tekton.dev/output_artifacts: '{"flip-coin": [{"key": "artifacts/$PIPELINERUN/flip-coin/Output.tgz",
+      "name": "flip-coin-Output", "path": "/tmp/outputs/Output/data"}], "random-num":
+      [{"key": "artifacts/$PIPELINERUN/random-num/Output.tgz", "name": "random-num-Output",
+      "path": "/tmp/outputs/Output/data"}], "random-num-2": [{"key": "artifacts/$PIPELINERUN/random-num-2/Output.tgz",
+      "name": "random-num-2-Output", "path": "/tmp/outputs/Output/data"}]}'
+    tekton.dev/input_artifacts: '{"print-msg": [{"name": "random-num-Output", "parent_task":
+      "random-num"}], "print-msg-2": [{"name": "random-num-Output", "parent_task":
+      "random-num"}], "print-msg-3": [{"name": "random-num-2-Output", "parent_task":
+      "random-num-2"}], "print-msg-4": [{"name": "random-num-2-Output", "parent_task":
+      "random-num-2"}]}'
+    tekton.dev/artifact_bucket: mlpipeline
+    tekton.dev/artifact_endpoint: minio-service.kubeflow:9000
+    tekton.dev/artifact_endpoint_scheme: http://
+    tekton.dev/artifact_items: '{"flip-coin": [["Output", "$(results.Output.path)"]],
+      "print-msg": [], "print-msg-2": [], "print-msg-3": [], "print-msg-4": [], "random-num":
+      [["Output", "$(results.Output.path)"]], "random-num-2": [["Output", "$(results.Output.path)"]]}'
+    sidecar.istio.io/inject: "false"
+    tekton.dev/template: ''

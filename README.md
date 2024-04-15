@@ -100,15 +100,15 @@ https://ai-on-openshift.io/odh-rhoai/openshift-group-management/
 
 ## Non-GitOps Installation
 
-1. Apply _rhoai-pipeline-operator.yaml_ first. 
+1. Apply __rhoai-pipeline-operator.yaml__ first. 
     This installs OpenShift Pipelines operator.
     Creates the `redhat-ods-operator` namespace for the RHOAI operator.
     And installs the RHOAI operator.
 
-2. Apply the _datasciencecluster.yaml_.
+2. Apply the __datasciencecluster.yaml__.
     This creates a DataScienceCluster instance for RHOAI.
     This also creates the DSCInitialization instance for RHOAI.
 
-3. Apply the _ds-sample-project-ns.yaml_.
+3. Apply the __ds-sample-project-ns.yaml__.
     This creates a DataScience project in RHOAI.
     This is a namespace manifest with the label: `opendatahub.io/dashboard: 'true'`

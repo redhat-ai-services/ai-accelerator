@@ -1,6 +1,8 @@
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
+  labels:
+    operators.coreos.com/openshift-pipelines-operator-rh.openshift-operators: ""
   name: openshift-pipelines-operator-rh
   namespace: openshift-operators
 spec:
@@ -12,20 +14,28 @@ spec:
   startingCSV: openshift-pipelines-operator-rh.v1.14.3
 
 ---
-kind: Namespace
 apiVersion: v1
+kind: Namespace
 metadata:
-  name: redhat-ods-operator
+  annotations:
+    openshift.io/display-name: "Red Hat OpenShift AI"
   labels:
-    kubernetes.io/metadata.name: datascience-test-project
-spec:
-  finalizers:
-    - kubernetes
+    openshift.io/cluster-monitoring: 'true'
+  name: redhat-ods-operator
+
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: rhods-operator-group
+  namespace: redhat-ods-operator
 
 ---
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
+  labels:
+    operators.coreos.com/rhods-operator.redhat-ods-operator: ""
   name: rhods-operator
   namespace: redhat-ods-operator
 spec:
@@ -34,3 +44,4 @@ spec:
   name: rhods-operator
   source: redhat-operators
   sourceNamespace: openshift-marketplace
+  startingCSV: rhods-operator.2.8.0
