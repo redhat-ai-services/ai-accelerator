@@ -44,3 +44,5 @@ Enter image location. In Openshift > Builds > ImageStreams > custom-wb, we can g
 
 11. Launch workbench
 
+Read More about it here: https://ai-on-openshift.io/odh-rhoai/custom-notebooks/#install-python-packages
+GitHub to where the workbench images are created: https://github.com/opendatahub-io-contrib/workbench-images/tree/main
