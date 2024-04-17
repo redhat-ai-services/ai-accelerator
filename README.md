@@ -99,10 +99,13 @@ https://ai-on-openshift.io/odh-rhoai/openshift-group-management/
 
 
 ## Non-GitOps Installation
+Install supporting operators:
 
-1. Apply __rhoai-pipeline-operator.yaml__ first. 
-    This installs OpenShift Pipelines operator.
-    Creates the `redhat-ods-operator` namespace for the RHOAI operator.
+
+Install RHOAI in the `nongitops_yamls/rhoai/` folder:
+
+1. Apply __rhoai-operator.yaml__ first. 
+    This creates the `redhat-ods-operator` namespace for the RHOAI operator.
     And installs the RHOAI operator.
 
 2. Apply the __datasciencecluster.yaml__.
