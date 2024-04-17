@@ -41,6 +41,18 @@ https://access.redhat.com/documentation/vi-vn/red_hat_openshift_data_science/1/h
 ## Configuring additional model serving runtimes:
 https://access.redhat.com/documentation/en-us/red_hat_openshift_ai_self-managed/2.6/html/serving_models/serving-small-and-medium-sized-models_model-serving
 
+Red Hat OpenShift AI includes a single model serving platform that is based on the KServe component.
+
+You must first make sure that you have properly installed the necessary component of the Single-Model Serving stack, as documented here: https://access.redhat.com/documentation/en-us/red_hat_openshift_ai_self-managed/2-latest/html/serving_models/serving-large-models_serving-large-models.
+
+Once the stack is installed, adding the runtime is pretty straightforward:
+
+- As an admin, in the OpenShift AI Dashboard, open the menu Settings -> Serving runtimes.
+- Click on Add serving runtime.
+- For the type of model serving platforms this runtime supports, select Single model serving platform.
+- Upload the serving-runtime.yaml from the current folder, or click Start from scratch and copy/paste its content.
+
+The runtime is now available when deploying a model.
 
 ## Rolebased Access Controls for RHOAI:
 By default, all OpenShift users have access to Red Hat OpenShift AI. In addition, users with the cluster-admin role, automatically have administrator access in OpenShift AI.
