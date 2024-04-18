@@ -38,6 +38,7 @@
             health_status.status = "Degraded"
           else
             health_status.status = "Degraded"
+          end
 
           health_status.message = msg
           return health_status
