@@ -41,7 +41,6 @@
           end
 
           health_status.message = msg
-          return health_status
         else
           health_status.status = "Progressing"
           health_status.message = "DataScienceCluster is progressing..."
