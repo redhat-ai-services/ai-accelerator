@@ -24,7 +24,7 @@
               degraded = True
               msg = msg .. i .. ": " .. condition.type .. " | " .. condition.reason .. " | " .. condition.message "\n" 
             elseif condition.status == "False" then
-              componentsDegraded += 1
+              componentsDegraded = componentsDegraded + 1
               msg = msg .. i .. ": " .. condition.type .. " | " .. condition.reason .. " | " .. condition.message "\n" 
             end
 
