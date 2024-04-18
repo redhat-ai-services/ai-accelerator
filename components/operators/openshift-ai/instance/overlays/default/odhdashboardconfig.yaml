@@ -3,5 +3,6 @@ kind: OdhDashboardConfig
 metadata:
   annotations:
     argocd.argoproj.io/sync-options: ServerSideApply=true
+    argocd.argoproj.io/sync-wave: "100"
   name: odh-dashboard-config
   namespace: redhat-ods-applications
