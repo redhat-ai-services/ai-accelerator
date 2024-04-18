@@ -3,3 +3,10 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - odhdashboardconfig.yaml
+
+components:
+  - ../../components/default-notebook-pvc-size
+  - ../../components/notebook-pod-sizes
+  - ../../components/modelserver-pod-sizes
+  - ../../components/rhoai-dashboard-access

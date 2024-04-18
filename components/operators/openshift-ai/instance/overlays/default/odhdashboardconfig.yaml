@@ -1,0 +1,7 @@
+apiVersion: opendatahub.io/v1alpha
+kind: OdhDashboardConfig
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+  name: odh-dashboard-config
+  namespace: redhat-ods-applications
