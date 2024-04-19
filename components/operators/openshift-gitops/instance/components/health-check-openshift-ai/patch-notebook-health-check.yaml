@@ -1,0 +1,42 @@
+- op: add
+  path: /spec/resourceHealthChecks/-
+  value:
+    group: kubeflow.org
+    kind: Notebook
+    check: |
+      health_status = {}
+      if obj.status ~= nil then
+        if obj.status.conditions ~= nil then
+          msg = ""
+          progressing = false
+          degraded = false
+          for i, condition in pairs(obj.status.conditions) do
+
+            if condition.status == "False" then
+              progressing = true
+              msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. condition.message .. "\n"
+            end
+
+          end
+
+          if progressing == false and degraded == false then
+            health_status.status = "Healthy"
+          elseif progressing == true then
+            health_status.status = "Progressing"
+          elseif degraded == false then
+            -- there is no condition that can help to distinguish between a degraded and progressing object
+            -- for now, we will just always keep the object as progressing and never set it to degraded
+            health_status.status = "Degraded"
+          end
+
+          health_status.message = msg
+        else
+          health_status.status = "Progressing"
+          health_status.message = "Notebook is creating..."
+        end
+      else
+        health_status.status = "Progressing"
+        health_status.message = "Notebook is creating..."
+      end
+
+      return health_status

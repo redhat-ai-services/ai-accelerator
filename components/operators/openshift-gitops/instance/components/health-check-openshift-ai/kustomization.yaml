@@ -8,3 +8,6 @@ patches:
   - path: patch-datasciencepipelineapplication-health-check.yaml
     target:
       kind: ArgoCD
+  - path: patch-notebook-health-check.yaml
+    target:
+      kind: ArgoCD
