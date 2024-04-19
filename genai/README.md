@@ -202,7 +202,7 @@ COLLECTION_NAME = f"rhoai-doc-2.6"
 ```
 
 Make sure to edit the __INFERENCE_SERVER_URL__ with the vLLM inference route:
-`INFERENCE_SERVER_URL = f"https://vllm-vllm.apps.cluster-8ggjn.sandbox841.opentlc.com/v1"`
+`INFERENCE_SERVER_URL = f"https://vllm-vllm.apps.cluster-8abcd.sandboxabc.opentlc.com/v1"`
 
 The notebook goes through initializing the vector db connection, creating the query chain with a template, creating the LLM connection, and then combining them together.
 
