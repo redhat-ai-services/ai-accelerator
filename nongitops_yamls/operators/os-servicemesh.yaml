@@ -1,0 +1,47 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: servicemeshoperator
+  namespace: openshift-operators
+spec:
+  channel: stable
+  installPlanApproval: Automatic
+  name: servicemeshoperator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+  startingCSV: servicemeshoperator.v2.5.0
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: istio-system
+
+---
+apiVersion: maistra.io/v2
+kind: ServiceMeshControlPlane
+metadata:
+  name: istio-system
+spec:
+  tracing:
+    sampling: 10000
+    type: Jaeger
+  gateways:
+    openshiftRoute:
+      enabled: true
+  policy:
+    type: Istiod
+  addons:
+    grafana:
+      enabled: true
+    jaeger:
+      install:
+        storage:
+          type: Memory
+    kiali:
+      enabled: true
+    prometheus:
+      enabled: true
+  version: v2.2
+  telemetry:
+    type: Istiod

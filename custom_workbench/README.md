@@ -6,8 +6,8 @@ The first task git clones this repository so we can use the Dockerfile and the r
 The second task uses buildah to build the Dockerfile (in this folder and uses the requirements.txt file) and pushes the container image to the openshift registry.
 
 
-Enable openshift image registry so we can push custom notebook image to openshift image registry.
-(if using an external registry, you can skip using the openshift registry)
+Enable openshift image registry so we can push custom notebook image to OpenShift image registry.
+(If using external registry, you can skip enabling and using the OpenShift internal registry)
 1. Expose openshift image registry route.
 `oc patch configs.imageregistry.operator.openshift.io/cluster --patch '{"spec":{"defaultRoute":true}}' --type=merge`
 
@@ -33,7 +33,7 @@ Choose newly created PVC for pipeline.
 Enter image location. In Openshift > Builds > ImageStreams > custom-wb, we can get the location:
 `image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/custom-wb`
 
-(If using external registry, please use that url)
+(If not using OpenShift internal registry, use external registry image location)
 
 ![RHOAI Import Notebook](./readme_images/import_notebook_image.png "RHOAI Import Notebook")
 
@@ -44,3 +44,5 @@ Enter image location. In Openshift > Builds > ImageStreams > custom-wb, we can g
 
 11. Launch workbench
 
+Read More about it here: https://ai-on-openshift.io/odh-rhoai/custom-notebooks/#install-python-packages
+GitHub to where the workbench images are created: https://github.com/opendatahub-io-contrib/workbench-images/tree/main

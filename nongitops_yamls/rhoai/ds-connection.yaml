@@ -1,0 +1,18 @@
+kind: Secret
+apiVersion: v1
+metadata:
+  name: test-connection
+  namespace: datascience-sample-project
+  labels:
+    opendatahub.io/dashboard: 'true'
+    opendatahub.io/managed: 'true'
+  annotations:
+    opendatahub.io/connection-type: s3
+    openshift.io/display-name: test-connection
+stringData:
+  AWS_ACCESS_KEY_ID: minio
+  AWS_DEFAULT_REGION: west
+  AWS_S3_BUCKET: test-bucket
+  AWS_S3_ENDPOINT: https://minio-api-minio.apps.cluster-12345.dynamic.redhatworkshops.io
+  AWS_SECRET_ACCESS_KEY: minio123
+type: Opaque

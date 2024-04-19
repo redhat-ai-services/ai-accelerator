@@ -4,6 +4,8 @@
 Run `./bootstrap.sh` to install GitOps, RHOAI, and other operators.
 (May need to run bootstrap.sh again if installing components are slow)
 
+After the script applies GitOps operator, it will prompt to choose the RHOAI folder to install the RHOAI operator and it's components. After it applies, you can go into GitOps and check the status of them. Sometimes, it needs to manually sync to get it going.
+
 ## Pipelines:
 https://rh-aiservices-bu.github.io/rhoai-rh1-testdrive/modules/setup/enabling-data-science-pipelines.html
 
@@ -39,6 +41,18 @@ https://access.redhat.com/documentation/vi-vn/red_hat_openshift_data_science/1/h
 ## Configuring additional model serving runtimes:
 https://access.redhat.com/documentation/en-us/red_hat_openshift_ai_self-managed/2.6/html/serving_models/serving-small-and-medium-sized-models_model-serving
 
+Red Hat OpenShift AI includes a single model serving platform that is based on the KServe component.
+
+You must first make sure that you have properly installed the necessary component of the Single-Model Serving stack, as documented here: https://access.redhat.com/documentation/en-us/red_hat_openshift_ai_self-managed/2-latest/html/serving_models/serving-large-models_serving-large-models.
+
+Once the stack is installed, adding the runtime is pretty straightforward:
+
+- As an admin, in the OpenShift AI Dashboard, open the menu Settings -> Serving runtimes.
+- Click on Add serving runtime.
+- For the type of model serving platforms this runtime supports, select Single model serving platform.
+- Upload the serving-runtime.yaml from the current folder, or click Start from scratch and copy/paste its content.
+
+The runtime is now available when deploying a model.
 
 ## Rolebased Access Controls for RHOAI:
 By default, all OpenShift users have access to Red Hat OpenShift AI. In addition, users with the cluster-admin role, automatically have administrator access in OpenShift AI.
@@ -99,16 +113,21 @@ https://ai-on-openshift.io/odh-rhoai/openshift-group-management/
 
 
 ## Non-GitOps Installation
+Install supporting operators from `nongitops_yamls/operators/`:
 
-1. Apply _rhoai-pipeline-operator.yaml_ first. 
-    This installs OpenShift Pipelines operator.
-    Creates the `redhat-ods-operator` namespace for the RHOAI operator.
+* After Elastic Search operator is created, make sure to apply the `cluster-monitoring-config.yaml`.
+
+Install RHOAI in the `nongitops_yamls/rhoai/` folder:
+
+1. Apply __rhoai-operator.yaml__ first. 
+    This creates the `redhat-ods-operator` namespace for the RHOAI operator.
     And installs the RHOAI operator.
 
-2. Apply the _datasciencecluster.yaml_.
+2. Apply the __datasciencecluster.yaml__.
     This creates a DataScienceCluster instance for RHOAI.
+    (You can edit the yaml to enable or disable features.)
     This also creates the DSCInitialization instance for RHOAI.
 
-3. Apply the _ds-sample-project-ns.yaml_.
+3. Apply the __ds-sample-project-ns.yaml__.
     This creates a DataScience project in RHOAI.
     This is a namespace manifest with the label: `opendatahub.io/dashboard: 'true'`

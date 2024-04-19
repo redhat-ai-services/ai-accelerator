@@ -1,0 +1,680 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: conditional-execution-pipeline
+  annotations:
+    tekton.dev/output_artifacts: '{"flip-coin": [{"key": "artifacts/$PIPELINERUN/flip-coin/Output.tgz",
+      "name": "flip-coin-Output", "path": "/tmp/outputs/Output/data"}], "random-num":
+      [{"key": "artifacts/$PIPELINERUN/random-num/Output.tgz", "name": "random-num-Output",
+      "path": "/tmp/outputs/Output/data"}], "random-num-2": [{"key": "artifacts/$PIPELINERUN/random-num-2/Output.tgz",
+      "name": "random-num-2-Output", "path": "/tmp/outputs/Output/data"}]}'
+    tekton.dev/input_artifacts: '{"print-msg": [{"name": "random-num-Output", "parent_task":
+      "random-num"}], "print-msg-2": [{"name": "random-num-Output", "parent_task":
+      "random-num"}], "print-msg-3": [{"name": "random-num-2-Output", "parent_task":
+      "random-num-2"}], "print-msg-4": [{"name": "random-num-2-Output", "parent_task":
+      "random-num-2"}]}'
+    tekton.dev/artifact_bucket: mlpipeline
+    tekton.dev/artifact_endpoint: minio-service.kubeflow:9000
+    tekton.dev/artifact_endpoint_scheme: http://
+    tekton.dev/artifact_items: '{"flip-coin": [["Output", "$(results.Output.path)"]],
+      "print-msg": [], "print-msg-2": [], "print-msg-3": [], "print-msg-4": [], "random-num":
+      [["Output", "$(results.Output.path)"]], "random-num-2": [["Output", "$(results.Output.path)"]]}'
+    sidecar.istio.io/inject: "false"
+    tekton.dev/template: ''
+    pipelines.kubeflow.org/big_data_passing_format: $(workspaces.$TASK_NAME.path)/artifacts/$ORIG_PR_NAME/$TASKRUN_NAME/$TASK_PARAM_NAME
+    pipelines.kubeflow.org/pipeline_spec: '{"description": "Shows how to use dsl.Condition().",
+      "name": "conditional-execution-pipeline"}'
+  labels:
+    pipelines.kubeflow.org/pipelinename: ''
+    pipelines.kubeflow.org/generation: ''
+spec:
+  pipelineSpec:
+    tasks:
+    - name: flip-coin
+      taskSpec:
+        steps:
+        - name: main
+          args:
+          - '----output-paths'
+          - $(results.Output.path)
+          command:
+          - sh
+          - -ec
+          - |
+            program_path=$(mktemp)
+            printf "%s" "$0" > "$program_path"
+            python3 -u "$program_path" "$@"
+          - |
+            def flip_coin():
+                """Flip a coin and output heads or tails randomly."""
+                import random
+                result = 'heads' if random.randint(0, 1) == 0 else 'tails'
+                print(result)
+                return result
+
+            def _serialize_str(str_value: str) -> str:
+                if not isinstance(str_value, str):
+                    raise TypeError('Value "{}" has type "{}" instead of str.'.format(
+                        str(str_value), str(type(str_value))))
+                return str_value
+
+            import argparse
+            _parser = argparse.ArgumentParser(prog='Flip coin', description='Flip a coin and output heads or tails randomly.')
+            _parser.add_argument("----output-paths", dest="_output_paths", type=str, nargs=1)
+            _parsed_args = vars(_parser.parse_args())
+            _output_files = _parsed_args.pop("_output_paths", [])
+
+            _outputs = flip_coin(**_parsed_args)
+
+            _outputs = [_outputs]
+
+            _output_serializers = [
+                _serialize_str,
+
+            ]
+
+            import os
+            for idx, output_file in enumerate(_output_files):
+                try:
+                    os.makedirs(os.path.dirname(output_file))
+                except OSError:
+                    pass
+                with open(output_file, 'w') as f:
+                    f.write(_output_serializers[idx](_outputs[idx]))
+          image: python:alpine3.6
+        results:
+        - name: Output
+          type: string
+          description: /tmp/outputs/Output/data
+        metadata:
+          labels:
+            pipelines.kubeflow.org/cache_enabled: "true"
+          annotations:
+            pipelines.kubeflow.org/component_spec_digest: '{"name": "Flip coin", "outputs":
+              [{"name": "Output", "type": "String"}], "version": "Flip coin@sha256=83ef617eda2e04a688908716a02461237baee3cd04754ea99894e441b1f0679a"}'
+    - name: random-num
+      taskSpec:
+        steps:
+        - name: main
+          args:
+          - --low
+          - '0'
+          - --high
+          - '9'
+          - '----output-paths'
+          - $(results.Output.path)
+          command:
+          - sh
+          - -ec
+          - |
+            program_path=$(mktemp)
+            printf "%s" "$0" > "$program_path"
+            python3 -u "$program_path" "$@"
+          - |
+            def random_num(low, high):
+                """Generate a random number between low and high."""
+                import random
+                result = random.randint(low, high)
+                print(result)
+                return result
+
+            def _serialize_int(int_value: int) -> str:
+                if isinstance(int_value, str):
+                    return int_value
+                if not isinstance(int_value, int):
+                    raise TypeError('Value "{}" has type "{}" instead of int.'.format(
+                        str(int_value), str(type(int_value))))
+                return str(int_value)
+
+            import argparse
+            _parser = argparse.ArgumentParser(prog='Random num', description='Generate a random number between low and high.')
+            _parser.add_argument("--low", dest="low", type=int, required=True, default=argparse.SUPPRESS)
+            _parser.add_argument("--high", dest="high", type=int, required=True, default=argparse.SUPPRESS)
+            _parser.add_argument("----output-paths", dest="_output_paths", type=str, nargs=1)
+            _parsed_args = vars(_parser.parse_args())
+            _output_files = _parsed_args.pop("_output_paths", [])
+
+            _outputs = random_num(**_parsed_args)
+
+            _outputs = [_outputs]
+
+            _output_serializers = [
+                _serialize_int,
+
+            ]
+
+            import os
+            for idx, output_file in enumerate(_output_files):
+                try:
+                    os.makedirs(os.path.dirname(output_file))
+                except OSError:
+                    pass
+                with open(output_file, 'w') as f:
+                    f.write(_output_serializers[idx](_outputs[idx]))
+          image: python:alpine3.6
+        results:
+        - name: Output
+          type: string
+          description: /tmp/outputs/Output/data
+        metadata:
+          labels:
+            pipelines.kubeflow.org/cache_enabled: "true"
+          annotations:
+            pipelines.kubeflow.org/component_spec_digest: '{"name": "Random num",
+              "outputs": [{"name": "Output", "type": "Integer"}], "version": "Random
+              num@sha256=da6efc3f1c1ef51912b3964a64b773aa38436116bb83f188a1a57ea6f1e6a541"}'
+      when:
+      - input: $(tasks.condition-1.results.outcome)
+        operator: in
+        values:
+        - "true"
+    - name: print-msg
+      params:
+      - name: random-num-Output
+        value: $(tasks.random-num.results.Output)
+      taskSpec:
+        steps:
+        - name: main
+          args:
+          - --msg
+          - heads and $(inputs.params.random-num-Output) > 5!
+          command:
+          - sh
+          - -ec
+          - |
+            program_path=$(mktemp)
+            printf "%s" "$0" > "$program_path"
+            python3 -u "$program_path" "$@"
+          - |
+            def print_msg(msg):
+                """Print a message."""
+                print(msg)
+
+            import argparse
+            _parser = argparse.ArgumentParser(prog='Print msg', description='Print a message.')
+            _parser.add_argument("--msg", dest="msg", type=str, required=True, default=argparse.SUPPRESS)
+            _parsed_args = vars(_parser.parse_args())
+
+            _outputs = print_msg(**_parsed_args)
+          image: python:alpine3.6
+        params:
+        - name: random-num-Output
+        metadata:
+          labels:
+            pipelines.kubeflow.org/cache_enabled: "true"
+          annotations:
+            pipelines.kubeflow.org/component_spec_digest: '{"name": "Print msg", "outputs":
+              [], "version": "Print msg@sha256=a13aed2f155afe0e8a1d1e29efc69b1cb1c3b170c45129f80ffe8d0a03a07861"}'
+      when:
+      - input: $(tasks.condition-2.results.outcome)
+        operator: in
+        values:
+        - "true"
+    - name: print-msg-2
+      params:
+      - name: random-num-Output
+        value: $(tasks.random-num.results.Output)
+      taskSpec:
+        steps:
+        - name: main
+          args:
+          - --msg
+          - heads and $(inputs.params.random-num-Output) <= 5!
+          command:
+          - sh
+          - -ec
+          - |
+            program_path=$(mktemp)
+            printf "%s" "$0" > "$program_path"
+            python3 -u "$program_path" "$@"
+          - |
+            def print_msg(msg):
+                """Print a message."""
+                print(msg)
+
+            import argparse
+            _parser = argparse.ArgumentParser(prog='Print msg', description='Print a message.')
+            _parser.add_argument("--msg", dest="msg", type=str, required=True, default=argparse.SUPPRESS)
+            _parsed_args = vars(_parser.parse_args())
+
+            _outputs = print_msg(**_parsed_args)
+          image: python:alpine3.6
+        params:
+        - name: random-num-Output
+        metadata:
+          labels:
+            pipelines.kubeflow.org/cache_enabled: "true"
+          annotations:
+            pipelines.kubeflow.org/component_spec_digest: '{"name": "Print msg", "outputs":
+              [], "version": "Print msg@sha256=a13aed2f155afe0e8a1d1e29efc69b1cb1c3b170c45129f80ffe8d0a03a07861"}'
+      when:
+      - input: $(tasks.condition-3.results.outcome)
+        operator: in
+        values:
+        - "true"
+    - name: random-num-2
+      taskSpec:
+        steps:
+        - name: main
+          args:
+          - --low
+          - '10'
+          - --high
+          - '19'
+          - '----output-paths'
+          - $(results.Output.path)
+          command:
+          - sh
+          - -ec
+          - |
+            program_path=$(mktemp)
+            printf "%s" "$0" > "$program_path"
+            python3 -u "$program_path" "$@"
+          - |
+            def random_num(low, high):
+                """Generate a random number between low and high."""
+                import random
+                result = random.randint(low, high)
+                print(result)
+                return result
+
+            def _serialize_int(int_value: int) -> str:
+                if isinstance(int_value, str):
+                    return int_value
+                if not isinstance(int_value, int):
+                    raise TypeError('Value "{}" has type "{}" instead of int.'.format(
+                        str(int_value), str(type(int_value))))
+                return str(int_value)
+
+            import argparse
+            _parser = argparse.ArgumentParser(prog='Random num', description='Generate a random number between low and high.')
+            _parser.add_argument("--low", dest="low", type=int, required=True, default=argparse.SUPPRESS)
+            _parser.add_argument("--high", dest="high", type=int, required=True, default=argparse.SUPPRESS)
+            _parser.add_argument("----output-paths", dest="_output_paths", type=str, nargs=1)
+            _parsed_args = vars(_parser.parse_args())
+            _output_files = _parsed_args.pop("_output_paths", [])
+
+            _outputs = random_num(**_parsed_args)
+
+            _outputs = [_outputs]
+
+            _output_serializers = [
+                _serialize_int,
+
+            ]
+
+            import os
+            for idx, output_file in enumerate(_output_files):
+                try:
+                    os.makedirs(os.path.dirname(output_file))
+                except OSError:
+                    pass
+                with open(output_file, 'w') as f:
+                    f.write(_output_serializers[idx](_outputs[idx]))
+          image: python:alpine3.6
+        results:
+        - name: Output
+          type: string
+          description: /tmp/outputs/Output/data
+        metadata:
+          labels:
+            pipelines.kubeflow.org/cache_enabled: "true"
+          annotations:
+            pipelines.kubeflow.org/component_spec_digest: '{"name": "Random num",
+              "outputs": [{"name": "Output", "type": "Integer"}], "version": "Random
+              num@sha256=da6efc3f1c1ef51912b3964a64b773aa38436116bb83f188a1a57ea6f1e6a541"}'
+      when:
+      - input: $(tasks.condition-4.results.outcome)
+        operator: in
+        values:
+        - "true"
+    - name: print-msg-3
+      params:
+      - name: random-num-2-Output
+        value: $(tasks.random-num-2.results.Output)
+      taskSpec:
+        steps:
+        - name: main
+          args:
+          - --msg
+          - tails and $(inputs.params.random-num-2-Output) > 15!
+          command:
+          - sh
+          - -ec
+          - |
+            program_path=$(mktemp)
+            printf "%s" "$0" > "$program_path"
+            python3 -u "$program_path" "$@"
+          - |
+            def print_msg(msg):
+                """Print a message."""
+                print(msg)
+
+            import argparse
+            _parser = argparse.ArgumentParser(prog='Print msg', description='Print a message.')
+            _parser.add_argument("--msg", dest="msg", type=str, required=True, default=argparse.SUPPRESS)
+            _parsed_args = vars(_parser.parse_args())
+
+            _outputs = print_msg(**_parsed_args)
+          image: python:alpine3.6
+        params:
+        - name: random-num-2-Output
+        metadata:
+          labels:
+            pipelines.kubeflow.org/cache_enabled: "true"
+          annotations:
+            pipelines.kubeflow.org/component_spec_digest: '{"name": "Print msg", "outputs":
+              [], "version": "Print msg@sha256=a13aed2f155afe0e8a1d1e29efc69b1cb1c3b170c45129f80ffe8d0a03a07861"}'
+      when:
+      - input: $(tasks.condition-5.results.outcome)
+        operator: in
+        values:
+        - "true"
+    - name: print-msg-4
+      params:
+      - name: random-num-2-Output
+        value: $(tasks.random-num-2.results.Output)
+      taskSpec:
+        steps:
+        - name: main
+          args:
+          - --msg
+          - tails and $(inputs.params.random-num-2-Output) <= 15!
+          command:
+          - sh
+          - -ec
+          - |
+            program_path=$(mktemp)
+            printf "%s" "$0" > "$program_path"
+            python3 -u "$program_path" "$@"
+          - |
+            def print_msg(msg):
+                """Print a message."""
+                print(msg)
+
+            import argparse
+            _parser = argparse.ArgumentParser(prog='Print msg', description='Print a message.')
+            _parser.add_argument("--msg", dest="msg", type=str, required=True, default=argparse.SUPPRESS)
+            _parsed_args = vars(_parser.parse_args())
+
+            _outputs = print_msg(**_parsed_args)
+          image: python:alpine3.6
+        params:
+        - name: random-num-2-Output
+        metadata:
+          labels:
+            pipelines.kubeflow.org/cache_enabled: "true"
+          annotations:
+            pipelines.kubeflow.org/component_spec_digest: '{"name": "Print msg", "outputs":
+              [], "version": "Print msg@sha256=a13aed2f155afe0e8a1d1e29efc69b1cb1c3b170c45129f80ffe8d0a03a07861"}'
+      when:
+      - input: $(tasks.condition-6.results.outcome)
+        operator: in
+        values:
+        - "true"
+    - name: condition-1
+      params:
+      - name: operand1
+        value: $(tasks.flip-coin.results.Output)
+      - name: operand2
+        value: heads
+      - name: operator
+        value: ==
+      taskSpec:
+        results:
+        - name: outcome
+          type: string
+          description: Conditional task outcome
+        params:
+        - name: operand1
+        - name: operand2
+        - name: operator
+        steps:
+        - name: main
+          command:
+          - sh
+          - -ec
+          - program_path=$(mktemp); printf "%s" "$0" > "$program_path";  python3 -u
+            "$program_path" "$1" "$2"
+          args:
+          - |
+            import sys
+            input1=str.rstrip(sys.argv[1])
+            input2=str.rstrip(sys.argv[2])
+            try:
+              input1=int(input1)
+              input2=int(input2)
+            except:
+              input1=str(input1)
+            outcome="true" if (input1 $(inputs.params.operator) input2) else "false"
+            f = open("/tekton/results/outcome", "w")
+            f.write(outcome)
+            f.close()
+          - $(inputs.params.operand1)
+          - $(inputs.params.operand2)
+          image: python:3.9.17-alpine3.18
+    - name: condition-2
+      params:
+      - name: operand1
+        value: $(tasks.random-num.results.Output)
+      - name: operand2
+        value: '5'
+      - name: operator
+        value: '>'
+      taskSpec:
+        results:
+        - name: outcome
+          type: string
+          description: Conditional task outcome
+        params:
+        - name: operand1
+        - name: operand2
+        - name: operator
+        steps:
+        - name: main
+          command:
+          - sh
+          - -ec
+          - program_path=$(mktemp); printf "%s" "$0" > "$program_path";  python3 -u
+            "$program_path" "$1" "$2"
+          args:
+          - |
+            import sys
+            input1=str.rstrip(sys.argv[1])
+            input2=str.rstrip(sys.argv[2])
+            try:
+              input1=int(input1)
+              input2=int(input2)
+            except:
+              input1=str(input1)
+            outcome="true" if (input1 $(inputs.params.operator) input2) else "false"
+            f = open("/tekton/results/outcome", "w")
+            f.write(outcome)
+            f.close()
+          - $(inputs.params.operand1)
+          - $(inputs.params.operand2)
+          image: python:3.9.17-alpine3.18
+      when:
+      - input: $(tasks.condition-1.results.outcome)
+        operator: in
+        values:
+        - "true"
+    - name: condition-3
+      params:
+      - name: operand1
+        value: $(tasks.random-num.results.Output)
+      - name: operand2
+        value: '5'
+      - name: operator
+        value: <=
+      taskSpec:
+        results:
+        - name: outcome
+          type: string
+          description: Conditional task outcome
+        params:
+        - name: operand1
+        - name: operand2
+        - name: operator
+        steps:
+        - name: main
+          command:
+          - sh
+          - -ec
+          - program_path=$(mktemp); printf "%s" "$0" > "$program_path";  python3 -u
+            "$program_path" "$1" "$2"
+          args:
+          - |
+            import sys
+            input1=str.rstrip(sys.argv[1])
+            input2=str.rstrip(sys.argv[2])
+            try:
+              input1=int(input1)
+              input2=int(input2)
+            except:
+              input1=str(input1)
+            outcome="true" if (input1 $(inputs.params.operator) input2) else "false"
+            f = open("/tekton/results/outcome", "w")
+            f.write(outcome)
+            f.close()
+          - $(inputs.params.operand1)
+          - $(inputs.params.operand2)
+          image: python:3.9.17-alpine3.18
+      when:
+      - input: $(tasks.condition-1.results.outcome)
+        operator: in
+        values:
+        - "true"
+    - name: condition-4
+      params:
+      - name: operand1
+        value: $(tasks.flip-coin.results.Output)
+      - name: operand2
+        value: tails
+      - name: operator
+        value: ==
+      taskSpec:
+        results:
+        - name: outcome
+          type: string
+          description: Conditional task outcome
+        params:
+        - name: operand1
+        - name: operand2
+        - name: operator
+        steps:
+        - name: main
+          command:
+          - sh
+          - -ec
+          - program_path=$(mktemp); printf "%s" "$0" > "$program_path";  python3 -u
+            "$program_path" "$1" "$2"
+          args:
+          - |
+            import sys
+            input1=str.rstrip(sys.argv[1])
+            input2=str.rstrip(sys.argv[2])
+            try:
+              input1=int(input1)
+              input2=int(input2)
+            except:
+              input1=str(input1)
+            outcome="true" if (input1 $(inputs.params.operator) input2) else "false"
+            f = open("/tekton/results/outcome", "w")
+            f.write(outcome)
+            f.close()
+          - $(inputs.params.operand1)
+          - $(inputs.params.operand2)
+          image: python:3.9.17-alpine3.18
+    - name: condition-5
+      params:
+      - name: operand1
+        value: $(tasks.random-num-2.results.Output)
+      - name: operand2
+        value: '15'
+      - name: operator
+        value: '>'
+      taskSpec:
+        results:
+        - name: outcome
+          type: string
+          description: Conditional task outcome
+        params:
+        - name: operand1
+        - name: operand2
+        - name: operator
+        steps:
+        - name: main
+          command:
+          - sh
+          - -ec
+          - program_path=$(mktemp); printf "%s" "$0" > "$program_path";  python3 -u
+            "$program_path" "$1" "$2"
+          args:
+          - |
+            import sys
+            input1=str.rstrip(sys.argv[1])
+            input2=str.rstrip(sys.argv[2])
+            try:
+              input1=int(input1)
+              input2=int(input2)
+            except:
+              input1=str(input1)
+            outcome="true" if (input1 $(inputs.params.operator) input2) else "false"
+            f = open("/tekton/results/outcome", "w")
+            f.write(outcome)
+            f.close()
+          - $(inputs.params.operand1)
+          - $(inputs.params.operand2)
+          image: python:3.9.17-alpine3.18
+      when:
+      - input: $(tasks.condition-4.results.outcome)
+        operator: in
+        values:
+        - "true"
+    - name: condition-6
+      params:
+      - name: operand1
+        value: $(tasks.random-num-2.results.Output)
+      - name: operand2
+        value: '15'
+      - name: operator
+        value: <=
+      taskSpec:
+        results:
+        - name: outcome
+          type: string
+          description: Conditional task outcome
+        params:
+        - name: operand1
+        - name: operand2
+        - name: operator
+        steps:
+        - name: main
+          command:
+          - sh
+          - -ec
+          - program_path=$(mktemp); printf "%s" "$0" > "$program_path";  python3 -u
+            "$program_path" "$1" "$2"
+          args:
+          - |
+            import sys
+            input1=str.rstrip(sys.argv[1])
+            input2=str.rstrip(sys.argv[2])
+            try:
+              input1=int(input1)
+              input2=int(input2)
+            except:
+              input1=str(input1)
+            outcome="true" if (input1 $(inputs.params.operator) input2) else "false"
+            f = open("/tekton/results/outcome", "w")
+            f.write(outcome)
+            f.close()
+          - $(inputs.params.operand1)
+          - $(inputs.params.operand2)
+          image: python:3.9.17-alpine3.18
+      when:
+      - input: $(tasks.condition-4.results.outcome)
+        operator: in
+        values:
+        - "true"

@@ -1,0 +1,10 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: datascience-sample-project
+  labels:
+    kubernetes.io/metadata.name: datascience-sample-project
+    opendatahub.io/dashboard: 'true'
+spec:
+  finalizers:
+    - kubernetes
