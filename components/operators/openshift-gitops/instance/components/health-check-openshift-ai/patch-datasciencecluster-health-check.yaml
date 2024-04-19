@@ -46,11 +46,11 @@
           health_status.message = msg
         else
           health_status.status = "Progressing"
-          health_status.message = "DataScienceCluster is progressing..."
+          health_status.message = "DataScienceCluster is creating..."
         end
       else
         health_status.status = "Progressing"
-        health_status.message = "DataScienceCluster is progressing..."
+        health_status.message = "DataScienceCluster is creating..."
       end
 
       return health_status
