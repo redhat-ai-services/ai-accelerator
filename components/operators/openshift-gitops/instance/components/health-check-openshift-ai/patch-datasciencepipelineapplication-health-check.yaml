@@ -27,8 +27,6 @@
             -- there is no condition that can help to distinguish between a degraded and progressing object
             -- for now, we will just always keep the object as progressing and never set it to degraded
             health_status.status = "Degraded"
-          else
-            health_status.status = "Degraded"
           end
 
           health_status.message = msg
