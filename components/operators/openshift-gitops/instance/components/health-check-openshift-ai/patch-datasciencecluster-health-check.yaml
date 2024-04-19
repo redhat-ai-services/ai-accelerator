@@ -16,7 +16,7 @@
 
             if condition.type == "Available" and condition.status == "True" then
               available = True
-              msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. "\n" 
+              msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. "\n" 
               -- msg = msg .. i .. ": " .. condition.type .. " | " .. condition.reason .. " | " .. condition.message "\n" 
             elseif condition.type == "Progressing" and condition.status == "True" then
               progressing = True
