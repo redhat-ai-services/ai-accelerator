@@ -9,19 +9,19 @@
         if obj.status.conditions ~= nil then
           msg = ""
           componentsDegraded = 0
-          available = False
-          progressing = False
-          degraded = False
+          available = false
+          progressing = false
+          degraded = false
           for i, condition in pairs(obj.status.conditions) do
 
             if condition.type == "Available" and condition.status == "True" then
-              available = True
+              available = true
               msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. condition.message .. "\n" 
             elseif condition.type == "Progressing" and condition.status == "True" then
-              progressing = True
+              progressing = true
               msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. condition.message .. "\n" 
             elseif condition.type == "Degraded" and condition.status == "True" then
-              degraded = True
+              degraded = true
               msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. condition.message .. "\n" 
             elseif condition.status == "False" then
               componentsDegraded = componentsDegraded + 1
@@ -30,13 +30,13 @@
 
           end
 
-          if available == True and numDegraded == 0 then
+          if available == true and numDegraded == 0 then
             health_status.status = "Healthy"
             msg = msg .. " - Healthy"
-          elseif progressing == True then
+          elseif progressing == true then
             health_status.status = "Progressing"
             msg = msg .. " - Progressing"
-          elseif degraded == True or numDegraded > 0 then
+          elseif degraded == true or numDegraded > 0 then
             health_status.status = "Degraded"
             msg = msg .. " - Degraded = " .. numDegraded
           else
