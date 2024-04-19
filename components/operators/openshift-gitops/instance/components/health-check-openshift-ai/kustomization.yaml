@@ -5,3 +5,6 @@ patches:
   - path: patch-datasciencecluster-health-check.yaml
     target:
       kind: ArgoCD
+  - path: patch-datasciencepipelineapplication-health-check.yaml
+    target:
+      kind: ArgoCD
