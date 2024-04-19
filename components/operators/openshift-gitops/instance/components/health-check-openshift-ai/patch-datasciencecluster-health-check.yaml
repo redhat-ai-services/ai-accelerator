@@ -30,15 +30,15 @@
 
           end
 
-          if available == true and numDegraded == 0 then
+          if available == true and componentsDegraded == 0 then
             health_status.status = "Healthy"
             msg = msg .. " - Healthy"
           elseif progressing == true then
             health_status.status = "Progressing"
             msg = msg .. " - Progressing"
-          elseif degraded == true or numDegraded > 0 then
+          elseif degraded == true or componentsDegraded > 0 then
             health_status.status = "Degraded"
-            msg = msg .. " - Degraded = " .. numDegraded
+            msg = msg .. " - Degraded = " .. componentsDegraded
           else
             health_status.status = "Degraded"
             msg = msg .. " uknown degraded state"
