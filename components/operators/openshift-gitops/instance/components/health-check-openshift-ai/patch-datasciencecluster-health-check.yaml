@@ -32,12 +32,16 @@
 
           if available == True and numDegraded == 0 then
             health_status.status = "Healthy"
+            msg = msg .. " - Healthy"
           elseif progressing == True then
             health_status.status = "Progressing"
+            msg = msg .. " - Progressing"
           elseif degraded == True or numDegraded > 0 then
             health_status.status = "Degraded"
+            msg = msg .. " - Degraded = " .. numDegraded
           else
             health_status.status = "Degraded"
+            msg = msg .. " uknown degraded state"
           end
 
           health_status.message = msg
