@@ -16,16 +16,20 @@
 
             if condition.type == "Available" and condition.status == "True" then
               available = true
-              msg = msg .. i .. "Available: " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. condition.message .. "\n" 
-            elseif condition.type == "Progressing" and condition.status == "True" then
-              progressing = true
-              msg = msg .. i .. "Progressing: " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. condition.message .. "\n" 
-            elseif condition.type == "Degraded" and condition.status == "True" then
-              degraded = true
-              msg = msg .. i .. "Degraded: " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. condition.message .. "\n" 
+              msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. condition.message .. "\n" 
+            elseif condition.type == "Progressing" then
+              if condition.status == "True" then
+                progressing = true
+                msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. condition.message .. "\n"
+              end
+            elseif condition.type == "Degraded" then
+              if condition.status == "True" then
+                degraded = true
+                msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. condition.message .. "\n" 
+              end
             elseif condition.status == "False" then
               componentsDegraded = componentsDegraded + 1
-              msg = msg .. i .. "Other: " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. condition.message .. "\n" 
+              msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. condition.message .. "\n" 
             end
 
           end
