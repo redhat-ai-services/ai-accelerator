@@ -16,6 +16,11 @@ spec:
         values:
           name: kiali-operator
           path: components/operators/kiali/operator/overlays/stable
+            - cluster: local
+        url: https://kubernetes.default.svc
+        values:
+          name: nfd-operator
+          path: components/operators/nfd/operator/overlays/stable
       - cluster: local
         url: https://kubernetes.default.svc
         values:
