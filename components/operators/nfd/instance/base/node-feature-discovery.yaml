@@ -3,8 +3,8 @@ apiVersion: nfd.openshift.io/v1
 metadata:
   name: nfd-instance
 spec:
-  customConfig:
-    configData: |
+  # customConfig:
+  #   configData: |
       #    - name: "more.kernel.features"
       #      matchOn:
       #      - loadedKMod: ["example_kmod3"]
