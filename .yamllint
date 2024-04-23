@@ -8,3 +8,6 @@ rules:
   truthy:
     ignore: .github/workflows/
   comments-indentation: disable
+
+ignore:
+  - "*/charts/"
