@@ -6,4 +6,4 @@ resources:
   - cluster-policy.yaml
   - device-plugin-config.yaml
   - setup-console-plugin-job.yaml
-  - setup-dashboard-job.yaml
+  # - setup-dashboard-job.yaml

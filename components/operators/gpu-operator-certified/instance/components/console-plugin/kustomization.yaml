@@ -1,13 +1,11 @@
-# apiVersion: kustomize.config.k8s.io/v1alpha1
-# kind: Component
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
 
 namespace: nvidia-gpu-operator
 
 # version 0.2.3 has an bug in the helm chart causes the install to fail
 # issue was resolved in 0.2.4 but waiting to be published to helm repo
-# https://github.com/rh-ecosystem-edge/console-plugin-nvidia-gpu/pull/63
+https://github.com/rh-ecosystem-edge/console-plugin-nvidia-gpu/pull/63
 helmCharts:
   - name: console-plugin-nvidia-gpu
     releaseName: console-plugin-nvidia-gpu
@@ -15,6 +13,7 @@ helmCharts:
     repo: https://rh-ecosystem-edge.github.io/console-plugin-nvidia-gpu
 
 resources:
+  - manifest.yaml
   - enable-console-plugin-job.yaml
   - enable-console-plugin-rbac.yaml
   - enable-console-plugin-sa.yaml
