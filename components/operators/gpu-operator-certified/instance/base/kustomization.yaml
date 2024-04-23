@@ -7,3 +7,6 @@ resources:
   - device-plugin-config.yaml
   - setup-console-plugin-job.yaml
   # - setup-dashboard-job.yaml
+
+components:
+  - ../components/monitoring-dashboard
