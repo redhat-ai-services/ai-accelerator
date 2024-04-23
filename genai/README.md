@@ -1,4 +1,4 @@
-GenAI on OCP
+Gen AI on OCP
 
 ### Set up Cluster
 Navigate to demo.redhat.com and order a __RHOAI on OCP on AWS with NVIDIA GPUs__ sandbox.
@@ -29,10 +29,10 @@ You can use the Automated install using GitOps (if installed) or using kustomize
 <details>
 <summary>Using kustomize to create manifests:</summary>
 
-You can also use kustomize to apply all the yamls at once:
+You can also use kustomize to apply all the manifests at once:
 `kustomize build https://github.com/rh-aiservices-bu/llm-on-openshift.git/llm-servers/vllm/gitops | oc apply -f -`
 
-This applies the pvc, service, route, and deployment in one command. Make sure you are in the correct namespace. Make sure to add your HuggingFace token to the deployment environment variable.
+This applies the PVC, Service, Route, and Deployment in one command. Make sure you are in the correct namespace. Make sure to add your HuggingFace token to the deployment environment variable.
 
 You can skip to testing the vLLM after this step
 </details>
@@ -68,15 +68,15 @@ Download the __deployment.yaml__: https://github.com/rh-aiservices-bu/llm-on-ope
 After you add the token to the environment variable, apply this deployment to the __vllm__ project.
 
 Navigate to the deployment pod logs and wait for the startup to complete:
-![vllm logs](./images/vllm_logs.png "vllm logs")
+![vLLM logs](./images/vllm_logs.png "vLLM logs")
 
 
 
 ### Test vLLM
 
-Navigate to the vllm route and add `/docs` to the end of it (https://vllm-vllm.apps.cluster-1abcd.sandbox123.opentlc.com/docs) to open the openAPI webpage to test the vLLM.
+Navigate to the vLLM route and add `/docs` to the end of it (https://vllm-vllm.apps.cluster-1abcd.sandbox123.opentlc.com/docs) to open the openAPI webpage to test the vLLM.
 
-![api](./images/fastapi_vllm.png "vllm api")
+![api](./images/fastapi_vllm.png "vLLM api")
 
 You can try the API by using the `/v1/chat/completions` and using the "try it out" feature.
 

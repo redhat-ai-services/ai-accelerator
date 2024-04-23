@@ -24,11 +24,11 @@
             elseif condition.type == "Degraded" then
               if condition.status == "True" then
                 degraded = true
-                msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. condition.message .. "\n" 
+                msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. condition.message .. "\n"
               end
             elseif condition.status == "False" then
               componentsDegraded = componentsDegraded + 1
-              msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. condition.message .. "\n" 
+              msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. condition.message .. "\n"
             end
 
           end
