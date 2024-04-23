@@ -31,7 +31,7 @@ spec:
     externalStorage:
       bucket: dstest
       host: minio-api-minio.apps.cluster-jbzjq.dynamic.redhatworkshops.io
-      port: ''
+      port: ""
       s3CredentialsSecret:
         accessKey: AWS_ACCESS_KEY_ID
         secretKey: AWS_SECRET_ACCESS_KEY

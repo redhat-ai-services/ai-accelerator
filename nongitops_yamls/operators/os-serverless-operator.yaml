@@ -13,7 +13,7 @@ kind: OperatorGroup
 metadata:
   name: serverless-operator-group
   namespace: openshift-serverless
-  
+
 ---
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
