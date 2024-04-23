@@ -5,12 +5,14 @@ kind: Kustomization
 
 namespace: openshift-config-managed
 
-commonLabels:
-  console.openshift.io/dashboard: "true"
-  # optional label to enable visibilty in developer perspective
-  console.openshift.io/odc-dashboard: "true"
+labels:
+  - includeSelectors: false
+    pairs:
+      console.openshift.io/dashboard: "true"
+      # optional label to enable visibilty in developer perspective
+      console.openshift.io/odc-dashboard: "true"
 
 configMapGenerator:
   - name: nvidia-dcgm-exporter-dashboard
-    files: 
+    files:
       - https://github.com/NVIDIA/dcgm-exporter/raw/main/grafana/dcgm-exporter-dashboard.json
