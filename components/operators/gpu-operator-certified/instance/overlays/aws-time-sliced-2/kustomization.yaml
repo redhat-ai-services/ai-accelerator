@@ -2,5 +2,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - ../../base/aws
-  - ../time-sliced-2
+  - ../../base
+
+componets:
+  - ../../componets/aws-gpu-machineset
+  - ../../components/console-plugin
+  - ../../components/monitoring-dashboard
+  - ../../components/time-sliced-2
