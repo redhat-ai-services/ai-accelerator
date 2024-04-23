@@ -2,7 +2,6 @@ kind: ClusterPolicy
 apiVersion: nvidia.com/v1
 metadata:
   name: gpu-cluster-policy
-  namespace: nvidia-gpu-operator
 spec:
   operator:
     defaultRuntime: crio
