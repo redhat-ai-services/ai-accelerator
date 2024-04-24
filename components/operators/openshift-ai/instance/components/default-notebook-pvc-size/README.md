@@ -18,4 +18,4 @@ components:
   - ../../components/default-notebook-pvc-size
 ```
 
-You can customize the pvc size by updating the [patch-rhoai-dashboard.yaml](./patch-rhoai-dashboard.yaml) file.
+You can customize the PVC size by updating the [patch-rhoai-dashboard.yaml](./patch-rhoai-dashboard.yaml) file.
