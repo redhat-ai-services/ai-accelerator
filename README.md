@@ -119,15 +119,15 @@ Install supporting operators from `nongitops_yamls/operators/`:
 
 Install RHOAI in the `nongitops_yamls/rhoai/` folder:
 
-1. Apply __rhoai-operator.yaml__ first. 
+1. Apply `rhoai-operator.yaml` first. 
     This creates the `redhat-ods-operator` namespace for the RHOAI operator.
     And installs the RHOAI operator.
 
-2. Apply the __datasciencecluster.yaml__.
+2. Apply the `datasciencecluster.yaml`.
     This creates a DataScienceCluster instance for RHOAI.
     (You can edit the yaml to enable or disable features.)
     This also creates the DSCInitialization instance for RHOAI.
 
-3. Apply the __ds-sample-project-ns.yaml__.
-    This creates a DataScience project in RHOAI.
+3. Apply the `ds-sample-project-ns.yaml`.
+    This creates a Data Science Project in RHOAI.
     This is a namespace manifest with the label: `opendatahub.io/dashboard: 'true'`

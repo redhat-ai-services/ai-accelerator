@@ -7,7 +7,7 @@ https://docs.nvidia.com/datacenter/cloud-native/openshift/latest/enable-gpu-moni
 ## Purpose
 This component is designed to enable to enable the GPU monitoring Dashboard.
 
-To learn more about the monitoring dashbaord, please refer to the official [docs](
+To learn more about the monitoring dashboard, please refer to the official [docs](
 https://docs.nvidia.com/datacenter/cloud-native/openshift/latest/enable-gpu-monitoring-dashboard.html)
 
 ## Usage
