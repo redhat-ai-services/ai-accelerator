@@ -1,4 +1,4 @@
-# modelserver-pod-sizes
+# model-server-pod-sizes
 
 ## Purpose
 This component is designed help admins configure the default sizes users can select from when creating a new Model Server.
