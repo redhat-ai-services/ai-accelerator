@@ -1,4 +1,4 @@
-# GPU Monitoring Dashboard
+# Console Plugin
 
-https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/openshift/enable-gpu-op-dashboard.html
-
+[NVIDIA Enable Console Plugin Docs](
+https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/openshift/enable-gpu-op-dashboard.html)
