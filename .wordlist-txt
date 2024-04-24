@@ -129,6 +129,7 @@ VolSync
 Workspaces
 ack
 acm
+aiservices
 amq
 api
 apiGroup
@@ -240,7 +241,9 @@ redhat
 redistributions
 repo
 resourceNames
+rh
 rhel
+rhoai
 rhpds
 roleRef
 rollout
