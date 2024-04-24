@@ -4,5 +4,5 @@ kind: Kustomization
 resources:
   - ../../base
 
-componets:
-  - ../../componets/mig-single
+components:
+  - ../../components/mig-single
