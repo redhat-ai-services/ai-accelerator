@@ -58,7 +58,7 @@ do
   echo "Validating $i"
   echo
 
-  KUSTOMIZE_BUILD_OUTPUT=$(${KUSTOMIZE_CMD} "$i --enable-helm")
+  KUSTOMIZE_BUILD_OUTPUT=$(${KUSTOMIZE_CMD} "$i" --enable-helm)
 
   build_response=$?
 
