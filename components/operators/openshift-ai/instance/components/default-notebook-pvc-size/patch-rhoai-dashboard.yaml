@@ -4,4 +4,4 @@ metadata:
   name: odh-dashboard-config
 spec:
   notebookController:
-    pvcSize: 10Gi
+    pvcSize: 20Gi
