@@ -235,3 +235,8 @@ vsphere
 wordlist
 workspaces
 yaml
+llm
+mig
+langchain
+pgvector
+psql

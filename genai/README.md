@@ -22,7 +22,7 @@ Save and let it spin up. This can take some time.
 (In our testing, we only needed 1 MachineSet, so we removed/deleted the other MachineSet. Up to you if you want to have 1 MachineSet)
 
 ### Set up vLLM
-We'll be using this repository to get the vLLM set up: https://github.com/rh-aiservices-bu/llm-on-openshift/tree/main/llm-servers/vllm
+We'll be using this repository to get the vLLM set up: [llm-on-openshift](https://github.com/rh-aiservices-bu/llm-on-openshift/tree/main/llm-servers/vllm)
 This repository uses and installs _Mistral-7B-Instruct-v0.2_ model and exposes it.
 You can use the Automated install using GitOps (if installed) or using kustomize or manually.
 

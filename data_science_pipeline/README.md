@@ -9,7 +9,7 @@ We also need an S3 storage bucket. In this tutorial, the operators should be alr
  3. Apply the _minio.yaml_ file.
     This will create the PVC, admin password secret, deployment, service, api route, and UI route.
  4. The credentials to log into minio are from the secret `minio-secret` from the minio.yaml to login. `minio:minio123`
- 5. Create new Data Science Project or apply the `ds-sample-project-ns.yaml`. This will create a new DSP named: datascience-sample-project
+ 5. Create new Data Science Project or apply the `ds-sample-project-ns.yaml`. This will create a new Data Science Project named: datascience-sample-project
  6. In the RHOAI Dashboard, configure a new pipeline server. Or you can apply the `pipeline-server.yaml`. (make sure the namespace is correct.)
     Enter the S3 information. Access key is `minio`. Secret key is `minio123`. Endpoint is the minio API endpoint. Bucket: you can create a new bucket on the minio-ui or if left blank, it will create a new bucket in S3.
  7. Import a new pipeline. Example: cointoss.yaml
