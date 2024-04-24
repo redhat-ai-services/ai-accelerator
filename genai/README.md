@@ -171,7 +171,7 @@ Follow the instructions to install PostgreSQL. Make sure the vector extension is
 ### Combining everything together in RHOAI
 Login to RHOAI and create a new Data Science Project.
 
-Before creating a DSP, navigate in the `RHOAI Dashboard > Settings > Accelerator profiles` and make sure the NVIDIA GPU is enabled.
+Before creating a Data Science Project, navigate in the `RHOAI Dashboard > Settings > Accelerator profiles` and make sure the NVIDIA GPU is enabled.
 
 Create a Data Science Project named `rag-demo` with a `Standard Data Science` Notebook image and either `Small` or `Medium` Container size. After the notebook is running, open and go into it.
 
