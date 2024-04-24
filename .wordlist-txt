@@ -18,8 +18,8 @@ CheCluster
 ClusterRoleBindings
 ClusterTask
 CodeReady
-Deployment
 DNS
+Deployment
 Dev
 DevSpaces
 DevWorkspace
@@ -49,8 +49,8 @@ KokuMetricsConfig
 Kubernetes
 Kyverno
 LDAP
-LVM
 LLM
+LVM
 Lifecycle
 Logstash
 MTA
@@ -81,9 +81,9 @@ RHOAI
 Rollout
 Route
 SAR
-SaaS
 SNO
 SSO
+SaaS
 Sagemaker
 SecretManager
 SecureCluster
@@ -228,8 +228,8 @@ truly
 txt
 url
 vLLM
-vllm
 vSphere
+vllm
 vscode
 vsphere
 wordlist
