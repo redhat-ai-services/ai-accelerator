@@ -263,3 +263,11 @@ kubectl
 Contrib
 ODH
 DCGM
+ClusterRoleBinding
+RoleBinding
+EOF
+apiGroups
+RBAC
+KServe
+Jupyter
+ConfigMap
