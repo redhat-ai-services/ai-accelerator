@@ -4,11 +4,7 @@ kind: Kustomization
 resources:
   - ../../base
 
-patches:
-  - target:
-      kind: ClusterPolicy
-      name: gpu-cluster-policy
-    patch: |-
-      - op: add
-        path: /spec/mig/strategy
-        value: mixed
+components:
+  - ../../components/console-plugin
+  - ../../components/monitoring-dashboard
+  - ../../components/mig-mixed

@@ -20,7 +20,7 @@ jobs:
           sudo curl "${KUSTOMIZE_URL}" -L -o ${BIN_PATH}/kustomize
           sudo chmod +x ${BIN_PATH}/kustomize
       - name: Code Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Validate Manifests
         run: |
           touch bootstrap/base/sealed-secrets-secret.yaml
@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Code Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Set up Python 3.9
         uses: actions/setup-python@v4
         with:
@@ -54,7 +54,7 @@ jobs:
           sudo curl -L -o /usr/bin/helm https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz
           sudo chmod +x /usr/bin/helm
       - name: Code Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Validate Charts
         run: |
           for i in `find "${HELM_DIRS}" -name "Chart.yaml" -exec dirname {} \;`;
@@ -82,6 +82,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Code Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Spellcheck
         uses: rojopolis/spellcheck-github-actions@0.27.0

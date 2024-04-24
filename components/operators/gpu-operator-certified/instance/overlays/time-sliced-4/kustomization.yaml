@@ -4,25 +4,5 @@ kind: Kustomization
 resources:
   - ../time-sliced-2
 
-patches:
-  - target:
-      kind: ConfigMap
-      name: device-plugin-config
-    patch: |-
-      - op: add
-        path: /data
-        value:
-          no-time-sliced: |-
-            version: v1
-            sharing:
-              timeSlicing:
-                resources:
-                  - name: nvidia.com/gpu
-                    replicas: 0
-          time-sliced: |-
-            version: v1
-            sharing:
-              timeSlicing:
-                resources:
-                  - name: nvidia.com/gpu
-                    replicas: 4
+components:
+  - ../../components/time-sliced-2
