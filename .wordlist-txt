@@ -271,3 +271,8 @@ RBAC
 KServe
 Jupyter
 ConfigMap
+rbac
+ClusterRole
+apiGroup
+roleRef
+resourceNames

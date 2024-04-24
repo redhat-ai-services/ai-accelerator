@@ -30,7 +30,7 @@ Choose newly created PVC for pipeline.
 8. Settings > Notebook Images > Import new image > Image location
 ![RHOAI Settings](./readme_images/rhoai_settings.png "RHOAI Settings")
 
-Enter image location. In Openshift > Builds > ImageStreams > custom-wb, we can get the location:
+Enter image location. In Openshift > Builds > ImageStreams > Custom Workbench, we can get the location:
 `image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/custom-wb`
 
 (If not using OpenShift internal registry, use external registry image location)

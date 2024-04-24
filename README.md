@@ -66,7 +66,7 @@ These instructions will show how the OpenShift Admin can create these groups in 
 
 Create the RHOAI groups:
 `oc adm groups new rhoai-users` 
-`oc adm groups new rhoai-admins` ## rhods-admins created by operator. Changed name and should be updated.
+`oc adm groups new rhoai-admins` ## `rhods-admins` created by operator. Changed name and should be updated.
 
 Confirm groups were created: `oc get groups | grep rhoai`
 
