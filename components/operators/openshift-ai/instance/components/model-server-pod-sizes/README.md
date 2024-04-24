@@ -15,7 +15,7 @@ resources:
   - ../../base
 
 components:
-  - ../../components/modelserver-pod-sizes
+  - ../../components/model-server-pod-sizes
 ```
 
 You can customize the pod sizes by updating the [patch-rhoai-dashboard.yaml](./patch-rhoai-dashboard.yaml) file.

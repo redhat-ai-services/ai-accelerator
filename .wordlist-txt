@@ -154,6 +154,7 @@ clusterrolebinding
 composable
 config
 configmap
+culler
 datasource
 deployable
 dev
