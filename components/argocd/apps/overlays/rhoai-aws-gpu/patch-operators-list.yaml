@@ -9,6 +9,11 @@ spec:
       - cluster: local
         url: https://kubernetes.default.svc
         values:
+          name: nvidia-gpu-operator
+          path: components/operators/gpu-operator-certified/operator/overlays/stable
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
           name: jaeger-operator
           path: components/operators/jaeger/operator/overlays/stable
       - cluster: local
@@ -16,6 +21,11 @@ spec:
         values:
           name: kiali-operator
           path: components/operators/kiali/operator/overlays/stable
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
+          name: nfd-operator
+          path: components/operators/nfd/aggregate/overlays/default
       - cluster: local
         url: https://kubernetes.default.svc
         values:
