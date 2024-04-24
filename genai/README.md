@@ -15,7 +15,7 @@ Then __Edit MachineSet__ to edit the yaml to change the Instance type.
 You can view the different type of instances that we can use here (scroll down to Accelerated Computing):
 https://aws.amazon.com/ec2/instance-types/ 
 
-We've tested using __g5.2xlarge__ so we'll choose this one. Edit one of the MachineSet yaml to reflect this:
+We've tested using `g5.2xlarge` so we'll choose this one. Edit one of the MachineSet yaml to reflect this:
 ![instanceType Edit](./images/change_instance_type.png "Edit Machine Count yaml instance type")
 
 Save and let it spin up. This can take some time. 
@@ -56,7 +56,7 @@ You can skip to testing the vLLM after this step
 
 For the deployment, we'll need to edit the __env variable: HUGGING_FACE_HUB_TOKEN__ with your hugging face token.
 
-We need this use this token because the model we're using, _Mistral-7B-Instruct-v0.2_, is gated. You must be authenticated to access it. Navigate to https://huggingface.co/settings/tokens and create a new token and copy it for the environment variable.
+We need this use this token because the model we're using, _Mistral-7B-Instruct-v0.2_, is gated. You must be authenticated to access it. Navigate to [https://huggingface.co/settings/tokens](https://huggingface.co/settings/tokens) and create a new token and copy it for the environment variable.
 
 ![mistralhf](./images/mistralhf_login.png "mistralhf")
 
@@ -202,7 +202,9 @@ COLLECTION_NAME = f"rhoai-doc-2.6"
 ```
 
 Make sure to edit the __INFERENCE_SERVER_URL__ with the vLLM inference route:
-`INFERENCE_SERVER_URL = f"https://vllm-vllm.apps.cluster-8abcd.sandboxabc.opentlc.com/v1"`
+```
+INFERENCE_SERVER_URL = f"https://vllm-vllm.apps.cluster-8abcd.sandboxabc.opentlc.com/v1"
+```
 
 The notebook goes through initializing the vector db connection, creating the query chain with a template, creating the LLM connection, and then combining them together.
 

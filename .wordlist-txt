@@ -240,3 +240,6 @@ mig
 langchain
 pgvector
 psql
+openAPI
+HuggingFace
+minio
