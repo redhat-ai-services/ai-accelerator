@@ -246,7 +246,6 @@ minio
 DSCInitialization
 DataScienceCluster
 CUDA
-DCMG
 Infiniband
 NICs
 runtimes
@@ -261,3 +260,6 @@ Buildpacks
 autocompletion
 schemas
 kubectl
+Contrib
+ODH
+DCGM

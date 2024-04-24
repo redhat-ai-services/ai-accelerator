@@ -56,7 +56,7 @@ You can skip to testing the vLLM after this step
 
 For the deployment, we'll need to edit the __env variable: HUGGING_FACE_HUB_TOKEN__ with your hugging face token.
 
-We need this use this token because the model we're using, _Mistral-7B-Instruct-v0.2_, is gated. You must be authenticated to access it. Navigate to [https://huggingface.co/settings/tokens](https://huggingface.co/settings/tokens) and create a new token and copy it for the environment variable.
+We need this use this token because the model we're using, _Mistral-7B-Instruct-v0.2_, is gated. You must be authenticated to access it. Navigate to [HuggingFace Tokens](https://huggingface.co/settings/tokens) and create a new token and copy it for the environment variable.
 
 ![mistralhf](./images/mistralhf_login.png "mistralhf")
 
@@ -74,7 +74,7 @@ Navigate to the deployment pod logs and wait for the startup to complete:
 
 ### Test vLLM
 
-Navigate to the vLLM route and add `/docs` to the end of it (https://vllm-vllm.apps.cluster-1abcd.sandbox123.opentlc.com/docs) to open the openAPI webpage to test the vLLM.
+Navigate to the vLLM route and add `/docs` to the end of it `https://vllm-vllm.apps.cluster-1abcd.sandbox123.opentlc.com/docs` to open the openAPI web page to test the vLLM.
 
 ![api](./images/fastapi_vllm.png "vLLM api")
 
@@ -202,6 +202,7 @@ COLLECTION_NAME = f"rhoai-doc-2.6"
 ```
 
 Make sure to edit the __INFERENCE_SERVER_URL__ with the vLLM inference route:
+
 ```
 INFERENCE_SERVER_URL = f"https://vllm-vllm.apps.cluster-8abcd.sandboxabc.opentlc.com/v1"
 ```

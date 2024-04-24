@@ -7,10 +7,11 @@ Run `./bootstrap.sh` to install GitOps, RHOAI, and other operators.
 After the script applies GitOps operator, it will prompt to choose the RHOAI folder to install the RHOAI operator and it's components. After it applies, you can go into GitOps and check the status of them. Sometimes, it needs to manually sync to get it going.
 
 ## Pipelines:
-https://rh-aiservices-bu.github.io/rhoai-rh1-testdrive/modules/setup/enabling-data-science-pipelines.html
+
+[Enabling Data Science Pipelines](https://rh-aiservices-bu.github.io/rhoai-rh1-testdrive/modules/setup/enabling-data-science-pipelines.html)
 
 ## Notebook Culling:
-https://access.redhat.com/documentation/vi-vn/red_hat_openshift_data_science/1/html/managing_users_and_user_resources/managing_notebook_servers
+[Managing Notebook Servers](https://access.redhat.com/documentation/vi-vn/red_hat_openshift_data_science/1/html/managing_users_and_user_resources/managing_notebook_servers)
 
 In RHOAI Dashboard>Settings>Cluster Settings>Stop idle notebooks:
 When enabled is selected and saved, the ConfigMap below will be created. You can enable culling outside of RHOAI Dashboard by applying this ConfigMap to `redhat-ods-applications` namespace.
@@ -36,14 +37,14 @@ NOTE: In RHOAI Dashboard>Settings>Cluster Settings>Stop idle notebooks
 If culling is enabled by ConfigMap, but then disabled in RHOAI Dashboard settings. The ConfigMap `notebook-controller-culler-config` will be deleted. 
 
 ## Default Jupyter PVC size:
-https://access.redhat.com/documentation/vi-vn/red_hat_openshift_data_science/1/html/managing_users_and_user_resources/configuring-the-default-pvc-size-for-your-cluster_user-mgmt 
+[Default PVC Sizes](https://access.redhat.com/documentation/vi-vn/red_hat_openshift_data_science/1/html/managing_users_and_user_resources/configuring-the-default-pvc-size-for-your-cluster_user-mgmt)
 
 ## Configuring additional model serving runtimes:
-https://access.redhat.com/documentation/en-us/red_hat_openshift_ai_self-managed/2.6/html/serving_models/serving-small-and-medium-sized-models_model-serving
+[Configuring Additional Runtimes](https://access.redhat.com/documentation/en-us/red_hat_openshift_ai_self-managed/2.6/html/serving_models/serving-small-and-medium-sized-models_model-serving)
 
 Red Hat OpenShift AI includes a single model serving platform that is based on the KServe component.
 
-You must first make sure that you have properly installed the necessary component of the Single-Model Serving stack, as documented here: https://access.redhat.com/documentation/en-us/red_hat_openshift_ai_self-managed/2-latest/html/serving_models/serving-large-models_serving-large-models.
+You must first make sure that you have properly installed the necessary component of the Single-Model Serving stack, as documented here: [Serving Large Models](https://access.redhat.com/documentation/en-us/red_hat_openshift_ai_self-managed/2-latest/html/serving_models/serving-large-models_serving-large-models).
 
 Once the stack is installed, adding the runtime is pretty straightforward:
 
@@ -70,6 +71,7 @@ Create the rhoai groups:
 Confirm groups were created: `oc get groups | grep rhoai`
 
 Create the Cluster Role and Cluster Role Binding:
+
 ```
 oc apply -f - <<EOF
 apiVersion: rbac.authorization.k8s.io/v1
@@ -96,12 +98,13 @@ roleRef:
   name: update-rhoai-users
 EOF
 ```
+
 To confirm cluster role and cluster role binding were created successfully:
 `oc get ClusterRole,ClusterRoleBinding  | grep 'update\-rhoai'`
 
 RHOAI admins can now add users.
 
-Make sure the rhoai-users group is added in the Data Science user groups: RHOAI>Settings>User Management>Data Science user groups
+Make sure the `rhoai-users` group is added in the Data Science user groups: RHOAI > Settings > User Management> Data Science user groups
 
 RHOAI Dashboard > Settings > User Management:
 
