@@ -44,13 +44,19 @@ You can skip to testing the vLLM after this step
 2. Create PVC, deployment, & service in __vllm__ namespace.
 
 ##### PVC: 
-`oc apply -f https://raw.githubusercontent.com/rh-aiservices-bu/llm-on-openshift/main/llm-servers/vllm/gitops/pvc.yaml`
+```
+oc apply -f https://raw.githubusercontent.com/rh-aiservices-bu/llm-on-openshift/main/llm-servers/vllm/gitops/pvc.yaml`
+```
 
 ##### Service: 
-`oc apply -f https://raw.githubusercontent.com/rh-aiservices-bu/llm-on-openshift/main/llm-servers/vllm/gitops/service.yaml`
+```
+oc apply -f https://raw.githubusercontent.com/rh-aiservices-bu/llm-on-openshift/main/llm-servers/vllm/gitops/service.yaml
+```
 
 ##### Route: 
-`oc apply -f https://raw.githubusercontent.com/rh-aiservices-bu/llm-on-openshift/main/llm-servers/vllm/gitops/route.yaml`
+```
+oc apply -f https://raw.githubusercontent.com/rh-aiservices-bu/llm-on-openshift/main/llm-servers/vllm/gitops/route.yaml
+```
 
 ##### Deployment: 
 
@@ -61,7 +67,7 @@ We need this use this token because the model we're using, _Mistral-7B-Instruct-
 ![mistralhf](./images/mistralhf_login.png "mistralhf")
 
 
-Download the __deployment.yaml__: https://github.com/rh-aiservices-bu/llm-on-openshift/blob/main/llm-servers/vllm/gitops/deployment.yaml#L52 and add your token.
+Download the [deployment.yaml](https://github.com/rh-aiservices-bu/llm-on-openshift/blob/main/llm-servers/vllm/gitops/deployment.yaml#L52) and add your token.
 
 ![env hf token](./images/hf_hub_token.png "env hf token")
 
@@ -91,6 +97,7 @@ Sample request body (clear the request body and substitute with these):
 }
 ```
 
+```
 <details>
 <summary>Response</summary>
 <code>
@@ -119,6 +126,7 @@ Sample request body (clear the request body and substitute with these):
 }
 </code>
 </details>
+```
 
 or
 
@@ -133,6 +141,7 @@ or
 }
 ```
 
+```
 <details>
 <summary>Response</summary>
 <code>{
@@ -160,11 +169,11 @@ or
 }
 </code>
 </details>
+```
 
 ### Create Vector Database - PostgreSQL w/ vector extension
 
-We're still using the examples from this repository:
-https://github.com/rh-aiservices-bu/llm-on-openshift/tree/main/vector-databases/pgvector
+We're still using the examples from this [repository](https://github.com/rh-aiservices-bu/llm-on-openshift/tree/main/vector-databases/pgvector)
 
 Follow the instructions to install PostgreSQL. Make sure the vector extension is enabled.
 
@@ -176,7 +185,7 @@ Before creating a Data Science Project, navigate in the `RHOAI Dashboard > Setti
 Create a Data Science Project named `rag-demo` with a `Standard Data Science` Notebook image and either `Small` or `Medium` Container size. After the notebook is running, open and go into it.
 
 Git clone the repo to pull down the files and examples:
-https://github.com/rh-aiservices-bu/llm-on-openshift
+[llm-on-openshift](https://github.com/rh-aiservices-bu/llm-on-openshift)
 
 Navigate to `examples/notebooks/langchain/` folder.
 
@@ -187,7 +196,7 @@ Make sure to edit the __CONNECTION_STRING__ with the correct username and passwo
 Example: `CONNECTION_STRING = "postgresql+psycopg://vectordb:vectordb@postgresql:5432/vectordb"`
 
 (You can find this in the __01_db_secret.yaml__
- here: https://github.com/rh-aiservices-bu/llm-on-openshift/tree/main/vector-databases/pgvector)
+ [here](https://github.com/rh-aiservices-bu/llm-on-openshift/tree/main/vector-databases/pgvector)
 
  Open `Langchain-PgVector-Query.ipynb` and run through the notebook to query the docs in the db.
 
