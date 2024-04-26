@@ -6,6 +6,4 @@ resources:
 
 components:
   - ../../components/aws-gpu-machineset
-  - ../../components/console-plugin
-  - ../../components/monitoring-dashboard
   - ../../components/time-sliced-4
