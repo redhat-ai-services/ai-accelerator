@@ -3,5 +3,8 @@ kind: Component
 
 namespace: redhat-ods-applications
 
+labels:
+  argocd.argoproj.io/sync-wave: "100"
+
 resources:
   - culler-config.yaml
