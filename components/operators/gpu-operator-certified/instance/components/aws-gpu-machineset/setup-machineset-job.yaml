@@ -20,10 +20,10 @@ spec:
           command:
             - /bin/bash
             - -c
-            - /tmp/mount/create-gpu-machineset.sh
+            - /scripts/create-gpu-machineset.sh
           volumeMounts:
             - name: create-gpu-machineset
-              mountPath: /tmp/mount
+              mountPath: /scripts
       volumes:
         - name: create-gpu-machineset
           configMap:
