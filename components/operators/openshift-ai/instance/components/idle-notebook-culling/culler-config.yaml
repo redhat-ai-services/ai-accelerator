@@ -4,6 +4,8 @@ metadata:
   name: notebook-controller-culler-config
   labels:
     opendatahub.io/dashboard: 'true'
+  annotations:
+    argocd.argoproj.io/sync-wave: "100"
 data:
   CULL_IDLE_TIME: '240'
   ENABLE_CULLING: 'true'
