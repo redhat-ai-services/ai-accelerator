@@ -8,6 +8,7 @@ generatorOptions:
     console.openshift.io/dashboard: "true"
     # optional label to enable visibilty in developer perspective
     console.openshift.io/odc-dashboard: "true"
+  disableNameSuffixHash: true
 
 configMapGenerator:
   - name: nvidia-dcgm-exporter-dashboard
