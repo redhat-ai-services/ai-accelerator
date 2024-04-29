@@ -17,7 +17,7 @@ spec:
           command:
             - /bin/bash
             - -c
-            - /scripts/enbale-console-plugin.sh
+            - /scripts/enable-console-plugin.sh
           volumeMounts:
             - name: scripts
               mountPath: /scripts
