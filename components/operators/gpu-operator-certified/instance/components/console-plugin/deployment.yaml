@@ -12,6 +12,7 @@ metadata:
     app.kubernetes.io/component: console-plugin-nvidia-gpu
     app.kubernetes.io/part-of: console-plugin-nvidia-gpu
     app.openshift.io/runtime-namespace: console-plugin-nvidia-gpu
+  namespace: nvidia-gpu-operator
 spec:
   replicas: 1
   selector:

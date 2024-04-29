@@ -13,6 +13,7 @@ metadata:
     app.kubernetes.io/part-of: console-plugin-nvidia-gpu
   annotations:
     service.alpha.openshift.io/serving-cert-secret-name: plugin-serving-cert
+  namespace: nvidia-gpu-operator
 spec:
   ports:
   - name: 9443-tcp

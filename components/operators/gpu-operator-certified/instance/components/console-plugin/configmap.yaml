@@ -12,6 +12,7 @@ metadata:
     app.kubernetes.io/component: console-plugin-nvidia-gpu
     app.kubernetes.io/instance: console-plugin-nvidia-gpu
     app.kubernetes.io/part-of: console-plugin-nvidia-gpu
+  namespace: nvidia-gpu-operator
 data:
   dcgm-metrics.csv: |
     DCGM_FI_PROF_GR_ENGINE_ACTIVE, gauge, gpu utilization.
