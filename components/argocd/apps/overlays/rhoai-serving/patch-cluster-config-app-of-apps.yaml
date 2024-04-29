@@ -4,4 +4,4 @@ metadata:
   name: cluster-config-app-of-apps
 spec:
   source:
-    path: clusters/overlays/rhoai
+    path: clusters/overlays/rhoai-serving
