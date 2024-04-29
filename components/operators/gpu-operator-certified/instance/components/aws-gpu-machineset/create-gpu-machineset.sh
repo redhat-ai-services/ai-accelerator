@@ -62,28 +62,28 @@ ocp_aws_create_gpu_machineset(){
 }
 
 ocp_create_machineset_autoscale(){
-    MACHINE_MIN=${1:-0}
-    MACHINE_MAX=${2:-4}
-    MACHINE_SETS=${3:-$(oc -n openshift-machine-api get machinesets.machine.openshift.io -o name | sed 's@.*/@@' )}
+MACHINE_MIN=${1:-0}
+MACHINE_MAX=${2:-4}
+MACHINE_SETS=${3:-$(oc -n openshift-machine-api get machinesets.machine.openshift.io -o name | sed 's@.*/@@' )}
 
-    for set in ${MACHINE_SETS}
-    do
-    echo "Creation MachineAutoscaler for ${set}"
-    cat << YAML | oc apply -f -
-        apiVersion: "autoscaling.openshift.io/v1beta1"
-        kind: "MachineAutoscaler"
-        metadata:
-        name: "${set}"
-        namespace: "openshift-machine-api"
-        spec:
-        minReplicas: ${MACHINE_MIN}
-        maxReplicas: ${MACHINE_MAX}
-        scaleTargetRef:
-            apiVersion: machine.openshift.io/v1beta1
-            kind: MachineSet
-            name: "${set}"
-    YAML
-    done
+for set in ${MACHINE_SETS}
+do
+echo "Creation MachineAutoscaler for ${set}"
+cat << YAML | oc apply -f -
+apiVersion: "autoscaling.openshift.io/v1beta1"
+kind: "MachineAutoscaler"
+metadata:
+name: "${set}"
+namespace: "openshift-machine-api"
+spec:
+minReplicas: ${MACHINE_MIN}
+maxReplicas: ${MACHINE_MAX}
+scaleTargetRef:
+    apiVersion: machine.openshift.io/v1beta1
+    kind: MachineSet
+    name: "${set}"
+YAML
+done
 }
 
 ocp_aws_cluster || exit 0
