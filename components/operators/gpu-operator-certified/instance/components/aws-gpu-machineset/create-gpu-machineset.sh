@@ -82,7 +82,7 @@ ocp_create_machineset_autoscale(){
             apiVersion: machine.openshift.io/v1beta1
             kind: MachineSet
             name: "${set}"
-        YAML
+    YAML
     done
 }
 
