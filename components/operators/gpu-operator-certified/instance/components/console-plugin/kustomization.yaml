@@ -12,4 +12,8 @@ helmCharts:
 resources:
   - enable-console-plugin-job.yaml
   - enable-console-plugin-rbac.yaml
-  - enable-console-plugin-sa.yaml
+
+configMapGenerator:
+  - name: enable-console-plugin
+    files:
+      - enable-console-plugin.sh
