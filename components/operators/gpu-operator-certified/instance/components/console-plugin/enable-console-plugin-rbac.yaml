@@ -2,12 +2,12 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: enable-console-plugin
+  name: enable-gpu-console-plugin
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: enable-console-plugin
+  name: enable-gpu-console-plugin
 rules:
   - apiGroups:
       - operator.openshift.io
@@ -22,11 +22,11 @@ rules:
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: enable-console-plugin
+  name: enable-gpu-console-plugin
 subjects:
   - kind: ServiceAccount
-    name: enable-console-plugin
+    name: enable-gpu-console-plugin
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: enable-console-plugin
+  name: enable-gpu-console-plugin

@@ -1,8 +1,8 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: enable-console-plugin
-  generateName: enable-console-plugin-
+  name: enable-gpu-console-plugin
+  generateName: enable-gpu-console-plugin-
   annotations:
     argocd.argoproj.io/sync-wave: "10"
 spec:
@@ -27,6 +27,6 @@ spec:
             name: enable-console-plugin
             defaultMode: 0755
       restartPolicy: Never
-      serviceAccount: enable-console-plugin
-      serviceAccountName: enable-console-plugin
+      serviceAccount: enable-gpu-console-plugin
+      serviceAccountName: enable-gpu-console-plugin
   backoffLimit: 4
