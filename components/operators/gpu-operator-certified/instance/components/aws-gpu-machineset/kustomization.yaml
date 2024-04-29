@@ -7,6 +7,9 @@ resources:
   - setup-machineset-job.yaml
   - setup-machineset-rbac.yaml
 
+generatorOptions:
+  disableNameSuffixHash: true
+
 configMapGenerator:
   - name: create-gpu-machineset
     files:
