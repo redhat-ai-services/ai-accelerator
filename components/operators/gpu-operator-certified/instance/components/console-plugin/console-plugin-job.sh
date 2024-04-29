@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -x
 
 enable_console_plugin(){
   [ -z "${CONSOLE_PLUGIN}" ] && return 1
