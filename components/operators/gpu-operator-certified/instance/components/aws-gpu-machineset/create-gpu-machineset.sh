@@ -56,6 +56,30 @@ ocp_aws_create_gpu_machineset(){
     --type=merge --patch '{"spec":{"template":{"spec":{"providerSpec":{"value":{"instanceType":"'"${INSTANCE_TYPE}"'"}}}}}}'
 }
 
+ocp_aws_clone_machineset(){
+  [ -z "${1}" ] && \
+  echo "
+    usage: ocp_aws_create_gpu_machineset < instance type, default g4dn.4xlarge >
+  "
+
+  INSTANCE_TYPE=${1:-g4dn.4xlarge}
+  MACHINE_SET=$(oc -n openshift-machine-api get machinesets.machine.openshift.io -o name | grep worker | head -n1)
+
+  # check for an existing instance machine set
+  if oc -n openshift-machine-api get machinesets.machine.openshift.io -o name | grep -q "${INSTANCE_TYPE%.*}"; then
+    echo "Exists: machineset - ${INSTANCE_TYPE}"
+  else
+    echo "Creating: machineset - ${INSTANCE_TYPE}"
+    oc -n openshift-machine-api \
+      get "${MACHINE_SET}" -o yaml | \
+        sed '/machine/ s/-worker/-'"${INSTANCE_TYPE}"'/g
+          /name/ s/-worker/-'"${INSTANCE_TYPE%.*}"'/g
+          s/instanceType.*/instanceType: '"${INSTANCE_TYPE}"'/
+          s/replicas.*/replicas: 0/' | \
+      oc apply -f -
+  fi
+}
+
 ocp_create_machineset_autoscale(){
   MACHINE_MIN=${1:-0}
   MACHINE_MAX=${2:-4}
