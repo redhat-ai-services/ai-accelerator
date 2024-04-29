@@ -69,6 +69,22 @@ MACHINE_SETS=${3:-$(oc -n openshift-machine-api get machinesets.machine.openshif
 for set in ${MACHINE_SETS}
 do
 echo "Creation MachineAutoscaler for ${set}"
+
+cat << YAML
+apiVersion: "autoscaling.openshift.io/v1beta1"
+kind: "MachineAutoscaler"
+metadata:
+name: "${set}"
+namespace: "openshift-machine-api"
+spec:
+minReplicas: ${MACHINE_MIN}
+maxReplicas: ${MACHINE_MAX}
+scaleTargetRef:
+    apiVersion: machine.openshift.io/v1beta1
+    kind: MachineSet
+    name: "${set}"
+YAML
+
 cat << YAML | oc apply -f -
 apiVersion: "autoscaling.openshift.io/v1beta1"
 kind: "MachineAutoscaler"
