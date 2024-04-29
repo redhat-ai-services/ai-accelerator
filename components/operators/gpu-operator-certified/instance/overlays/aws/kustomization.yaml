@@ -3,6 +3,4 @@ kind: Kustomization
 
 resources:
   - ../../base
-
-components:
   - ../../components/aws-gpu-machineset
