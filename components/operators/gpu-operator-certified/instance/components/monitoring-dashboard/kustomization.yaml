@@ -3,12 +3,11 @@ kind: Component
 
 namespace: openshift-config-managed
 
-labels:
-  - includeSelectors: false
-    pairs:
-      console.openshift.io/dashboard: "true"
-      # optional label to enable visibilty in developer perspective
-      console.openshift.io/odc-dashboard: "true"
+generatorOptions:
+  labels:
+    console.openshift.io/dashboard: "true"
+    # optional label to enable visibilty in developer perspective
+    console.openshift.io/odc-dashboard: "true"
 
 configMapGenerator:
   - name: nvidia-dcgm-exporter-dashboard
