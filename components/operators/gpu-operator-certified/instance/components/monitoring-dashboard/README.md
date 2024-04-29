@@ -3,8 +3,8 @@
 [NVIDIA Enable Monitoring Dashboard Docs](
 https://docs.nvidia.com/datacenter/cloud-native/openshift/latest/enable-gpu-monitoring-dashboard.html)
 
-
 ## Purpose
+
 This component is designed to enable to enable the GPU monitoring Dashboard.
 
 To learn more about the monitoring dashboard, please refer to the official [docs](

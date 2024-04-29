@@ -10,13 +10,12 @@ helmCharts:
     repo: https://rh-ecosystem-edge.github.io/console-plugin-nvidia-gpu
 
 resources:
-  - enable-console-plugin-job.yaml
-  - enable-console-plugin-rbac.yaml
+  - console-plugin-job.yaml
 
 generatorOptions:
   disableNameSuffixHash: true
 
 configMapGenerator:
-  - name: enable-console-plugin
+  - name: job-gpu-console-plugin
     files:
-      - enable-console-plugin.sh
+      - console-plugin-job.sh

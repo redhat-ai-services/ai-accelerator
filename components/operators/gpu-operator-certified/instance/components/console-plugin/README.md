@@ -1,6 +1,7 @@
 # console-plugin
 
 ## Purpose
+
 This component is designed to enable to NVIDIA GPU Operator console plugin.
 
 To learn more about the console plugin, please refer to the official [docs](

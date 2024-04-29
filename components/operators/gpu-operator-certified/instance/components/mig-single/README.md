@@ -1,6 +1,7 @@
 # mig-single
 
 ## Purpose
+
 This component is designed to enable to enable MIG in single mode.  The single MIG strategy should be utilized when  all GPUs on a node have MIG enabled.
 
 To learn more about MIG, please refer to the official [docs](

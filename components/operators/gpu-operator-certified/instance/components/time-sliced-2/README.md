@@ -1,6 +1,7 @@
 # time-sliced-2
 
 ## Purpose
+
 This component is designed to enable to enable time slicing on GPUs with two replicas of each GPU.
 
 To learn more about the monitoring dashboard, please refer to the official [docs](

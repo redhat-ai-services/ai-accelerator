@@ -1,6 +1,7 @@
 # aws-gpu-machineset
 
 ## Purpose
+
 This component is designed to setup a MachineSet with GPUs on an AWS based OpenShift cluster.
 
 This component triggers a job that creates a MachineSet based on your current MachineSet.

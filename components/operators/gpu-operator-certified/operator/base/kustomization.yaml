@@ -5,6 +5,3 @@ resources:
   - namespace.yaml
   - operator-group.yaml
   - subscription.yaml
-
-components:
-  - ../components/console-plugin

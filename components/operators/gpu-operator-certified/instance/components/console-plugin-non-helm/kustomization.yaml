@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+
+namespace: nvidia-gpu-operator
+
+resources:
+  - configmap.yaml
+  - console-plugin-job.yaml
+  - consoleplugin.yaml
+  - deployment.yaml
+  - service.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+configMapGenerator:
+  - name: job-gpu-console-plugin
+    files:
+      - console-plugin-job.sh

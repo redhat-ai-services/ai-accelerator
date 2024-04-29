@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - ../time-sliced-2
+  - ../../base
 
 components:
-  - ../../components/time-sliced-2
+  - ../../components/time-sliced-4
