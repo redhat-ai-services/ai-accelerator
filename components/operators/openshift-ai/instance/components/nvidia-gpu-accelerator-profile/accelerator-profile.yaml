@@ -1,0 +1,13 @@
+apiVersion: dashboard.opendatahub.io/v1
+kind: AcceleratorProfile
+metadata:
+  name: nvidia-gpu
+spec:
+  displayName: nvidia-gpu
+  enabled: true
+  identifier: nvidia.com/gpu
+  tolerations:
+    - effect: NoSchedule
+      key: nvidia-gpu-only
+      operator: Exists
+      value: ''
