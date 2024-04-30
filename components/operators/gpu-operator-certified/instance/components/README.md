@@ -6,6 +6,7 @@ This repo currently contains the following components:
 
 * [aws-gpu-machineset](aws-gpu-machineset)
 * [console-plugin](console-plugin)
+* [console-plugin-helm](console-plugin-helm)
 * [mig-mixed](mig-mixed)
 * [mig-single](mig-single)
 * [monitoring-dashboard](monitoring-dashboard)
