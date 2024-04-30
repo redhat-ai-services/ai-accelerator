@@ -6,5 +6,4 @@ resources:
   - device-plugin-config.yaml
 
 components:
-  - ../components/console-plugin
   - ../components/monitoring-dashboard
