@@ -13,4 +13,3 @@ configMapGenerator:
     namespace: nvidia-gpu-operator
     files:
       - job.sh
-  
