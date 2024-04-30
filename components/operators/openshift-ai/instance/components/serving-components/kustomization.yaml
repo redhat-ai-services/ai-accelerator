@@ -5,3 +5,6 @@ patches:
   - path: patch-datasciencecluster.yaml
     target:
       kind: DataScienceCluster
+  - path: patch-dsc-init.yaml
+    target:
+      kind: DSCInitialization
