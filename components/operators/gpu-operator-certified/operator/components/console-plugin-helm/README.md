@@ -26,4 +26,4 @@ components:
 
 This component requires the `--enable-helm` flag when applying this resource with `kustomize build`.
 
-If applying this resource with ArgoCD, be sure to configure teh `--enable-helm` flag with ArgoCD.  For examples, see the [here](https://github.com/redhat-cop/gitops-catalog/tree/main/openshift-gitops-operator/instance/components/kustomize-build-enable-helm).
+If applying this resource with ArgoCD, be sure to configure the `--enable-helm` flag with ArgoCD.  For examples, see the [here](https://github.com/redhat-cop/gitops-catalog/tree/main/openshift-gitops-operator/instance/components/kustomize-build-enable-helm).
