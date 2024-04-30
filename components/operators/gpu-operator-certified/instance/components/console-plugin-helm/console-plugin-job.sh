@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 enable_console_plugin(){
-  [ -z "${CONSOLE_PLUGIN}" ] && return 1
+  [ -z "${PLUGIN_NAME}" ] && return 1
 
   echo "Attempting to enable ${PLUGIN_NAME} plugin"
   echo ""
