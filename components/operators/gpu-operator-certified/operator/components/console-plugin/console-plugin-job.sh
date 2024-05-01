@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
 enable_console_plugin(){
+  [ -z "${PLUGIN_NAME}" ] && return 1
 
   echo "Attempting to enable ${PLUGIN_NAME} plugin"
   echo ""
-
-  [ -z "${PLUGIN_NAME}" ] && return 1
-
 
   # Create the plugins section on the object if it doesn't exist
   if [ -z "$(oc get consoles.operator.openshift.io cluster -o=jsonpath='{.spec.plugins}')" ]; then
