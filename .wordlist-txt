@@ -22,6 +22,7 @@ ClusterRole
 ClusterRoleBinding
 ClusterRoleBindings
 ClusterTask
+CodeFlare
 CodeReady
 ConfigMap
 Contrib
@@ -63,6 +64,7 @@ KieApp
 Koku
 KokuMetricsConfig
 Kubernetes
+Kueue
 Kyverno
 LDAP
 LLM
