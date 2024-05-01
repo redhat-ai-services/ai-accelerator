@@ -17,6 +17,8 @@ spec:
       annotations:
         argocd.argoproj.io/compare-options: IgnoreExtraneous
         argocd.argoproj.io/sync-options: Prune=false
+    labels:
+      gitops: operators
     spec:
       project: cluster-config
       syncPolicy:
