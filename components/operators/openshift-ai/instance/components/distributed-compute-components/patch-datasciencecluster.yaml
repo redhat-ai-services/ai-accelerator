@@ -6,5 +6,7 @@ spec:
   components:
     codeflare:
       managementState: Managed
+    kueue:
+      managementState: Managed
     ray:
       managementState: Managed

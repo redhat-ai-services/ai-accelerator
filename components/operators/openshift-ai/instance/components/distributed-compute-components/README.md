@@ -1,7 +1,11 @@
 # rhoai-dashboard-access
 
 ## Purpose
-This component is designed help admins configure the default access to the RHOAI Dashboard.
+This component is designed help configure the distributed compute specific components including the following items:
+
+CodeFlare
+Kueue
+Ray
 
 ## Usage
 

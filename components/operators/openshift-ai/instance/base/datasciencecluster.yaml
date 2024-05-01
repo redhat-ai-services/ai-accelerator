@@ -8,10 +8,6 @@ spec:
   components:
     codeflare:
       managementState: Removed
-    dashboard:
-      managementState: Managed
-    datasciencepipelines:
-      managementState: Removed
     kserve:
       managementState: Removed
       serving:
@@ -20,9 +16,17 @@ spec:
             type: SelfSigned
         managementState: Managed
         name: knative-serving
-    modelmeshserving:
+    trustyai:
       managementState: Removed
     ray:
       managementState: Removed
+    kueue:
+      managementState: Removed
     workbenches:
+      managementState: Removed
+    dashboard:
+      managementState: Removed
+    modelmeshserving:
+      managementState: Removed
+    datasciencepipelines:
       managementState: Removed
