@@ -27,29 +27,28 @@ spec:
       securityContext:
         runAsNonRoot: true
       containers:
-      - name: console-plugin-nvidia-gpu
-        image: "quay.io/edge-infrastructure/console-plugin-nvidia-gpu:latest"
-        imagePullPolicy: Always
-        securityContext:
-          allowPrivilegeEscalation: false
-        ports:
-        - containerPort: 9443
-          protocol: TCP
-        volumeMounts:
-        - name: plugin-serving-cert
-          readOnly: true
-          mountPath: /var/serving-cert
-        resources:
-            {}
+        - name: console-plugin-nvidia-gpu
+          image: "quay.io/edge-infrastructure/console-plugin-nvidia-gpu:latest"
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+          ports:
+            - containerPort: 9443
+              protocol: TCP
+          volumeMounts:
+            - name: plugin-serving-cert
+              readOnly: true
+              mountPath: /var/serving-cert
+          resources: {}
       volumes:
-      - name: plugin-serving-cert
-        secret:
-          secretName: plugin-serving-cert
-          defaultMode: 420
-      - name: nginx-conf
-        configMap:
-          name: nginx-conf
-          defaultMode: 420
+        - name: plugin-serving-cert
+          secret:
+            secretName: plugin-serving-cert
+            defaultMode: 420
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf
+            defaultMode: 420
       restartPolicy: Always
       dnsPolicy: ClusterFirst
   strategy:
