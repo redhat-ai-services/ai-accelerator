@@ -29,6 +29,7 @@ DCGM
 DNS
 DSCInitialization
 DataScienceCluster
+DataSciencePipelines
 Deployment
 Dev
 DevSpaces
@@ -72,6 +73,7 @@ MTA
 MachineConfig
 MachineSet
 MachineSets
+ModelMesh
 MultiClusterHub
 NFD
 NICs
@@ -197,6 +199,7 @@ kafka
 kataconfig
 kiali
 knative
+kubeadmin
 kubectl
 kustomization
 kustomize
