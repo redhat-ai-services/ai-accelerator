@@ -11,6 +11,7 @@ components:
   - ../../components/idle-notebook-culling
   - ../../components/notebook-pod-sizes
   - ../../components/nvidia-gpu-accelerator-profile
+  - ../../components/make-kubeadmin-cluster-admin
   - ../../components/model-server-pod-sizes
   - ../../components/rhoai-dashboard-access
   - ../../components/serving-components
