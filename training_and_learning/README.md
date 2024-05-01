@@ -111,11 +111,11 @@ Documentation:
 
 
 ## Non-GitOps Installation
-Install supporting operators from `nongitops_yamls/operators/`:
+Install supporting operators from `nongitops_yaml/operators/`:
 
 * After Elastic Search operator is created, make sure to apply the `cluster-monitoring-config.yaml`.
 
-Install RHOAI in the `nongitops_yamls/rhoai/` folder:
+Install RHOAI in the `nongitops_yaml/rhoai/` folder:
 
 1. Apply `rhoai-operator.yaml` first. 
     This creates the `redhat-ods-operator` namespace for the RHOAI operator.
