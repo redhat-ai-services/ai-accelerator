@@ -12,5 +12,5 @@ components:
   - ../../components/notebook-pod-sizes
   - ../../components/model-server-pod-sizes
   - ../../components/rhoai-dashboard-access
-  - ../../components/serving-components
-  - ../../components/training-components
+  - ../../components/components-serving
+  - ../../components/components-training

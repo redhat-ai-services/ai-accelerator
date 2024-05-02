@@ -6,8 +6,8 @@ resources:
 
 components:
   - ../../components/default-notebook-pvc-size
-  - ../../components/distributed-compute-components
+  - ../../components/components-distributed-compute
   - ../../components/idle-notebook-culling
   - ../../components/notebook-pod-sizes
   - ../../components/rhoai-dashboard-access
-  - ../../components/training-components
+  - ../../components/components-training

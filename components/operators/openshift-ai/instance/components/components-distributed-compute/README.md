@@ -1,11 +1,12 @@
-# rhoai-dashboard-access
+# components-distributed-compute
 
 ## Purpose
 This component is designed help configure the distributed compute specific components including the following items:
 
 CodeFlare
-Kueue
 Ray
+
+The Distributed Compute Components are Generally Available as of RHOAI 2.9.
 
 ## Usage
 
@@ -19,7 +20,7 @@ resources:
   - ../../base
 
 components:
-  - ../../components/rhoai-dashboard-access
+  - ../../components/components-distributed-compute
 ```
 
 You can customize the access by updating the [patch-rhoai-dashboard.yaml](./patch-rhoai-dashboard.yaml) file.

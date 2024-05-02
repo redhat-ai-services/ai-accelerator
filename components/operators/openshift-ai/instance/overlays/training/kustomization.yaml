@@ -9,4 +9,4 @@ components:
   - ../../components/idle-notebook-culling
   - ../../components/notebook-pod-sizes
   - ../../components/rhoai-dashboard-access
-  - ../../components/training-components
+  - ../../components/components-training

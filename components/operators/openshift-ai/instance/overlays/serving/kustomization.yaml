@@ -7,4 +7,4 @@ resources:
 components:
   - ../../components/model-server-pod-sizes
   - ../../components/rhoai-dashboard-access
-  - ../../components/serving-components
+  - ../../components/components-serving

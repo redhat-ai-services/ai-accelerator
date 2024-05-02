@@ -1,10 +1,10 @@
-# training-components
+# components-serving
 
 ## Purpose
-This component is designed help configure the training specific components including the following items:
+This component is designed help configure the serving specific components including the following items:
 
-DataSciencePipelines
-Workbenches
+KServe
+ModelMesh
 
 ## Usage
 
@@ -18,5 +18,5 @@ resources:
   - ../../base
 
 components:
-  - ../../components/training-components
+  - ../../components/components-serving
 ```
