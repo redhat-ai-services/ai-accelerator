@@ -41,6 +41,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: job-wait-for-servicemesh
+  namespace: redhat-ods-operator
   annotations:
     argocd.argoproj.io/hook: PreSync
     argocd.argoproj.io/sync-wave: "10"
