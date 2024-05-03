@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: job-wait-for-servicemesh
+  name: wait-for-servicemesh
   namespace: redhat-ods-operator
   annotations:
     argocd.argoproj.io/hook: PreSync
@@ -10,7 +10,7 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: job-wait-for-servicemesh
+  name: wait-for-servicemesh
   annotations:
     argocd.argoproj.io/hook: PreSync
 rules:
@@ -25,22 +25,22 @@ rules:
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: job-wait-for-servicemesh
+  name: wait-for-servicemesh
   annotations:
     argocd.argoproj.io/hook: PreSync
 subjects:
   - kind: ServiceAccount
-    name: job-wait-for-servicemesh
+    name: wait-for-servicemesh
     namespace: redhat-ods-operator
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: job-wait-for-servicemesh
+  name: wait-for-servicemesh
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: job-wait-for-servicemesh
+  name: wait-for-servicemesh
   namespace: redhat-ods-operator
   annotations:
     argocd.argoproj.io/hook: PreSync
@@ -54,16 +54,16 @@ spec:
           command:
             - /bin/bash
             - -c
-            - /scripts/job-wait-for-servicemesh.sh
+            - /scripts/wait-for-servicemesh.sh
           volumeMounts:
             - name: scripts
               mountPath: /scripts
       volumes:
         - name: scripts
           configMap:
-            name: job-wait-for-servicemesh
+            name: wait-for-servicemesh
             defaultMode: 0755
       restartPolicy: Never
-      serviceAccount: job-wait-for-servicemesh
-      serviceAccountName: job-wait-for-servicemesh
+      serviceAccount: wait-for-servicemesh
+      serviceAccountName: wait-for-servicemesh
   backoffLimit: 4
