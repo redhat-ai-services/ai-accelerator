@@ -6,14 +6,30 @@ source "$(dirname "$0")/functions.sh"
 
 LANG=C
 TIMEOUT_SECONDS=45
+OPERATOR_NS="openshift-gitops-operator"
 ARGO_NS="openshift-gitops"
 GITOPS_OVERLAY=components/operators/openshift-gitops/operator/overlays/latest/
+
+apply_firmly(){
+  if [ ! -f "${1}/kustomization.yaml" ]; then
+    echo "Please provide a dir with \"kustomization.yaml\""
+    return 1
+  fi
+
+  # kludge
+  until oc kustomize "${1}" --enable-helm | oc apply -f- 2>/dev/null
+  do
+    echo "again..."
+    sleep 20
+  done
+  # until_true oc apply -k "${1}" 2>/dev/null
+}
 
 install_gitops(){
   echo ""
   echo "Installing GitOps Operator."
 
-  kustomize build ${GITOPS_OVERLAY} | oc apply -f -
+  apply_firmly ${GITOPS_OVERLAY} 
 
   # oc wait docs:
   # https://docs.openshift.com/container-platform/4.11/cli_reference/openshift_cli/developer-cli-commands.html#oc-wait
@@ -22,13 +38,13 @@ install_gitops(){
   # https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#wait
 
   echo "Waiting for deployment of the openshift-gitops-operator-controller-manager to begin..."
-  until oc get deployment openshift-gitops-operator-controller-manager -n openshift-gitops-operator
+  until oc get deployment openshift-gitops-operator-controller-manager -n ${OPERATOR_NS}
   do
     sleep 5
   done
 
   echo "Waiting for openshift-gitops-operator-controller-manager to start..."
-  oc wait --for=condition=Available deployment/openshift-gitops-operator-controller-manager -n openshift-gitops-operator --timeout=${TIMEOUT_SECONDS}s
+  oc wait --for=condition=Available deployment/openshift-gitops-operator-controller-manager -n ${OPERATOR_NS} --timeout=${TIMEOUT_SECONDS}s
 
   echo "Waiting for ${ARGO_NS} namespace to be created..."
   oc wait --for=jsonpath='{.status.phase}'=Active namespace/${ARGO_NS} --timeout=${TIMEOUT_SECONDS}s
@@ -41,6 +57,8 @@ install_gitops(){
   echo ""
   echo "OpenShift GitOps successfully installed."
 }
+
+
 
 bootstrap_cluster(){
 
