@@ -6,6 +6,8 @@ resources:
 
 generatorOptions:
   disableNameSuffixHash: true
+  annotations:
+    argocd.argoproj.io/hook: PreSync
 
 configMapGenerator:
   - name: job-wait-for-servicemesh
