@@ -8,7 +8,7 @@ generatorOptions:
   disableNameSuffixHash: true
 
 configMapGenerator:
-  - name: job-gitops-console-plugin
+  - name: job-wait-for-servicemesh
     namespace: redhat-ods-operator
     files:
       - wait-for-servicemesh-job.sh

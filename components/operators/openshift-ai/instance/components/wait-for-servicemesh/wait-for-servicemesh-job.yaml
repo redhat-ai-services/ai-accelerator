@@ -53,7 +53,7 @@ spec:
           command:
             - /bin/bash
             - -c
-            - /scripts/console-plugin-job.sh
+            - /scripts/job-wait-for-servicemesh.sh
           volumeMounts:
             - name: scripts
               mountPath: /scripts
