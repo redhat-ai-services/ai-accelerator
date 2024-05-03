@@ -10,4 +10,4 @@ patches:
       kind: DSCInitialization
 
 components:
-  - ./wait-for-servicemesh
+  - ../wait-for-servicemesh
