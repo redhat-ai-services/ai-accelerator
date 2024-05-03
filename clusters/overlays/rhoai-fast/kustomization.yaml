@@ -5,7 +5,7 @@ namespace: openshift-gitops
 
 resources:
   - ../../base
-  - ../../../components/argocd/apps/overlays/rhoai-aws-gpu
+  - ../../../components/argocd/apps/overlays/rhoai-fast
 
 patches:
   - path: patch-applicationset-repo-revision.yaml

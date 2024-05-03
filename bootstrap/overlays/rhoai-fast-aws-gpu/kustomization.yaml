@@ -3,4 +3,4 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - ../../../clusters/overlays/rhoai
+  - ../../../clusters/overlays/rhoai-fast-aws-gpu

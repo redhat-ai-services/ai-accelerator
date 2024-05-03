@@ -5,7 +5,7 @@ namespace: openshift-gitops
 
 resources:
   - ../../base
-  - ../../../components/argocd/apps/overlays/rhoai-serving
+  - ../../../components/argocd/apps/overlays/rhoai-eus-2.8
 
 patches:
   - path: patch-applicationset-repo-revision.yaml
@@ -14,6 +14,17 @@ patches:
       kind: ApplicationSet
       version: v1alpha1
   - path: patch-application-repo-revision.yaml
+    target:
+      group: argoproj.io
+      kind: Application
+      version: v1alpha1
+  # Uncomment patches to disable automatic sync
+  - path: patch-applicationset-manual-sync.yaml
+    target:
+      group: argoproj.io
+      version: v1alpha1
+      kind: ApplicationSet
+  - path: patch-application-manual-sync.yaml
     target:
       group: argoproj.io
       kind: Application
