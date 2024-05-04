@@ -25,7 +25,7 @@ spec:
     workbenches:
       managementState: Removed
     dashboard:
-      managementState: Removed
+      managementState: Managed
     modelmeshserving:
       managementState: Removed
     datasciencepipelines:
