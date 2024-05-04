@@ -8,6 +8,9 @@ spec:
     managementState: Managed
     namespace: redhat-ods-monitoring
   serviceMesh:
+    auth:
+      audiences:
+        - 'https://kubernetes.default.svc'
     controlPlane:
       metricsCollection: Istio
       name: data-science-smcp
