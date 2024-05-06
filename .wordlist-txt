@@ -205,6 +205,7 @@ kiali
 knative
 kubeadmin
 kubectl
+kueue
 kustomization
 kustomize
 labeler
@@ -276,6 +277,7 @@ tekton
 templating
 thanos
 traefik
+triton
 truly
 txt
 url
