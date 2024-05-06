@@ -10,6 +10,7 @@ AmazonSageMakerFullAccess
 Ansible
 ArgoCD
 ArgoCD's
+Authorino
 Bitnami
 Buildpacks
 CICD
@@ -144,6 +145,7 @@ approver
 argocd
 argoproj
 arn
+authorino
 autocompletion
 aws
 buildah
