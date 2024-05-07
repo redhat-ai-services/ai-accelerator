@@ -1,6 +1,6 @@
 - op: replace
   path: /spec/source/repoURL
-  value: 'https://github.com/rh-datascience-and-edge-practice/openshift-ai-pilot-gitops.git'
+  value: 'https://github.com/redhat-ai-services/openshift-ai-pilot-gitops.git'
 - op: replace
   path: /spec/source/targetRevision
   value: main
