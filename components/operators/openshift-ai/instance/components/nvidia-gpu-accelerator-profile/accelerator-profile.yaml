@@ -2,6 +2,7 @@ apiVersion: dashboard.opendatahub.io/v1
 kind: AcceleratorProfile
 metadata:
   name: nvidia-gpu
+  namespace: redhat-ods-applications
   annotations:
     argocd.argoproj.io/sync-wave: "100"
 spec:
