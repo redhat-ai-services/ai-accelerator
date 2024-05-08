@@ -3,4 +3,4 @@ kind: Namespace
 metadata:
   name: ai-example-multi-model-serving
   labels:
-    modelmesh-enabled: 'false'
+    modelmesh-enabled: 'true'
