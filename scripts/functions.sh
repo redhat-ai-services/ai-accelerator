@@ -204,7 +204,6 @@ check_branch(){
               No ) break;;
           esac
       done
-      echo "finally"
     fi
   fi
 }
