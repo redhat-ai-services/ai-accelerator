@@ -10,7 +10,7 @@ spec:
   generators:
   - git:
       repoURL: 'https://github.com/redhat-ai-services/openshift-ai-pilot-gitops.git'
-      revision: main
+      revision: tenant
       directories:
       - path: tenants/*/overlays/patch-me-see-overlay
   template:
