@@ -1,0 +1,10 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: tenants
+  namespace: openshift-gitops
+spec:
+  generators:
+  - git:
+      directories:
+      - path: tenants/*/overlays/rhoai-eus-2.8
