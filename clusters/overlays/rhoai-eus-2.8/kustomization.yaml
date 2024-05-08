@@ -33,7 +33,7 @@ replacements:
     targets:
       - select:
           kind: ApplicationSet
-        fieldPaths: 
+        fieldPaths:
           - spec.template.spec.source.repoURL
       - select:
           kind: ApplicationSet
@@ -47,7 +47,7 @@ replacements:
     targets:
       - select:
           kind: ApplicationSet
-        fieldPaths: 
+        fieldPaths:
           - spec.template.spec.source.targetRevision
       - select:
           kind: ApplicationSet
