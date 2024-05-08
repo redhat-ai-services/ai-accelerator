@@ -15,7 +15,7 @@ spec:
       - path: tenants/*/overlays/patch-me-see-overlay
   template:
     metadata:
-      name: '{{path[1]-path[2]}}'
+      name: '{{path[1]}}-{{path[2]}}'
       annotations:
         argocd.argoproj.io/compare-options: IgnoreExtraneous
         argocd.argoproj.io/sync-options: Prune=false
