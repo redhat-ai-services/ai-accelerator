@@ -1,6 +1,0 @@
-- op: replace
-  path: /spec/template/spec/source/repoURL
-  value: 'https://github.com/redhat-ai-services/openshift-ai-pilot-gitops.git'
-- op: replace
-  path: /spec/template/spec/source/targetRevision
-  value: tenant
