@@ -176,3 +176,61 @@ wait_for_openshift_gitops(){
 
   done
 }
+
+check_branch(){
+  if [ -z "$1" ]; then
+    echo "No cluster overlay supplied."
+    exit 1
+  else
+    CLUSTER_OVERLAY=$1
+  fi
+
+  CLUSTERS_FOLDER="clusters/overlays"
+
+  APP_PATCH_FILE="${CLUSTERS_FOLDER}/${CLUSTER_OVERLAY}/patch-application-repo-revision.yaml"
+  APPSET_PATCH_FILE="${CLUSTERS_FOLDER}/${CLUSTER_OVERLAY}/patch-applicationset-repo-revision.yaml"
+
+  if ! command -v yq &> /dev/null; then
+    echo "yq could not be found.  We are unable to verify the branch of your repo."
+  else
+    GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    APP_BRANCH=$(yq -r ".[1].value" ${APP_PATCH_FILE})
+    APPSET_BRANCH=$(yq -r ".[1].value" ${APPSET_PATCH_FILE})
+    if [[ ${GIT_BRANCH} == ${APP_BRANCH} ]] && [[ ${GIT_BRANCH} == ${APPSET_BRANCH} ]] ; then
+      echo "Your working branch ${GIT_BRANCH}, matches your cluster overlay branch ${APP_BRANCH}"
+    else 
+      echo "Your current working branch is ${GIT_BRANCH}, and your cluster overlay branch is ${APP_BRANCH}.
+      Do you wish to update it?"
+      select yn in "Yes" "No"; do
+          case $yn in
+              Yes ) update_branch ${CLUSTER_OVERLAY}; break;;
+              No ) break;;
+          esac
+      done
+      echo "finally"
+    fi
+  fi
+}
+
+update_branch(){
+  if [ -z "$1" ]; then
+    echo "No cluster overlay supplied."
+    exit 1
+  else
+    CLUSTER_OVERLAY=$1
+  fi
+
+  CLUSTERS_FOLDER="clusters/overlays"
+
+  APP_PATCH_FILE="${CLUSTERS_FOLDER}/${CLUSTER_OVERLAY}/patch-application-repo-revision.yaml"
+  APPSET_PATCH_FILE="${CLUSTERS_FOLDER}/${CLUSTER_OVERLAY}/patch-applicationset-repo-revision.yaml"
+
+  GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+  yq ".[1].value = \"${GIT_BRANCH}\"" -i ${APP_PATCH_FILE}
+  yq ".[1].value = \"${GIT_BRANCH}\"" -i ${APPSET_PATCH_FILE}
+
+  git add ${APP_PATCH_FILE} ${APPSET_PATCH_FILE}
+  git commit -m "automatic update to branch by bootstrap script"
+  git push origin ${GIT_BRANCH}
+}
