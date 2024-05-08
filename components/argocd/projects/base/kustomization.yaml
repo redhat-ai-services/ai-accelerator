@@ -5,3 +5,4 @@ resources:
   - cluster-config-project.yaml
   - gitops-config-project.yaml
   - operators-config-project.yaml
+  - tenants-project.yaml

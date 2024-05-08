@@ -8,6 +8,7 @@ AdoptedResource
 AmazonS
 AmazonSageMakerFullAccess
 Ansible
+ApplicationSet
 ArgoCD
 ArgoCD's
 Authorino
@@ -141,6 +142,7 @@ apiGroup
 apiGroups
 apiVersion
 apicast
+applicationset
 approver
 argocd
 argoproj

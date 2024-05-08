@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: tenants
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/compare-options: IgnoreExtraneous
+    argocd.argoproj.io/sync-options: Prune=false
+spec:
+  generators:
+  - git:
+      repoURL: 'https://github.com/redhat-ai-services/openshift-ai-pilot-gitops.git'
+      revision: main
+      directories:
+      - path: tenants/*/*/overlays/patch-me-see-overlay
+  template:
+    metadata:
+      name: '{{path[1]}}-{{path[2]}}'
+      annotations:
+        argocd.argoproj.io/compare-options: IgnoreExtraneous
+        argocd.argoproj.io/sync-options: Prune=false
+      labels:
+        tenant: '{{path[1]}}'
+    spec:
+      project: tenants
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 20m
+      source:
+        repoURL: patch-me-see-clusters-overlays
+        targetRevision: patch-me-see-clusters-overlays
+        path: '{{path}}'
+      destination:
+        server: https://kubernetes.default.svc

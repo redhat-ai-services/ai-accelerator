@@ -8,16 +8,11 @@ resources:
   - ../../../components/argocd/apps/overlays/rhoai-eus-2.8-aws-gpu
 
 patches:
-  - path: patch-applicationset-repo-revision.yaml
-    target:
-      group: argoproj.io
-      kind: ApplicationSet
-      version: v1alpha1
+  # set the repo and branch for applications
   - path: patch-application-repo-revision.yaml
     target:
       group: argoproj.io
       kind: Application
-      version: v1alpha1
   # Uncomment patches to disable automatic sync
   # - path: patch-applicationset-manual-sync.yaml
   #   target:
@@ -29,3 +24,33 @@ patches:
   #     group: argoproj.io
   #     kind: Application
   #     version: v1alpha1
+
+replacements:
+  # copy the repo from the application to the applicationsets
+  - source:
+      kind: Application
+      fieldPath: spec.source.repoURL
+    targets:
+      - select:
+          kind: ApplicationSet
+        fieldPaths:
+          - spec.template.spec.source.repoURL
+      - select:
+          kind: ApplicationSet
+          name: tenants
+        fieldPaths:
+          - spec.generators.*.git.repoURL
+  # copy the branch from the application to the applicationsets
+  - source:
+      kind: Application
+      fieldPath: spec.source.targetRevision
+    targets:
+      - select:
+          kind: ApplicationSet
+        fieldPaths:
+          - spec.template.spec.source.targetRevision
+      - select:
+          kind: ApplicationSet
+          name: tenants
+        fieldPaths:
+          - spec.generators.*.git.revision
