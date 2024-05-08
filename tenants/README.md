@@ -25,11 +25,11 @@ tenants/
             └── my-cluster-2
 ```
 
-The `tenant-name` should be a logical name used for grouping assesets that belong to a specific group or team.  `tenant-name` will most commonly coorispond to a team name.
+The `tenant-name` should be a logical name used for grouping assets that belong to a specific group or team.  `tenant-name` will most commonly correspond to a team name.
 
 The `resource-category` can be any logical grouping of resources that you wish to deploy together.  How you wish to group your resources should be flexible based on your organizations needs.
 
-The `cluster` should coorispond to the resources you wish to deploy to that specific cluster.  If you do not include a cluster in the overlay, those resources will not be synced to that cluster.
+The `cluster` should correspond to the resources you wish to deploy to that specific cluster.  If you do not include a cluster in the overlay, those resources will not be synced to that cluster.
 
 ## ApplicationSet
 
