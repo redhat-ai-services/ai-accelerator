@@ -3,8 +3,6 @@ kind: AcceleratorProfile
 metadata:
   name: nvidia-gpu
   namespace: redhat-ods-applications
-  annotations:
-    argocd.argoproj.io/sync-wave: "100"
 spec:
   displayName: nvidia-gpu
   enabled: true

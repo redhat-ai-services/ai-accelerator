@@ -2,8 +2,6 @@ kind: DataScienceCluster
 apiVersion: datasciencecluster.opendatahub.io/v1
 metadata:
   name: default
-  annotations:
-    argocd.argoproj.io/sync-wave: "10"
 spec:
   components:
     codeflare:
