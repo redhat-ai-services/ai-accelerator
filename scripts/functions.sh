@@ -5,6 +5,7 @@ OCP_VERSION=4.11
 TMP_DIR=tmp
 SEALED_SECRETS_FOLDER=components/operators/sealed-secrets-operator/overlays/default/
 SEALED_SECRETS_SECRET=bootstrap/base/sealed-secrets-secret.yaml
+TIMEOUT_SECONDS=60
 
 setup_bin(){
   mkdir -p ${TMP_DIR}/bin
