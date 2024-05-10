@@ -35,7 +35,7 @@ spec:
       region: us-east-1
       s3CredentialsSecret:
         accessKey: minio_root_user
-        secretKey:   minio_root_password
+        secretKey: minio_root_password
         secretName: minio-secret
       scheme: http
   persistenceAgent:
