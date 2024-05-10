@@ -5,13 +5,4 @@ namespace: ai-example-training
 
 resources:
   - dspa.yaml
-  # - minio.yaml
-
-helmCharts:
-  - name: minio
-    releaseName: minio
-    namespace: ai-example-training
-    repo: https://charts.min.io/
-    valuesInline:
-      rootUser: minio
-      rootPassword: minio123
+  - minio.yaml
