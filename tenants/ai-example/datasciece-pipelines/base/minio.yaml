@@ -2,7 +2,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: minio-pvc
+  name: minio
 spec:
   accessModes:
     - ReadWriteOnce
@@ -14,7 +14,7 @@ spec:
 kind: Secret
 apiVersion: v1
 metadata:
-  name: minio-secret
+  name: minio
 stringData:
   # change the username and password to your own values.
   # ensure that the user is at least 3 characters long and the password at least 8
@@ -39,7 +39,7 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: minio-pvc
+            claimName: minio
       containers:
         - resources:
             limits:
@@ -70,12 +70,12 @@ spec:
             - name: MINIO_ROOT_USER
               valueFrom:
                 secretKeyRef:
-                  name: minio-secret
+                  name: minio
                   key: minio_root_user
             - name: MINIO_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: minio-secret
+                  name: minio
                   key: minio_root_password
           ports:
             - containerPort: 9000
@@ -108,7 +108,7 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: minio-service
+  name: minio
 spec:
   ipFamilies:
     - IPv4
@@ -135,7 +135,7 @@ metadata:
 spec:
   to:
     kind: Service
-    name: minio-service
+    name: minio
     weight: 100
   port:
     targetPort: api
@@ -151,7 +151,7 @@ metadata:
 spec:
   to:
     kind: Service
-    name: minio-service
+    name: minio
     weight: 100
   port:
     targetPort: ui
