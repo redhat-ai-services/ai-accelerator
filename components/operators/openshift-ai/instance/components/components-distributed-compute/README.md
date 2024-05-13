@@ -22,5 +22,3 @@ resources:
 components:
   - ../../components/components-distributed-compute
 ```
-
-You can customize the access by updating the [patch-rhoai-dashboard.yaml](./patch-rhoai-dashboard.yaml) file.
