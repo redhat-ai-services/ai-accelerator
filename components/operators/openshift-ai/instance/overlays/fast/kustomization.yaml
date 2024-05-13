@@ -5,6 +5,7 @@ resources:
   - ../../base
 
 components:
+  - ../../components/auth-with-authorino
   - ../../components/components-distributed-compute
   - ../../components/components-serving
   - ../../components/components-training
