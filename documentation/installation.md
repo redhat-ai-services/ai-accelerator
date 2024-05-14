@@ -4,15 +4,17 @@ This document contains the steps for installing and configuring Red Hat OpenShif
 
 ## Prerequisites
 
-### OpenShift Cluster Access
+### OpenShift Cluster
 
-Ensure that you have administrative access to an OpenShift cluster, since we will be installing several operators and configuring various components that support MLOps.
+Prior to deploying OpenShift AI, it is recommended you review the [Supported Configurations](https://access.redhat.com/articles/rhoai-supported-configs) documentation.
 
-This OpenShift cluster should be running on Amazon Web Services (AWS), or a temporary demonstration cluster obtained though the [Red Hat Demo Platform](https://demo.redhat.com) utilizing one of the AWS types.
+Ensure that you have cluster-admin access to an OpenShift cluster, since we will be installing several operators and configuring various components on the cluster.
 
-This is because the installation configuration will provision components such as Storage and GPU compute using AWS instance types and definitions. However this configuration could also be customized when using other providers such as Azure or even dedicated on-prem hardware as required.
+The cluster must also have a functional storage provisioner available with a default StorageClass.
 
- > **_NOTE:_** Should you require a demonstration cluster, one can be obtained from https://demo.redhat.com, such as the [AWS with OpenShift Open Environment](https://demo.redhat.com/catalog?search=openshift&category=Open_Environments&item=babylon-catalog-prod%2Fsandboxes-gpte.sandbox-ocp.prod). Request the largest control plane instance type (e.g. m6a.4xlarge). And it doesn't hurt to add an extra worker before you run the bootstrap.
+For GPU deployments, this repo is designed specifically to work with AWS to provision additional GPU nodes, but this can still act as an example to deploy GPU resources in any cloud environment or a self-hosted cluster with some minor modications.
+
+ > **_NOTE:_** Red Hat employees can request a demo cluster using [demo.redhat.com](https://demo.redhat.com) to provision OpenShift AI. For more information see the [Red Hat Demo Environment](redhat_demo_environment.md) documentation.
 
 ### Client Tooling
 
@@ -46,7 +48,7 @@ Execute the bootstrap script to begin the installation process:
 ./scripts/bootstrap.sh
 ```
 
-When prompted to select a bootstrap folder, choose the overlay that matches your cluster version, for example: `bootstrap/overlays/rhpds-4.11/`.
+When prompted to select a bootstrap folder, choose the overlay that matches your cluster version, for example: `bootstrap/overlays/rhoai-eus-2.8/`.
 
 The `bootstrap.sh` script will now install the OpenShift GitOps Operator, create an ArgoCD instance once the operator is deployed in the `openshift-gitops` namespace, then bootstrap a set of ArgoCD applications to configure the cluster.
 
