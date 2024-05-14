@@ -3,7 +3,7 @@ kind: PipelineRun
 metadata:
   name: dsp-example-init
 spec:
-  params: {}
+  params: []
   pipelineRef:
     name: dsp-example
   taskRunTemplate:
