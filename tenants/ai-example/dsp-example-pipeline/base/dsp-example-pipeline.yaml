@@ -17,7 +17,7 @@ spec:
     - default: 'image-registry.openshift-image-registry.svc:5000/ai-example-training/dsp-example'
       name: TARGET_IMAGE
       type: string
-    - default: ds-pipeline-dspa.ai-example-training.svc.cluster.local
+    - default: 'https://ds-pipeline-dspa.ai-example-training.svc.cluster.local:8443'
       name: KUBEFLOW_ENDPOINT
       type: string
   tasks:
