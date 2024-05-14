@@ -11,12 +11,14 @@ This project structure is based on the opinionated configuration found [here](ht
 ├── bootstrap                             # used to for initial provisioning
 ├── clusters                              # used to define a running configuration
 ├── components                            # configurations in Kustomize and YAML
+│   ├── argocd                            # yaml defenitions for argocd objects such as Applications and Projects
+│   ├── cluster-configs                   # cluster level configurations
+│   └── operators                         # operator subscriptions and configurations
 ├── documentation                         # various documentation, software groups
 │   ├── images
 │   └── operators
-├── scripts                               # scripts to automate, list list-images.sh
-├── tenants                               # examples and demonstrations
-└── training_and_learning                 # notebooks to demo software
+├── scripts                               # scripts to automate maintence tasks
+└── tenants                               # configurations for end user namespaces and resources
 ```
 
 ## Bootstrap
