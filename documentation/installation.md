@@ -12,7 +12,7 @@ This OpenShift cluster should be running on Amazon Web Services (AWS), or a temp
 
 This is because the installation configuration will provision components such as Storage and GPU compute using AWS instance types and definitions. However this configuration could also be customized when using other providers such as Azure or even dedicated on-prem hardware as required.
 
- > **_NOTE:_** Should you require a demonstration cluster, one can be obtained from https://demo.redhat.com, such as the [AWS with OpenShift Open Environment](https://demo.redhat.com/catalog?search=openshift&category=Open_Environments&item=babylon-catalog-prod%2Fsandboxes-gpte.sandbox-ocp.prod)
+ > **_NOTE:_** Should you require a demonstration cluster, one can be obtained from https://demo.redhat.com, such as the [AWS with OpenShift Open Environment](https://demo.redhat.com/catalog?search=openshift&category=Open_Environments&item=babylon-catalog-prod%2Fsandboxes-gpte.sandbox-ocp.prod). Request the largest control plane instance type (e.g. m6a.4xlarge). And it doesn't hurt to add an extra worker before you run the bootstrap.
 
 ### Client Tooling
 

@@ -25,11 +25,17 @@ The bootstrap folder contains the initial set of resources utilized to deploy th
 
 ## Clusters
 
-Clusters is the main aggregation layer for all of the elements of the cluster. It also contains the main configuration elements for changing the repo/branch of the project.
+The `clusters` folder contains the main aggregation layer for all of the elements of the cluster. This includes a `base` folder containing common elements, as well as cluster/environment specific configuration.
+
+These overlays are contains in sub-directories that include a kustomization.yaml file. The Kustomization file contains a set of references to other kustomization directories as bases. Each Kustomization file that is referenced will either have another overlay or a base definition, as illustrated in the following figure:
+
+![Kustomize and ArgoCD.jpeg](images/Kustomize%20and%20ArgoCD.jpeg)
+
+It's expected that you will copy some of these examples and adapted them for your specific requirements for an installation of RHOAI on your OpenShift clusters - however you can also use these "as-is" for a demonstration cluster.
 
 ## Components
 
-Components contains the bulk of the configuration. Currently we are utilizing two main folders inside of `components`:
+Components contains the bulk of the configuration.
 
 - argocd
 - operators
