@@ -3,17 +3,7 @@ kind: PipelineRun
 metadata:
   name: dsp-example-init
 spec:
-  params:
-  - name: GIT_URL
-    value: https://github.com/redhat-ai-services/kubeflow-pipelines-examples.git
-  - name: GIT_REVISION
-    value: main
-  - name: PYTHON_IMAGE
-    value: 3.11-ubi9
-  - name: TARGET_IMAGE
-    value: image-registry.openshift-image-registry.svc:5000/ai-example-training/dsp-example
-  - name: KUBEFLOW_ENDPOINT
-    value: 'https://ds-pipeline-dspa.ai-example-training.svc.cluster.local:8443'
+  params: {}
   pipelineRef:
     name: dsp-example
   taskRunTemplate:
