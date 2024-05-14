@@ -27,6 +27,7 @@ ClusterTask
 CodeFlare
 CodeReady
 ConfigMap
+Configs
 Contrib
 DCGM
 DNS
@@ -73,6 +74,7 @@ LLM
 LVM
 Lifecycle
 Logstash
+MLOps
 MTA
 MachineConfig
 MachineSet
@@ -112,6 +114,7 @@ SNO
 SSO
 SaaS
 Sagemaker
+SealedSecret
 SecretManager
 SecureCluster
 Service
@@ -162,8 +165,11 @@ clusterrolebinding
 composable
 config
 configmap
+configs
+crypto
 culler
 datasource
+decrypt
 deployable
 dev
 devfile
@@ -198,6 +204,7 @@ init
 installplan
 installplans
 io
+ish
 jaeger
 jenkins
 js
@@ -207,6 +214,7 @@ kiali
 knative
 kubeadmin
 kubectl
+kubeseal
 kueue
 kustomization
 kustomize
@@ -222,6 +230,7 @@ machineset
 microservices
 mig
 minio
+na
 namespace
 namespaces
 newman
@@ -273,15 +282,19 @@ serverless
 serviceaccount
 servicemesh
 sfdc
+ssa
 strimzi
 sublicense
+subnet
 tekton
+templated
 templating
 thanos
 traefik
 triton
 truly
 txt
+un
 url
 vLLM
 vSphere
@@ -290,4 +303,5 @@ vscode
 vsphere
 wordlist
 workspaces
+xlarge
 yaml
