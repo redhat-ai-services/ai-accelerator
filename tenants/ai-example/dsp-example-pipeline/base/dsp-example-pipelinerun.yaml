@@ -1,0 +1,35 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: dsp-example-init
+spec:
+  params:
+  - name: GIT_URL
+    value: https://github.com/redhat-ai-services/kubeflow-pipelines-examples.git
+  - name: GIT_REVISION
+    value: main
+  - name: PYTHON_IMAGE
+    value: 3.11-ubi9
+  - name: TARGET_IMAGE
+    value: image-registry.openshift-image-registry.svc:5000/ai-example-training/dsp-example
+  - name: KUBEFLOW_ENDPOINT
+    value: ds-pipeline-dspa.ai-example-training.svc.cluster.local
+  pipelineRef:
+    name: new-pipeline
+  taskRunTemplate:
+    serviceAccountName: pipeline
+  timeouts:
+    pipeline: 1h0m0s
+  workspaces:
+  - name: source
+    volumeClaimTemplate:
+      metadata:
+        creationTimestamp: null
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: ocs-external-storagecluster-ceph-rbd
+        volumeMode: Filesystem
