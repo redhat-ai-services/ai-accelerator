@@ -3,7 +3,7 @@
 ## Purpose
 This component is designed help configure the the authentication endpoint for RHOAI with KServe using Authorino with ServiceMesh
 
-The Authorino auth is availible in RHOAI 2.9 and later.
+The Authorino auth is available in RHOAI 2.9 and later.
 
 ## Usage
 
