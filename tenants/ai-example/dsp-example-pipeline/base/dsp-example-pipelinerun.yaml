@@ -15,7 +15,7 @@ spec:
   - name: KUBEFLOW_ENDPOINT
     value: ds-pipeline-dspa.ai-example-training.svc.cluster.local
   pipelineRef:
-    name: new-pipeline
+    name: dsp-example
   taskRunTemplate:
     serviceAccountName: pipeline
   timeouts:
