@@ -2,11 +2,11 @@ apiVersion: serving.kserve.io/v1beta1
 kind: InferenceService
 metadata:
   annotations:
-    openshift.io/display-name: sample-model
+    openshift.io/display-name: flan-t5-small
     serving.knative.openshift.io/enablePassthrough: 'true'
     sidecar.istio.io/inject: 'true'
     sidecar.istio.io/rewriteAppHTTPProbers: 'true'
-  name: sample-model
+  name: flan-t5-small
   namespace: ai-example-single-model-serving
   finalizers:
     - inferenceservice.finalizers
@@ -18,11 +18,10 @@ spec:
     minReplicas: 1
     model:
       modelFormat:
-        name: onnx
-        version: '1'
+        name: pytorch
       name: ''
       resources: {}
-      runtime: sample-model
+      runtime: flan-t5-small
       storage:
         key: single-model-serving-ds-connection
-        path: models/fraud
+        path: models/flan-t5-small
