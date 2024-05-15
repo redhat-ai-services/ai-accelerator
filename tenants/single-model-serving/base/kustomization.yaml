@@ -9,5 +9,6 @@ labels:
 resources:
   - ai-example-single-model-serving-namespace.yaml
   - create-bucket-job.yaml
+  - upload-model-to-s3.yaml
   - serving-runtime.yaml
   - inference-service.yaml
