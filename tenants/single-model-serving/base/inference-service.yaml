@@ -21,7 +21,7 @@ spec:
         name: pytorch
       name: ''
       resources: {}
-      runtime: flan-t5-small
+      runtime: sample-model
       storage:
         key: single-model-serving-ds-connection
         path: models/flan-t5-small
