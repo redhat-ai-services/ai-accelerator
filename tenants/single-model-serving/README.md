@@ -11,6 +11,9 @@ Using model: flan-t5-small from https://huggingface.co/google/flan-t5-small.git
 with TGIS Standalone ServingRuntime for KServe (default serving runtime with RHOAI 2.9)
 aws_s3_url example: https://minio-api-ai-example-training.apps.cluster-dlsw9.dlsw9.sandbox2226.opentlc.com
 
+Testing the model can be found in the test-model folder.
+
 References:
+https://github.com/rh-aiservices-bu/test-drive/tree/main/llm
 https://rh-aiservices-bu.github.io/fraud-detection/fraud-detection-workshop/running-a-script-to-install-storage.html
 https://raw.githubusercontent.com/rh-aiservices-bu/fraud-detection/main/setup/setup-s3-no-sa.yaml
