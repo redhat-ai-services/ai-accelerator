@@ -1,0 +1,28 @@
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  annotations:
+    openshift.io/display-name: sample-model
+    serving.knative.openshift.io/enablePassthrough: 'true'
+    sidecar.istio.io/inject: 'true'
+    sidecar.istio.io/rewriteAppHTTPProbers: 'true'
+  name: sample-model
+  namespace: ai-example-single-model-serving
+  finalizers:
+    - inferenceservice.finalizers
+  labels:
+    opendatahub.io/dashboard: 'true'
+spec:
+  predictor:
+    maxReplicas: 1
+    minReplicas: 1
+    model:
+      modelFormat:
+        name: onnx
+        version: '1'
+      name: ''
+      resources: {}
+      runtime: sample-model
+      storage:
+        key: single-model-serving-ds-connection
+        path: models/fraud
