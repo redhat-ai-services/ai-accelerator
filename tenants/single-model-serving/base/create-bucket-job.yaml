@@ -95,37 +95,37 @@ spec:
         component: minio
     spec:
       containers:
-        - args:
-            - -ec
-            - |-
-              oc get secret single-model-serving-ds-connection
-              env | grep AWS_
-              cat << 'EOF' | python3
-              import boto3, os
+      - name: create-buckets
+        image: image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-generic-data-science-notebook:2023.1
+        imagePullPolicy: IfNotPresent
+        command:
+          - /bin/bash
+        env:
+          - name: BUCKETNAME
+            value: "single-model-bucket"
+        envFrom:
+          - secretRef:
+              name: single-model-serving-ds-connection
+        args:
+          - -ec
+          - |-
+            oc get secret single-model-serving-ds-connection
+            env | grep AWS_
+            cat << 'EOF' | python3
+            import boto3, os
 
-              s3_endpoint = os.getenv("AWS_S3_ENDPOINT")
-              bucket_name = '$(BUCKETNAME)'
+            s3_endpoint = os.getenv("AWS_S3_ENDPOINT")
+            bucket_name = '$(BUCKETNAME)'
 
-              s3 = boto3.client("s3",
-                                endpoint_url=s3_endpoint,
-                                aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-                                aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"))
-              bucket = bucket_name
-              print('creating ' + bucket + ' bucket in minio')
-              if bucket not in [bu["Name"] for bu in s3.list_buckets()["Buckets"]]:
-                s3.create_bucket(Bucket=bucket)
-              EOF
-          command:
-            - /bin/bash
-          env:
-            - name: BUCKETNAME
-              åvalue: "single-model-bucket"
-          envFrom:
-            - secretRef:
-                name: single-model-serving-ds-connection
-          image: image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-generic-data-science-notebook:2023.1
-          imagePullPolicy: IfNotPresent
-          name: create-buckets
+            s3 = boto3.client("s3",
+                              endpoint_url=s3_endpoint,
+                              aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+                              aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"))
+            bucket = bucket_name
+            print('creating ' + bucket + ' bucket in minio')
+            if bucket not in [bu["Name"] for bu in s3.list_buckets()["Buckets"]]:
+              s3.create_bucket(Bucket=bucket)
+            EOF
       initContainers:
         - args:
             - -ec
