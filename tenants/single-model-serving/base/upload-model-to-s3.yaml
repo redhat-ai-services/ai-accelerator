@@ -64,7 +64,6 @@ spec:
               local_directory = "$(MODEL_PATH)"
               s3_prefix = "$(MODEL_PATH)"
 
-
               print('uploading to s3')
               for root, dirs, files in os.walk(local_directory):
                 for filename in files:
@@ -110,8 +109,8 @@ spec:
             - clone
             - --single-branch
             - --
-            - https://huggingface.co/ibm-granite/granite-3b-code-base.git
-            - /opt/app-root/src/models/granite-3b-code-base
+            - https://huggingface.co/google/flan-t5-small.git
+            - /opt/app-root/src/models/flan-t5-small
           volumeMounts:
             - mountPath: /opt/app-root/src/
               name: model-repo
