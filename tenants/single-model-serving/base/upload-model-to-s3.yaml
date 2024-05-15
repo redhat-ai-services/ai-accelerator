@@ -33,7 +33,7 @@ spec:
           - name: PREFIX_PATH
             value: "models"
           - name: MODEL_PATH
-            value: "$(PREFIX_PATH)/granite-3b-code-base"
+            value: "$(PREFIX_PATH)/flan-t5-small"
           command:
             - /bin/bash
           args:
