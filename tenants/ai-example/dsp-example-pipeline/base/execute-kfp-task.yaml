@@ -1,0 +1,28 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: execute-kubeflow-pipeline
+spec:
+  description: >-
+    This task will execute a python script, triggering a kubeflow pipeline
+  params:
+    - name: IMAGE
+      description: The image used to execute the script
+      type: string
+    - name: TAG
+      description: The tag for the image
+      type: string
+      default: "latest"
+    - name: SCRIPT
+      description: The location of the script to be executed
+    - name: KUBEFLOW_ENDPOINT
+      description: The endpoint URL for Kubeflow
+      default: "https://ds-pipeline-dspa:8443"
+  steps:
+    - name: execute-python
+      image: $(inputs.params.IMAGE):$(inputs.params.TAG)
+      env:
+        - name: KUBEFLOW_ENDPOINT
+          value: $(inputs.params.KUBEFLOW_ENDPOINT)
+      script: |
+        python $(inputs.params.SCRIPT)
