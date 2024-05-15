@@ -1,0 +1,62 @@
+apiVersion: serving.kserve.io/v1alpha1
+kind: ServingRuntime
+metadata:
+  annotations:
+    opendatahub.io/accelerator-name: ''
+    opendatahub.io/apiProtocol: gRPC
+    opendatahub.io/recommended-accelerators: '["nvidia.com/gpu"]'
+    opendatahub.io/template-display-name: TGIS Standalone ServingRuntime for KServe
+    opendatahub.io/template-name: tgis-grpc-runtime
+    openshift.io/display-name: sample-model
+  name: sample-model
+  namespace: ai-example-single-model-serving
+  labels:
+    opendatahub.io/dashboard: 'true'
+spec:
+  containers:
+    - resources:
+        limits:
+          cpu: '2'
+          memory: 8Gi
+        requests:
+          cpu: '1'
+          memory: 4Gi
+      readinessProbe:
+        exec:
+          command:
+            - curl
+            - 'localhost:3000/health'
+        initialDelaySeconds: 5
+      name: kserve-container
+      command:
+        - text-generation-launcher
+      livenessProbe:
+        exec:
+          command:
+            - curl
+            - 'localhost:3000/health'
+        initialDelaySeconds: 5
+      env:
+        - name: TRANSFORMERS_CACHE
+          value: /tmp/transformers_cache
+      ports:
+        - containerPort: 8033
+          name: h2c
+          protocol: TCP
+      volumeMounts:
+        - mountPath: /dev/shm
+          name: shm
+      image: 'quay.io/modh/text-generation-inference@sha256:18048121be7624d8cfe3f387e6de7ebb2e9376213f795d66cada26d8391229ca'
+      args:
+        - '--model-name=/mnt/models/'
+        - '--port=3000'
+        - '--grpc-port=8033'
+  multiModel: false
+  supportedModelFormats:
+    - autoSelect: true
+      name: pytorch
+  volumes:
+    - emptyDir:
+        medium: Memory
+        sizeLimit: 2Gi
+      name: shm
