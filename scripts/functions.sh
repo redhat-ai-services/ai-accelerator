@@ -198,7 +198,7 @@ check_branch(){
       echo "Your working branch ${GIT_BRANCH}, matches your cluster overlay branch ${APP_BRANCH}"
     else 
       echo "Your current working branch is ${GIT_BRANCH}, and your cluster overlay branch is ${APP_BRANCH}.
-      Do you wish to update it?"
+      Do you wish to update it to ${GIT_BRANCH}?"
       select yn in "Yes" "No"; do
           case $yn in
               Yes ) update_branch ${CLUSTER_OVERLAY}; break;;
