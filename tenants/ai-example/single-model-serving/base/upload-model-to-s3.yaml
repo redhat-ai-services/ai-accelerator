@@ -94,7 +94,6 @@ spec:
               echo -n .
               sleep 5
               done; echo
-              
               echo -n 'Waiting for minio deployment'
               while ! oc get deployment minio -n ai-example-training 2>/dev/null | grep -qF minio; do
                 echo -n .
