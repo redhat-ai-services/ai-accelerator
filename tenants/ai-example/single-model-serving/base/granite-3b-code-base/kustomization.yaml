@@ -1,0 +1,7 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - upload-model-to-s3-granite.yaml
+  - serving-runtime-vllm.yaml
+  - inference-service-granite.yaml
