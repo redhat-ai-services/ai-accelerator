@@ -8,6 +8,7 @@ metadata:
     app.kubernetes.io/part-of: minio
     component: minio
   name: upload-model-to-s3
+  namespace: ai-example-single-model-serving
 spec:
   selector: {}
   template:
