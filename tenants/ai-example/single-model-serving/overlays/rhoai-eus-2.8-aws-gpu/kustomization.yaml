@@ -2,5 +2,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - ../../base/main
-  - ../../base/granite-3b-code-base
+  - ../../../../components/apps/minio/overlays/default
+  - ../../base/
+  - ../../examples/vllm-granite-single-model-server

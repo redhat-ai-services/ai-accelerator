@@ -35,23 +35,16 @@ spec:
         args:
           - -ec
           - |-
-            oc get secret single-model-serving-ds-connection
             env | grep AWS_
-            cat << 'EOF' | python3
-            import boto3, os
-
-            s3_endpoint = os.getenv("AWS_S3_ENDPOINT")
-            bucket_name = '$(BUCKETNAME)'
-
-            s3 = boto3.client("s3",
-                              endpoint_url=s3_endpoint,
-                              aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-                              aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"))
-            bucket = bucket_name
-            print('creating ' + bucket + ' bucket in minio')
-            if bucket not in [bu["Name"] for bu in s3.list_buckets()["Buckets"]]:
-              s3.create_bucket(Bucket=bucket)
-            EOF
+            python3 /scripts/create-bucket.py
+        volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+      volumes:
+        - name: scripts
+          configMap:
+            name: create-bucket-script
+            defaultMode: 0755
       initContainers:
         - args:
             - -ec

@@ -11,3 +11,12 @@ resources:
   - cluster-role-binding-demo-setup.yaml
   - create-ds-connection-secret.yaml
   - create-bucket-job.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+configMapGenerator:
+  - name: create-bucket-script
+    namespace: ai-example-single-model-serving
+    files:
+      - create-bucket.py
