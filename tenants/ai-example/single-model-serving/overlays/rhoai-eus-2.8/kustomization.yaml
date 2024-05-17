@@ -4,6 +4,6 @@ kind: Kustomization
 namespace: ai-example-single-model-serving
 
 resources:
-  - ../../../../components/apps/minio/overlays/default
+  - ../../../../../components/apps/minio/overlays/default
   - ../../base/
   - ../../examples/tgis-flan-single-model-server
