@@ -20,3 +20,7 @@ configMapGenerator:
     namespace: ai-example-single-model-serving
     files:
       - create-bucket.py
+  - name: upload-model-to-s3
+    namespace: ai-example-single-model-serving
+    files:
+      - upload-model-to-s3.py

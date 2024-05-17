@@ -1,0 +1,74 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: upload-model-to-s3
+  namespace: ai-example-single-model-serving
+spec:
+  selector: {}
+  template:
+    spec:
+      containers:
+        - name: upload-model-to-s3
+          image: image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-generic-data-science-notebook:2023.1
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: single-model-serving-ds-connection
+          env:
+            - name: PREFIX_PATH
+              value: "models"
+            - name: MODEL_PATH
+              value: "$(PREFIX_PATH)/granite-3b-code-base"
+          command:
+            - /bin/bash
+          args:
+            - -ec
+            - |-
+              env | grep AWS_
+              python3 /scripts/upload-model-to-s3.py
+          volumeMounts:
+            - name: model-repo
+              mountPath: /opt/app-root/src
+            - name: scripts
+              mountPath: /scripts
+      initContainers:
+        - name: wait-for-minio
+          command:
+            - /bin/bash
+          args:
+            - -ec
+            - |-
+              echo -n 'Waiting for minio root user secret'
+              while ! oc get secret single-model-serving-ds-connection 2>/dev/null | grep -qF single-model-serving-ds-connection; do
+              echo -n .
+              sleep 5
+              done; echo
+              echo -n 'Waiting for minio deployment'
+              while ! oc get deployment minio 2>/dev/null | grep -qF minio; do
+                echo -n .
+                sleep 5
+              done; echo
+              oc wait --for=condition=available --timeout=60s deployment/minio
+              sleep 10
+          image: image-registry.openshift-image-registry.svc:5000/openshift/tools:latest
+          imagePullPolicy: IfNotPresent
+        - name: git-cloner
+          image: alpine/git
+          args:
+            - clone
+            - --single-branch
+            - --
+            - https://huggingface.co/ibm-granite/granite-3b-code-base.git
+            - /opt/app-root/src/models/granite-3b-code-base
+          volumeMounts:
+            - mountPath: /opt/app-root/src/
+              name: model-repo
+      volumes:
+        - name: model-repo
+          emptyDir: {}
+        - name: scripts
+          configMap:
+            name: upload-model-to-s3
+      restartPolicy: Never
+      serviceAccount: demo-setup
+      serviceAccountName: demo-setup
