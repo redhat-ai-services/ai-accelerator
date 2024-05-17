@@ -9,7 +9,6 @@ metadata:
     opendatahub.io/template-name: tgis-grpc-runtime
     openshift.io/display-name: sample-model
   name: sample-model
-  namespace: ai-example-single-model-serving
   labels:
     opendatahub.io/dashboard: 'true'
 spec:

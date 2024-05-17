@@ -7,7 +7,6 @@ metadata:
     sidecar.istio.io/inject: 'true'
     sidecar.istio.io/rewriteAppHTTPProbers: 'true'
   name: granite
-  namespace: ai-example-single-model-serving
   labels:
     opendatahub.io/dashboard: 'true'
 spec:
