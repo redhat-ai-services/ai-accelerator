@@ -7,20 +7,20 @@ spec:
   template:
     spec:
       containers:
-      - name: create-buckets
-        image: image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-generic-data-science-notebook:2023.1
-        imagePullPolicy: IfNotPresent
-        command:
-          - /bin/bash
-        envFrom:
-          - secretRef:
-              name: single-model-serving-ds-connection
-        args:
-          - -ec
-          - |-
-            env | grep AWS_
-            python3 /scripts/create-bucket.py
-        volumeMounts:
+        - name: create-buckets
+          image: image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-generic-data-science-notebook:2023.1
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/bash
+          envFrom:
+            - secretRef:
+                name: single-model-serving-ds-connection
+          args:
+            - -ec
+            - |-
+              env | grep AWS_
+              python3 /scripts/create-bucket.py
+          volumeMounts:
             - name: scripts
               mountPath: /scripts
       volumes:

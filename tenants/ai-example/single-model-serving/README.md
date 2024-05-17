@@ -5,17 +5,22 @@
 tenants/
 └── ai-example
     ├── single-model-serving
-    │   └── base
-    │       ├── flan-t5-small
-    │       ├── granite-3b-code-base
-    │       └── main
-    └── overlays
-        ├── rhoai-'nonGPU'
-        └── rhoai-'GPU'
+        ├── base
+        ├── examples
+        │   ├── tgis-flan-single-model-server
+        │   └── vllm-granite-single-model-server
+        └── overlays
+            ├── rhoai-'nonGPU'
+            └── rhoai-'GPU'
 ```
 If using __nonGPU__ cluster, use the `rhoai-'nonGPU'` overlay. It will use the ___flan-t5-small___ example which uses CPU.
 
 If using __GPU__ cluster, use the `rhoai-'GPU'` overlay. It will use the ___granite-3b-code-base___ example which utilizes GPU.
+
+In the ___overlays___ folder, Kustomize will create the instances for minio in the namespace.
+Kustomize will take care of adding the namespace to the manifests.
+
+The python scripts used for the jobs, will be put in a ConfigMap and will be called by the job. Kustomize takes care of putting the scripts in a ConfigMap.
 
 ### For CPU model:
 
