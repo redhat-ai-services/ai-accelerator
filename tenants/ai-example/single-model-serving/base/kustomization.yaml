@@ -8,7 +8,7 @@ labels:
 
 resources:
   - service-account-demo-setup.yaml
-  - cluster-role-binding-demo-setup.yaml
+  - role-binding-demo-setup.yaml
   - create-ds-connection-secret.yaml
   - create-bucket-job.yaml
 
