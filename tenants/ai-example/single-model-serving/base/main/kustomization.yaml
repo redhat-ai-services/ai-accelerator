@@ -7,7 +7,6 @@ labels:
     opendatahub.io/dashboard: "true"
 
 resources:
-  - ai-example-single-model-serving-namespace.yaml
   - service-account-demo-setup.yaml
   - cluster-role-binding-demo-setup.yaml
   - create-ds-connection-secret.yaml

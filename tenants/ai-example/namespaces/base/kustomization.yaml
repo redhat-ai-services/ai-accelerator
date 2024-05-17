@@ -8,4 +8,5 @@ labels:
 
 resources:
   - ai-example-multi-model-serving-namespace.yaml
+  - ai-example-single-model-serving-namespace.yaml
   - ai-example-training-namespace.yaml

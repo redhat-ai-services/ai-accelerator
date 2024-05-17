@@ -8,8 +8,6 @@ metadata:
     sidecar.istio.io/rewriteAppHTTPProbers: 'true'
   name: flan-t5-small
   namespace: ai-example-single-model-serving
-  finalizers:
-    - inferenceservice.finalizers
   labels:
     opendatahub.io/dashboard: 'true'
 spec:
