@@ -48,11 +48,11 @@ spec:
             - name: NOTEBOOK_ARGS
               value: |-
                 --ServerApp.port=8888
-                                  --ServerApp.token=''
-                                  --ServerApp.password=''
-                                  --ServerApp.base_url=/notebook/ai-example-training/example-workbench
-                                  --ServerApp.quit_button=False
-                                  --ServerApp.tornado_settings={"user":"kube-3aadmin","hub_host":"https://rhods-dashboard-redhat-ods-applications.apps.cluster-pmhtr.pmhtr.sandbox831.opentlc.com","hub_prefix":"/projects/ai-example-training"}
+                --ServerApp.token=''
+                --ServerApp.password=''
+                --ServerApp.base_url=/notebook/ai-example-training/example-workbench
+                --ServerApp.quit_button=False
+                --ServerApp.tornado_settings={"user":"user1","hub_host":"https://rhods-dashboard-redhat-ods-applications.apps.cluster-pmhtr.pmhtr.sandbox831.opentlc.com","hub_prefix":"/projects/ai-example-training"}
             - name: JUPYTER_IMAGE
               value: 'image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-minimal-notebook:2024.1'
             - name: PIP_CERT
