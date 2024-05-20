@@ -1,0 +1,346 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: modelmesh-serving-test-server
+  namespace: ai-example-multi-model-serving
+  ownerReferences:
+    - apiVersion: serving.kserve.io/v1alpha1
+      kind: ServingRuntime
+      name: test-server
+      uid: 4e4aadca-4396-4736-8d7a-7641be68fc41
+      controller: true
+      blockOwnerDeletion: true
+  labels:
+    app.kubernetes.io/instance: modelmesh-controller
+    app.kubernetes.io/managed-by: modelmesh-controller
+    app.kubernetes.io/name: modelmesh-controller
+    modelmesh-service: modelmesh-serving
+    name: modelmesh-serving-test-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      modelmesh-service: modelmesh-serving
+      name: modelmesh-serving-test-server
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: modelmesh-controller
+        app.kubernetes.io/managed-by: modelmesh-controller
+        app.kubernetes.io/name: modelmesh-controller
+        modelmesh-service: modelmesh-serving
+        name: modelmesh-serving-test-server
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: '2112'
+        prometheus.io/scheme: https
+        prometheus.io/scrape: 'true'
+    spec:
+      restartPolicy: Always
+      serviceAccountName: modelmesh-serving-sa
+      schedulerName: default-scheduler
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values:
+                      - amd64
+                      - arm64
+      terminationGracePeriodSeconds: 90
+      securityContext: {}
+      containers:
+        - name: rest-proxy
+          image: 'registry.redhat.io/rhoai/odh-mm-rest-proxy-rhel8@sha256:fb7eab73ad10fc1ea321d69bff85b518abcc4717ab6f6a28054a1397d705f95e'
+          ports:
+            - name: http
+              containerPort: 8008
+              protocol: TCP
+          env:
+            - name: REST_PROXY_LISTEN_PORT
+              value: '8008'
+            - name: REST_PROXY_GRPC_PORT
+              value: '8033'
+            - name: REST_PROXY_USE_TLS
+              value: 'false'
+            - name: REST_PROXY_GRPC_MAX_MSG_SIZE_BYTES
+              value: '16777216'
+          resources:
+            limits:
+              cpu: '1'
+              memory: 512Mi
+            requests:
+              cpu: 50m
+              memory: 96Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+        - resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /oauth/healthz
+              port: 8443
+              scheme: HTTPS
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+          name: oauth-proxy
+          livenessProbe:
+            httpGet:
+              path: /oauth/healthz
+              port: 8443
+              scheme: HTTPS
+            initialDelaySeconds: 30
+            timeoutSeconds: 1
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          ports:
+            - name: https
+              containerPort: 8443
+              protocol: TCP
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: proxy-tls
+              mountPath: /etc/tls/private
+          terminationMessagePolicy: File
+          image: 'registry.redhat.io/openshift4/ose-oauth-proxy@sha256:4bef31eb993feb6f1096b51b4876c65a6fb1f4401fee97fa4f4542b6b7c9bc46'
+          args:
+            - '--https-address=:8443'
+            - '--provider=openshift'
+            - '--openshift-service-account="modelmesh-serving-sa"'
+            - '--upstream=http://localhost:8008'
+            - '--tls-cert=/etc/tls/private/tls.crt'
+            - '--tls-key=/etc/tls/private/tls.key'
+            - '--cookie-secret=SECRET'
+            - '--openshift-delegate-urls={"/": {"namespace": "ai-example-multi-model-serving", "resource": "services", "verb": "get"}}'
+            - '--openshift-sar={"namespace": "ai-example-multi-model-serving", "resource": "services", "verb": "get"}'
+            - '--skip-auth-regex=''(^/metrics|^/apis/v1beta1/healthz)'''
+        - resources:
+            limits:
+              cpu: '2'
+              memory: 8Gi
+            requests:
+              cpu: '1'
+              memory: 4Gi
+          terminationMessagePath: /dev/termination-log
+          lifecycle:
+            preStop:
+              httpGet:
+                path: /prestop
+                port: 8090
+                scheme: HTTP
+          name: ovms
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: models-dir
+              mountPath: /models
+            - name: shm
+              mountPath: /dev/shm
+          terminationMessagePolicy: File
+          image: 'quay.io/modh/openvino_model_server@sha256:5d04d405526ea4ce5b807d0cd199ccf7f71bab1228907c091e975efa770a4908'
+          args:
+            - '--port=8001'
+            - '--rest_port=8888'
+            - '--config_path=/models/model_config_list.json'
+            - '--file_system_poll_wait_seconds=0'
+            - '--grpc_bind_address=127.0.0.1'
+            - '--rest_bind_address=127.0.0.1'
+        - resources:
+            limits:
+              cpu: '2'
+              memory: 512Mi
+            requests:
+              cpu: 50m
+              memory: 96Mi
+          terminationMessagePath: /dev/termination-log
+          lifecycle:
+            preStop:
+              httpGet:
+                path: /prestop
+                port: 8090
+                scheme: HTTP
+          name: ovms-adapter
+          command:
+            - /opt/app/ovms-adapter
+          env:
+            - name: ADAPTER_PORT
+              value: '8085'
+            - name: RUNTIME_PORT
+              value: '8888'
+            - name: RUNTIME_DATA_ENDPOINT
+              value: 'port:8001'
+            - name: CONTAINER_MEM_REQ_BYTES
+              valueFrom:
+                resourceFieldRef:
+                  containerName: ovms
+                  resource: requests.memory
+                  divisor: '0'
+            - name: MEM_BUFFER_BYTES
+              value: '134217728'
+            - name: LOADTIME_TIMEOUT
+              value: '90000'
+            - name: USE_EMBEDDED_PULLER
+              value: 'true'
+            - name: RUNTIME_VERSION
+              value: 5d04d405526ea4ce5b807d0cd199ccf7f71bab1228907c091e975efa770a4908
+            - name: OVMS_FORCE_TARGET_DEVICE
+              value: AUTO
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: models-dir
+              mountPath: /models
+            - name: storage-config
+              readOnly: true
+              mountPath: /storage-config
+          terminationMessagePolicy: File
+          image: 'registry.redhat.io/rhoai/odh-modelmesh-runtime-adapter-rhel8@sha256:7899d04a82330ea628a04a5f451c7c32e254cfb4f602fb0da78577cbd8cd2e14'
+        - resources:
+            limits:
+              cpu: '3'
+              memory: 448Mi
+            requests:
+              cpu: 300m
+              memory: 448Mi
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8089
+              scheme: HTTP
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - /opt/kserve/mmesh/stop.sh
+                  - wait
+          name: mm
+          livenessProbe:
+            httpGet:
+              path: /live
+              port: 8089
+              scheme: HTTP
+            initialDelaySeconds: 90
+            timeoutSeconds: 5
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 2
+          env:
+            - name: MM_SERVICE_NAME
+              value: modelmesh-serving
+            - name: MM_SVC_GRPC_PORT
+              value: '8033'
+            - name: WKUBE_POD_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.name
+            - name: WKUBE_POD_IPADDR
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+            - name: MM_LOCATION
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.hostIP
+            - name: KV_STORE
+              value: 'etcd:/opt/kserve/mmesh/etcd/etcd_connection'
+            - name: MM_METRICS
+              value: 'prometheus:port=2112;scheme=https'
+            - name: SHUTDOWN_TIMEOUT_MS
+              value: '90000'
+            - name: INTERNAL_SERVING_GRPC_PORT
+              value: '8001'
+            - name: INTERNAL_GRPC_PORT
+              value: '8085'
+            - name: MM_SVC_GRPC_MAX_MSG_SIZE
+              value: '16777216'
+            - name: MM_KVSTORE_PREFIX
+              value: mm
+            - name: MM_DEFAULT_VMODEL_OWNER
+              value: ksp
+            - name: MM_LABELS
+              value: 'mt:onnx,mt:onnx:1,mt:openvino_ir,mt:openvino_ir:opset1,mt:tensorflow,mt:tensorflow:2,pv:grpc-v1,rt:test-server'
+            - name: MM_TYPE_CONSTRAINTS_PATH
+              value: /etc/watson/mmesh/config/type_constraints
+            - name: MM_DATAPLANE_CONFIG_PATH
+              value: /etc/watson/mmesh/config/dataplane_api_config
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - name: grpc
+              containerPort: 8033
+              protocol: TCP
+            - name: prometheus
+              containerPort: 2112
+              protocol: TCP
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: tc-config
+              mountPath: /etc/watson/mmesh/config
+            - name: etcd-config
+              readOnly: true
+              mountPath: /opt/kserve/mmesh/etcd
+          terminationMessagePolicy: File
+          image: 'registry.redhat.io/rhoai/odh-modelmesh-rhel8@sha256:6f09efd3031343b45e11c2aee0a2e44fa3befea1ab82501aa1f8ec433d71c7ce'
+      serviceAccount: modelmesh-serving-sa
+      volumes:
+        - name: shm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 2Gi
+        - name: proxy-tls
+          secret:
+            secretName: model-serving-proxy-tls
+            defaultMode: 420
+        - name: models-dir
+          emptyDir:
+            sizeLimit: 12Gi
+        - name: storage-config
+          secret:
+            secretName: storage-config
+            defaultMode: 420
+        - name: tc-config
+          configMap:
+            name: tc-config
+            defaultMode: 420
+        - name: etcd-config
+          secret:
+            secretName: model-serving-etcd
+            defaultMode: 420
+      dnsPolicy: ClusterFirst
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 15%
+      maxSurge: 75%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600

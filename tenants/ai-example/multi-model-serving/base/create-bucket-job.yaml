@@ -1,0 +1,46 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-minio-buckets
+spec:
+  selector: {}
+  template:
+    spec:
+      containers:
+        - name: create-buckets
+          image: image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-generic-data-science-notebook:2023.1
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/bash
+          envFrom:
+            - secretRef:
+                name: multi-model-serving-ds-connection
+          args:
+            - -ec
+            - |-
+              env | grep AWS_
+              python3 /scripts/create-bucket.py
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+      volumes:
+        - name: scripts
+          configMap:
+            name: create-bucket-script
+      initContainers:
+        - args:
+            - -ec
+            - |-
+              echo -n 'Waiting for minio root user secret'
+              while ! oc get secret multi-model-serving-ds-connection 2>/dev/null | grep -qF multi-model-serving-ds-connection; do
+              echo -n .
+              sleep 5
+              done; echo
+          command:
+            - /bin/bash
+          image: image-registry.openshift-image-registry.svc:5000/openshift/tools:latest
+          imagePullPolicy: IfNotPresent
+          name: wait-for-minio
+      restartPolicy: Never
+      serviceAccount: demo-setup
+      serviceAccountName: demo-setup
