@@ -1,0 +1,269 @@
+apiVersion: kubeflow.org/v1
+kind: Notebook
+metadata:
+  annotations:
+    notebooks.opendatahub.io/inject-oauth: 'true'
+    opendatahub.io/image-display-name: Minimal Python
+    notebooks.opendatahub.io/oauth-logout-url: 'https://rhods-dashboard-redhat-ods-applications.apps.cluster-pmhtr.pmhtr.sandbox831.opentlc.com/projects/ai-example-training?notebookLogout=example-workbench-test'
+    opendatahub.io/accelerator-name: ''
+    openshift.io/description: ''
+    openshift.io/display-name: example-workbench-test
+    notebooks.opendatahub.io/last-image-selection: 's2i-minimal-notebook:2024.1'
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"kubeflow.org/v1","kind":"Notebook","metadata":{"annotations":{"notebooks.opendatahub.io/inject-oauth":"true","notebooks.opendatahub.io/last-image-selection":"s2i-minimal-notebook:2024.1","notebooks.opendatahub.io/oauth-logout-url":"https://rhods-dashboard-redhat-ods-applications.apps.cluster-pmhtr.pmhtr.sandbox831.opentlc.com/projects/ai-example-training?notebookLogout=example-workbench-test","opendatahub.io/accelerator-name":"","opendatahub.io/image-display-name":"Minimal Python","openshift.io/description":"","openshift.io/display-name":"example-workbench-test"},"labels":{"opendatahub.io/dashboard":"true"},"name":"example-workbench-test","namespace":"ai-example-training"},"spec":{"template":{"spec":{"affinity":{},"containers":[{"env":[{"name":"NOTEBOOK_ARGS","value":"--ServerApp.port=8888\n                  --ServerApp.token=''\n                  --ServerApp.password=''\n                  --ServerApp.base_url=/notebook/ai-example-training/example-workbench\n                  --ServerApp.quit_button=False\n                  --ServerApp.tornado_settings={\"user\":\"kube-3aadmin\",\"hub_host\":\"https://rhods-dashboard-redhat-ods-applications.apps.cluster-pmhtr.pmhtr.sandbox831.opentlc.com\",\"hub_prefix\":\"/projects/ai-example-training\"}"},{"name":"JUPYTER_IMAGE","value":"image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-minimal-notebook:2024.1"},{"name":"PIP_CERT","value":"/etc/pki/tls/custom-certs/ca-bundle.crt"},{"name":"REQUESTS_CA_BUNDLE","value":"/etc/pki/tls/custom-certs/ca-bundle.crt"},{"name":"SSL_CERT_FILE","value":"/etc/pki/tls/custom-certs/ca-bundle.crt"},{"name":"PIPELINES_SSL_SA_CERTS","value":"/etc/pki/tls/custom-certs/ca-bundle.crt"}],"image":"image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-minimal-notebook:2024.1","imagePullPolicy":"Always","livenessProbe":{"failureThreshold":3,"httpGet":{"path":"/notebook/ai-example-training/example-workbench/api","port":"notebook-port","scheme":"HTTP"},"initialDelaySeconds":10,"periodSeconds":5,"successThreshold":1,"timeoutSeconds":1},"name":"example-workbench","ports":[{"containerPort":8888,"name":"notebook-port","protocol":"TCP"}],"readinessProbe":{"failureThreshold":3,"httpGet":{"path":"/notebook/ai-example-training/example-workbench/api","port":"notebook-port","scheme":"HTTP"},"initialDelaySeconds":10,"periodSeconds":5,"successThreshold":1,"timeoutSeconds":1},"resources":{"limits":{"cpu":"2","memory":"8Gi"},"requests":{"cpu":"1","memory":"8Gi"}},"volumeMounts":[{"mountPath":"/opt/app-root/src","name":"example-workbench"},{"mountPath":"/dev/shm","name":"shm"},{"mountPath":"/etc/pki/tls/custom-certs/ca-bundle.crt","name":"trusted-ca","readOnly":true,"subPath":"ca-bundle.crt"}],"workingDir":"/opt/app-root/src"}],"enableServiceLinks":false,"serviceAccountName":"example-workbench","volumes":[{"name":"example-workbench","persistentVolumeClaim":{"claimName":"example-workbench-test"}},{"emptyDir":{"medium":"Memory"},"name":"shm"},{"configMap":{"items":[{"key":"ca-bundle.crt","path":"ca-bundle.crt"}],"name":"workbench-trusted-ca-bundle","optional":true},"name":"trusted-ca"}]}}}}
+    notebooks.opendatahub.io/last-size-selection: Small
+    opendatahub.io/username: 'kube:admin'
+  resourceVersion: '1270602'
+  name: example-workbench-test
+  uid: 6c99128a-c2c6-4dce-a276-077b80d275b8
+  creationTimestamp: '2024-05-08T21:38:22Z'
+  generation: 2
+  managedFields:
+    - apiVersion: kubeflow.org/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            'f:kubectl.kubernetes.io/last-applied-configuration': {}
+            'f:notebooks.opendatahub.io/inject-oauth': {}
+            .: {}
+            'f:opendatahub.io/image-display-name': {}
+            'f:notebooks.opendatahub.io/oauth-logout-url': {}
+            'f:opendatahub.io/accelerator-name': {}
+            'f:notebooks.opendatahub.io/last-image-selection': {}
+            'f:openshift.io/display-name': {}
+            'f:openshift.io/description': {}
+          'f:labels':
+            .: {}
+            'f:opendatahub.io/dashboard': {}
+        'f:spec':
+          .: {}
+          'f:template':
+            .: {}
+            'f:spec':
+              .: {}
+              'f:affinity': {}
+              'f:enableServiceLinks': {}
+              'f:serviceAccountName': {}
+      manager: kubectl-client-side-apply
+      operation: Update
+      time: '2024-05-08T21:38:22Z'
+    - apiVersion: kubeflow.org/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            'f:notebooks.opendatahub.io/last-size-selection': {}
+            'f:opendatahub.io/username': {}
+          'f:labels':
+            'f:app': {}
+            'f:opendatahub.io/odh-managed': {}
+            'f:opendatahub.io/user': {}
+        'f:spec':
+          'f:template':
+            'f:spec':
+              'f:containers': {}
+              'f:tolerations': {}
+              'f:volumes': {}
+      manager: unknown
+      operation: Update
+      time: '2024-05-08T21:38:58Z'
+    - apiVersion: kubeflow.org/v1beta1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:status':
+          .: {}
+          'f:conditions': {}
+          'f:containerState':
+            .: {}
+            'f:waiting':
+              .: {}
+              'f:reason': {}
+          'f:readyReplicas': {}
+      manager: Go-http-client
+      operation: Update
+      subresource: status
+      time: '2024-05-08T21:39:00Z'
+  namespace: ai-example-training
+  labels:
+    app: example-workbench-test
+    opendatahub.io/dashboard: 'true'
+    opendatahub.io/odh-managed: 'true'
+    opendatahub.io/user: kube-3aadmin
+spec:
+  template:
+    spec:
+      affinity: {}
+      containers:
+        - resources:
+            limits:
+              cpu: '2'
+              memory: 8Gi
+            requests:
+              cpu: '1'
+              memory: 8Gi
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /notebook/ai-example-training/example-workbench-test/api
+              port: notebook-port
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: example-workbench-test
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /notebook/ai-example-training/example-workbench-test/api
+              port: notebook-port
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          env:
+            - name: NOTEBOOK_ARGS
+              value: |-
+                --ServerApp.port=8888
+                                  --ServerApp.token=''
+                                  --ServerApp.password=''
+                                  --ServerApp.base_url=/notebook/ai-example-training/example-workbench-test
+                                  --ServerApp.quit_button=False
+                                  --ServerApp.tornado_settings={"user":"kube-3aadmin","hub_host":"https://rhods-dashboard-redhat-ods-applications.apps.cluster-pmhtr.pmhtr.sandbox831.opentlc.com","hub_prefix":"/projects/ai-example-training"}
+            - name: JUPYTER_IMAGE
+              value: 'image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-minimal-notebook:2024.1'
+            - name: PIP_CERT
+              value: /etc/pki/tls/custom-certs/ca-bundle.crt
+            - name: REQUESTS_CA_BUNDLE
+              value: /etc/pki/tls/custom-certs/ca-bundle.crt
+            - name: SSL_CERT_FILE
+              value: /etc/pki/tls/custom-certs/ca-bundle.crt
+            - name: PIPELINES_SSL_SA_CERTS
+              value: /etc/pki/tls/custom-certs/ca-bundle.crt
+          ports:
+            - containerPort: 8888
+              name: notebook-port
+              protocol: TCP
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /opt/app-root/src
+              name: example-workbench
+            - mountPath: /dev/shm
+              name: shm
+            - mountPath: /etc/pki/tls/custom-certs/ca-bundle.crt
+              name: trusted-ca
+              readOnly: true
+              subPath: ca-bundle.crt
+          image: 'image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-minimal-notebook:2024.1'
+          workingDir: /opt/app-root/src
+        - resources:
+            limits:
+              cpu: 100m
+              memory: 64Mi
+            requests:
+              cpu: 100m
+              memory: 64Mi
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /oauth/healthz
+              port: oauth-proxy
+              scheme: HTTPS
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: oauth-proxy
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /oauth/healthz
+              port: oauth-proxy
+              scheme: HTTPS
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          env:
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          ports:
+            - containerPort: 8443
+              name: oauth-proxy
+              protocol: TCP
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /etc/oauth/config
+              name: oauth-config
+            - mountPath: /etc/tls/private
+              name: tls-certificates
+          image: 'registry.redhat.io/openshift4/ose-oauth-proxy@sha256:4bef31eb993feb6f1096b51b4876c65a6fb1f4401fee97fa4f4542b6b7c9bc46'
+          args:
+            - '--provider=openshift'
+            - '--https-address=:8443'
+            - '--http-address='
+            - '--openshift-service-account=example-workbench-test'
+            - '--cookie-secret-file=/etc/oauth/config/cookie_secret'
+            - '--cookie-expire=24h0m0s'
+            - '--tls-cert=/etc/tls/private/tls.crt'
+            - '--tls-key=/etc/tls/private/tls.key'
+            - '--upstream=http://localhost:8888'
+            - '--upstream-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt'
+            - '--email-domain=*'
+            - '--skip-provider-button'
+            - '--openshift-sar={"verb":"get","resource":"notebooks","resourceAPIGroup":"kubeflow.org","resourceName":"example-workbench-test","namespace":"$(NAMESPACE)"}'
+            - '--logout-url=https://rhods-dashboard-redhat-ods-applications.apps.cluster-pmhtr.pmhtr.sandbox831.opentlc.com/projects/ai-example-training?notebookLogout=example-workbench-test'
+      enableServiceLinks: false
+      serviceAccountName: example-workbench-test
+      volumes:
+        - name: example-workbench
+          persistentVolumeClaim:
+            claimName: example-workbench
+        - emptyDir:
+            medium: Memory
+          name: shm
+        - configMap:
+            items:
+              - key: ca-bundle.crt
+                path: ca-bundle.crt
+            name: workbench-trusted-ca-bundle
+            optional: true
+          name: trusted-ca
+        - name: oauth-config
+          secret:
+            defaultMode: 420
+            secretName: example-workbench-test-oauth-config
+        - name: tls-certificates
+          secret:
+            defaultMode: 420
+            secretName: example-workbench-test-tls
+status:
+  conditions:
+    - lastProbeTime: '2024-05-08T21:39:00Z'
+      lastTransitionTime: '2024-05-08T21:39:00Z'
+      status: 'True'
+      type: Initialized
+    - lastProbeTime: '2024-05-08T21:39:00Z'
+      lastTransitionTime: '2024-05-08T21:39:00Z'
+      message: 'containers with unready status: [example-workbench-test oauth-proxy]'
+      reason: ContainersNotReady
+      status: 'False'
+      type: Ready
+    - lastProbeTime: '2024-05-08T21:39:00Z'
+      lastTransitionTime: '2024-05-08T21:39:00Z'
+      message: 'containers with unready status: [example-workbench-test oauth-proxy]'
+      reason: ContainersNotReady
+      status: 'False'
+      type: ContainersReady
+    - lastProbeTime: '2024-05-08T21:39:00Z'
+      lastTransitionTime: '2024-05-08T21:39:00Z'
+      status: 'True'
+      type: PodScheduled
+  containerState:
+    waiting:
+      reason: ContainerCreating
+  readyReplicas: 0
