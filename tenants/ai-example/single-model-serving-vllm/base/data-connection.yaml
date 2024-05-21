@@ -7,6 +7,7 @@ metadata:
     opendatahub.io/managed: 'true'
   annotations:
     opendatahub.io/connection-type: s3
+    openshift.io/display-name: vllm
 stringData:
   AWS_ACCESS_KEY_ID: minio
   AWS_S3_BUCKET: vllm
