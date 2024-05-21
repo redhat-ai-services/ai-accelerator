@@ -25,7 +25,6 @@ spec:
           args:
             - -ec
             - |-
-              env | grep AWS_
               python3 /scripts/upload-model-to-s3.py
           volumeMounts:
             - name: src
