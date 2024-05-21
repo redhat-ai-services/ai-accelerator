@@ -1,46 +1,58 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: create-minio-buckets
+  name: upload-model-to-s3
 spec:
   selector: {}
   template:
     spec:
       containers:
-        - name: create-buckets
+        - name: upload-model-to-s3
           image: image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-generic-data-science-notebook:2023.1
           imagePullPolicy: IfNotPresent
-          command:
-            - /bin/bash
           envFrom:
             - secretRef:
-                name: single-model-serving-ds-connection
+                name: aws-connection-example
+          env:
+            - name: MODEL_NAME
+              value: granite-3b-code-base
+            - name: PREFIX_PATH
+              value: "models"
+            - name: MODEL_PATH
+              value: "$(PREFIX_PATH)/$(MODEL_PATH)"
+          command:
+            - /bin/bash
           args:
             - -ec
             - |-
               env | grep AWS_
-              python3 /scripts/create-bucket.py
+              python3 /scripts/upload-model-to-s3.py
           volumeMounts:
+            - name: src
+              mountPath: /opt/app-root/src
             - name: scripts
               mountPath: /scripts
+      initContainers:
+        - name: git-cloner
+          image: alpine/git
+          env:
+            - name: MODEL_NAME
+              value: granite-3b-code-base
+            - name: REPO_URL
+              value: https://huggingface.co/ibm-granite/granite-3b-code-base.git
+          args:
+            - clone
+            - --single-branch
+            - --
+            - ${REPO_URL}
+            - /opt/app-root/src/models/${MODEL_NAME}
+          volumeMounts:
+            - mountPath: /opt/app-root/src/
+              name: src
       volumes:
+        - name: src
+          emptyDir: {}
         - name: scripts
           configMap:
-            name: create-bucket-script
-      initContainers:
-        - args:
-            - -ec
-            - |-
-              echo -n 'Waiting for minio root user secret'
-              while ! oc get secret single-model-serving-ds-connection 2>/dev/null | grep -qF single-model-serving-ds-connection; do
-              echo -n .
-              sleep 5
-              done; echo
-          command:
-            - /bin/bash
-          image: image-registry.openshift-image-registry.svc:5000/openshift/tools:latest
-          imagePullPolicy: IfNotPresent
-          name: wait-for-minio
+            name: upload-model-to-s3
       restartPolicy: Never
-      serviceAccount: create-bucket
-      serviceAccountName: create-bucket

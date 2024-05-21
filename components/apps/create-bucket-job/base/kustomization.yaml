@@ -3,7 +3,7 @@ kind: Kustomization
 
 resources:
   - create-bucket-job.yaml
-  - create-bucket-rbac.yaml
+  # - create-bucket-rbac.yaml
 
 generatorOptions:
   disableNameSuffixHash: true
