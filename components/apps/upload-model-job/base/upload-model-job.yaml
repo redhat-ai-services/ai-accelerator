@@ -43,13 +43,8 @@ spec:
             #   value: "false"
           command:
             - /bin/bash
-          args:
-            - git
-            - clone
-            - --single-branch
-            - --
-            - $(REPO_URL)
-            - /opt/app-root/src/models/$(MODEL_NAME)
+            - -c
+            - git clone --single-branch -- $(REPO_URL) /opt/app-root/src/models/$(MODEL_NAME)
           volumeMounts:
             - mountPath: /opt/app-root/src/
               name: src
