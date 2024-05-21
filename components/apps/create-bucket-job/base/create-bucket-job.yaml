@@ -26,7 +26,7 @@ spec:
       volumes:
         - name: scripts
           configMap:
-            name: create-bucket-script
+            name: create-bucket
       restartPolicy: Never
       # initContainers:
       #   - args:
