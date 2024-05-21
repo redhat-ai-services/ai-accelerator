@@ -19,7 +19,7 @@ spec:
             - name: PREFIX_PATH
               value: "models"
             - name: MODEL_PATH
-              value: "$(PREFIX_PATH)/$(MODEL_PATH)"
+              value: "$(PREFIX_PATH)/$(MODEL_NAME)"
           command:
             - /bin/bash
           args:
