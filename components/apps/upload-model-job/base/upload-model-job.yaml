@@ -41,7 +41,10 @@ spec:
               value: https://huggingface.co/ibm-granite/granite-3b-code-base.git
             # - name: GIT_CLONE_PROTECTION_ACTIVE
             #   value: "false"
+          command:
+            - /bin/bash
           args:
+            - git
             - clone
             - --single-branch
             - --
