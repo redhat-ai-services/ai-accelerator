@@ -16,7 +16,7 @@ spec:
     minReplicas: 1
     model:
       modelFormat:
-        name: caikit
+        name: pytorch
       name: ""
       runtime: tgis
       storage:
