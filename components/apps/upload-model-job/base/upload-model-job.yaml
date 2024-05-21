@@ -41,7 +41,7 @@ spec:
             - name: REPO_URL
               value: https://huggingface.co/ibm-granite/granite-3b-code-base.git
             - name: GIT_CLONE_PROTECTION_ACTIVE
-              value: false
+              value: "false"
           args:
             - clone
             - --single-branch
