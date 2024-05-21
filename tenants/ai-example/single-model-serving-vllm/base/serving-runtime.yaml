@@ -1,8 +1,8 @@
 apiVersion: serving.kserve.io/v1alpha1
 kind: ServingRuntime
-labels:
-  opendatahub.io/dashboard: "true"
 metadata:
+  labels:
+    opendatahub.io/dashboard: "true"
   annotations:
     openshift.io/display-name: vLLM
   name: vllm
