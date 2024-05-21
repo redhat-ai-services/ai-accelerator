@@ -1,7 +1,7 @@
 kind: Secret
 apiVersion: v1
 metadata:
-  name: aws-connection-vllm
+  name: aws-connection-tgis
   labels:
     opendatahub.io/dashboard: 'true'
   annotations:
