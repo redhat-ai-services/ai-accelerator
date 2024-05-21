@@ -4,6 +4,7 @@ metadata:
   name: aws-connection-tgis
   labels:
     opendatahub.io/dashboard: 'true'
+    opendatahub.io/managed: 'true'
   annotations:
     opendatahub.io/connection-type: s3
 stringData:
