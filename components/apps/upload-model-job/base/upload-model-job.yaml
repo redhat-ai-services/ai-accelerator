@@ -43,8 +43,8 @@ spec:
           args:
             - clone
             - --single-branch
-            - https://huggingface.co/ibm-granite/granite-3b-code-base.git
-            - /opt/app-root/src/models/${MODEL_NAME}
+            - $(REPO_URL)
+            - /opt/app-root/src/models/$(MODEL_NAME)
           volumeMounts:
             - mountPath: /opt/app-root/src/
               name: src
