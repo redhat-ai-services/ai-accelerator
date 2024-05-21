@@ -14,7 +14,7 @@ spec:
             - /bin/bash
           envFrom:
             - secretRef:
-                name: aws-
+                name: aws-connection-example
           args:
             - -ec
             - |-
