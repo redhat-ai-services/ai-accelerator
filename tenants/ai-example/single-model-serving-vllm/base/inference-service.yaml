@@ -26,3 +26,7 @@ spec:
       storage:
         key: aws-connection-vllm
         path: models/granite-3b-code-base
+    tolerations:
+      - effect: NoSchedule
+        key: nvidia-gpu-only
+        operator: Exists
