@@ -5,9 +5,9 @@ namespace: ai-example-single-model-serving
 
 resources:
   - ./setup-jobs
-  - inference-service-granite.yaml
-  - vllm-data-connection.yaml
-  - serving-runtime-vllm.yaml
+  - data-connection.yaml
+  - inference-service.yaml
+  - serving-runtime.yaml
 
 patches:
   - path: patch-model-details.yaml
