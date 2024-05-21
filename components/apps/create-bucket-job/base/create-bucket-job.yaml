@@ -27,6 +27,7 @@ spec:
         - name: scripts
           configMap:
             name: create-bucket-script
+      restartPolicy: Never
       # initContainers:
       #   - args:
       #       - -ec
