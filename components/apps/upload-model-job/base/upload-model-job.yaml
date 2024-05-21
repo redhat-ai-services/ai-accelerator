@@ -43,6 +43,7 @@ spec:
           args:
             - clone
             - --single-branch
+            - --
             - $(REPO_URL)
             - /opt/app-root/src/models/$(MODEL_NAME)
           volumeMounts:
