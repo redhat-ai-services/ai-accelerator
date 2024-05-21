@@ -5,7 +5,14 @@ namespace: ai-example-single-model-serving
 
 resources:
   - ../../../../components/apps/create-bucket-job/overlays/default
+  - ../../../../components/apps/upload-model-job/overlays/default
   - vllm-data-connection.yaml
+
+patches:
+  - path: patch-model-details.yaml
+    target:
+      kind: Job
+      name: upload-model-to-s3
 
 replacements:
   - source:
@@ -15,6 +22,11 @@ replacements:
     targets:
       - select:
           kind: Job
-          name: create-minio-buckets
+          name: create-buckets
+        fieldPaths:
+          - spec.template.spec.containers.0.envFrom.0.secretRef.name
+      - select:
+          kind: Job
+          name: upload-model-to-s3
         fieldPaths:
           - spec.template.spec.containers.0.envFrom.0.secretRef.name
