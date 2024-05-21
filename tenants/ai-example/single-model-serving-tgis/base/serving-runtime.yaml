@@ -11,7 +11,6 @@ metadata:
   labels:
     opendatahub.io/dashboard: "true"
   name: tgis
-  namespace: ai-example-single-model-serving
 spec:
   containers:
   - name: kserve-container

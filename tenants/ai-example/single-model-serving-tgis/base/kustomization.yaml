@@ -6,8 +6,8 @@ namespace: ai-example-single-model-serving
 resources:
   - ./setup-jobs
   - data-connection.yaml
-  # - inference-service.yaml
-  # - serving-runtime.yaml
+  - inference-service.yaml
+  - serving-runtime.yaml
 
 patches:
   - path: patch-model-details.yaml
