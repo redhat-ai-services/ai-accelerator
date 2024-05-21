@@ -33,14 +33,14 @@ spec:
               mountPath: /scripts
       initContainers:
         - name: git-cloner
-          image: alpine/git
+          image: image-registry.openshift-image-registry.svc:5000/openshift/tools:latest
           env:
             - name: MODEL_NAME
               value: granite-3b-code-base
             - name: REPO_URL
               value: https://huggingface.co/ibm-granite/granite-3b-code-base.git
-            - name: GIT_CLONE_PROTECTION_ACTIVE
-              value: "false"
+            # - name: GIT_CLONE_PROTECTION_ACTIVE
+            #   value: "false"
           args:
             - clone
             - --single-branch
