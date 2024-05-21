@@ -1,4 +1,7 @@
-import boto3, os, botocore
+import os
+
+import botocore
+import boto3
 
 bucket_name = os.getenv("AWS_S3_BUCKET")
 aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID")
@@ -21,6 +24,9 @@ bucket = s3_resource.Bucket(bucket_name)
 
 local_directory = os.getenv("MODEL_PATH")
 s3_prefix = os.getenv("MODEL_PATH")
+
+print(f"Attempting to upload files from {local_directory}")
+print(os.listdir(local_directory))
 
 print("Uploading to s3: ")
 for root, dirs, files in os.walk(local_directory):
