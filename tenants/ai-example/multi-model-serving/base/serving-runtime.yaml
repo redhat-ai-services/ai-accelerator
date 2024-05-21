@@ -8,10 +8,8 @@ metadata:
     opendatahub.io/recommended-accelerators: '["nvidia.com/gpu"]'
     opendatahub.io/template-display-name: OpenVINO Model Server
     opendatahub.io/template-name: ovms
-    openshift.io/display-name: test-server
-  name: test-server
-  uid: 4e4aadca-4396-4736-8d7a-7641be68fc41
-  namespace: ai-example-multi-model-serving
+    openshift.io/display-name: sample-model-server
+  name: sample-model-server
   labels:
     opendatahub.io/dashboard: 'true'
 spec:

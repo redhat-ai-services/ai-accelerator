@@ -2,11 +2,9 @@ apiVersion: serving.kserve.io/v1beta1
 kind: InferenceService
 metadata:
   annotations:
-    openshift.io/display-name: fraud
+    openshift.io/display-name: fraud-detection-model
     serving.kserve.io/deploymentMode: ModelMesh
-  name: fraud
-  uid: 7ab55d63-23e6-457a-aa74-143094cddf8a
-  namespace: ai-example-multi-model-serving
+  name: fraud-detection-model
   labels:
     opendatahub.io/dashboard: 'true'
 spec:
@@ -17,7 +15,7 @@ spec:
         version: '1'
       name: ''
       resources: {}
-      runtime: test-server
+      runtime: sample-model-server
       storage:
         key: multi-model-serving-ds-connection
-        path: fraud/models/frauddetectionmodel.onnx
+        path: models/tenants/ai-example/multi-model-serving/models/frauddetectionmodel.onnx

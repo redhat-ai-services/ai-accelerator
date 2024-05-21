@@ -55,6 +55,8 @@ spec:
           image: alpine/git
           args:
             - clone
+            # - --branch
+            # - multi-model-serving
             - --single-branch
             - --
             - https://github.com/redhat-ai-services/ai-accelerator.git
