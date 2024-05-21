@@ -12,6 +12,6 @@ generatorOptions:
   disableNameSuffixHash: true
 
 configMapGenerator:
-  - name: create-bucket-script
+  - name: create-bucket
     files:
       - create-bucket.py
