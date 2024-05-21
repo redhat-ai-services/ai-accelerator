@@ -22,7 +22,7 @@ spec:
           nvidia.com/gpu: '1'
         requests:
           nvidia.com/gpu: '1'
-      runtime: granite
+      runtime: vllm
       storage:
         key: aws-connection-vllm
         path: models/granite-3b-code-base
