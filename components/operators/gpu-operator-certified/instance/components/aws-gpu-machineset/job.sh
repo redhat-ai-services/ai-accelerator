@@ -105,6 +105,8 @@ YAML
   done
 }
 
+INSTANCE_TYPE=${INSTANCE_TYPE:-g4dn.4xlarge}
+
 ocp_aws_cluster || exit 0
-ocp_aws_create_gpu_machineset
+ocp_aws_create_gpu_machineset ${INSTANCE_TYPE}
 ocp_create_machineset_autoscale
