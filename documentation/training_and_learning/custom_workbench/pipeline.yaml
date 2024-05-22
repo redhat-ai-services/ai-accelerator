@@ -9,7 +9,7 @@ spec:
     - name: git-clone
       params:
         - name: url
-          value: 'https://github.com/redhat-na-stp-ai-practice/openshift-ai-pilot-gitops'
+          value: 'https://github.com/redhat-na-stp-ai-practice/ai-accelerator'
         - name: revision
           value: custom-wb-pipeline
         - name: refspec
