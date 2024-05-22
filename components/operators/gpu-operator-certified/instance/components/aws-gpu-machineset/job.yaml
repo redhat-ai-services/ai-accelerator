@@ -55,8 +55,8 @@ metadata:
   generateName: job-aws-gpu-machineset-
   name: job-aws-gpu-machineset
   namespace: nvidia-gpu-operator
-  annotations:
-    argocd.argoproj.io/hook: Sync
+  # annotations:
+  #   argocd.argoproj.io/hook: Sync
     # argocd.argoproj.io/hook-delete-policy: HookSucceeded
 spec:
   template:
