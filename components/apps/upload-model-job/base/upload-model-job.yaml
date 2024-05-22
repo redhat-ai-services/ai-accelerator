@@ -44,6 +44,7 @@ spec:
           command:
             - /bin/bash
             - -c
+            - -e
             - git clone --single-branch -- $(REPO_URL) /opt/app-root/src/models/$(MODEL_NAME)
             - ls -laFh /opt/app-root/src/models/$(MODEL_NAME)
           volumeMounts:
