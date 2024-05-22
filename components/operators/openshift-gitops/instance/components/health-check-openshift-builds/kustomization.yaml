@@ -5,6 +5,6 @@ patches:
   - path: patch-build-health-check.yaml
     target:
       kind: ArgoCD
-  - path: patch-imagestream-health-check.yaml
-    target:
-      kind: ArgoCD
+  # - path: patch-imagestream-health-check.yaml
+  #   target:
+  #     kind: ArgoCD
