@@ -9,7 +9,7 @@ metadata:
 spec:
   generators:
   - git:
-      repoURL: 'https://github.com/redhat-ai-services/openshift-ai-pilot-gitops.git'
+      repoURL: 'https://github.com/redhat-ai-services/ai-accelerator.git'
       revision: main
       directories:
       - path: tenants/*/*/overlays/patch-me-see-overlay
