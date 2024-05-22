@@ -33,7 +33,8 @@ spec:
               mountPath: /scripts
       initContainers:
         - name: git-cloner
-          image: image-registry.openshift-image-registry.svc:5000/openshift/tools:latest
+          # image: image-registry.openshift-image-registry.svc:5000/openshift/tools:latest
+          image: alpine/git:2.43.0
           env:
             - name: MODEL_NAME
               value: granite-3b-code-base
