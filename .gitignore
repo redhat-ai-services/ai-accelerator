@@ -9,3 +9,6 @@ tmp/
 
 # Sealed secret key
 bootstrap/base/sealed-secrets-secret.yaml
+
+# DrawIO backups
+*.drawio.bkp
