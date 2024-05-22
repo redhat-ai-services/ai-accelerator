@@ -43,7 +43,7 @@ spec:
             # - name: GIT_CLONE_PROTECTION_ACTIVE
             #   value: "false"
           command:
-            - /bin/bash
+            - /bin/sh
             - -c
             - -e
             - git clone --single-branch -- $(REPO_URL) /opt/app-root/src/models/$(MODEL_NAME)
