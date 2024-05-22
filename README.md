@@ -6,7 +6,7 @@ This repo is intended to provide a core set of OpenShift features that would com
 
 Once the initial components are deployed, several ArgoCD Application objects are created which are then used to install and manage the install of the operators on the cluster.
 
-[AI Accelerator Overview](documentation/images/AI_Accelerator.drawio.png)
+![AI Accelerator Overview](documentation/images/AI_Accelerator.drawio.png)
 
 ## Additional Documentation and Info
 
