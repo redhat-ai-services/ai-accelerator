@@ -12,7 +12,7 @@ metadata:
 spec:
   predictor:
     maxReplicas: 1
-    minReplicas: 1
+    minReplicas: 0
     model:
       modelFormat:
         name: pytorch
