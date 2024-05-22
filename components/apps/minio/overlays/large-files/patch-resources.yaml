@@ -6,7 +6,8 @@ spec:
   template:
     spec:
       containers:
-        - resources:
+        - name: minio
+          resources:
             limits:
               cpu: 500m
               memory: 4Gi

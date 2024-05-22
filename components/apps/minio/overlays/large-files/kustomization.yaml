@@ -6,6 +6,6 @@ resources:
 
 patches:
   - target:
-      kind: Demployment
+      kind: Deployment
       name: minio
     path: patch-resources.yaml
