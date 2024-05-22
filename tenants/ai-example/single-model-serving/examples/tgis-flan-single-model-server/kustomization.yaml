@@ -1,7 +1,0 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-
-resources:
-  - upload-model-to-s3-flan-job.yaml
-  - serving-runtime-tgis-grpc.yaml
-  - inference-service-flan.yaml
