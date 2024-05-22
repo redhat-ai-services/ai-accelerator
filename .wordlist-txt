@@ -45,6 +45,7 @@ Devfile
 DotNET
 ECK
 EOF
+Elasticsearch
 Eventing
 FullAccess
 GPUs
@@ -81,6 +82,7 @@ MTA
 MachineConfig
 MachineSet
 MachineSets
+MinIO
 ModelMesh
 MultiClusterHub
 NFD

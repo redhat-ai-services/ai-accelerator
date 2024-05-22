@@ -21,7 +21,7 @@ Once the initial components are deployed, several ArgoCD Application objects are
 * [Kiali Operator](components/operators/kiali/)
 * [Node Feature Discovery Operator](components/operators/nfd/)
 * [OpenShift AI](components/operators/openshift-ai/)
-* [OpenShift ElasticSearch](components/operators/openshift-elasticsearch/)
+* [OpenShift Elasticsearch](components/operators/openshift-elasticsearch/)
 * [OpenShift Pipelines](components/operators/openshift-pipelines/)
 * [OpenShift Serverless](components/operators/openshift-serverless/)
 * [OpenShift ServiceMesh](components/operators/openshift-servicemesh/)
