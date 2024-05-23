@@ -104,11 +104,49 @@ RHOAI Dashboard > Settings > User Management:
 ![Add Groups in RHOAI](./readme_images/add_groups_RHOAI.png "Add Groups in RHOAI")
 
 Documentation:
-
 [Managing Users](https://access.redhat.com/documentation/en-us/red_hat_openshift_ai_self-managed/2-latest/html-single/managing_users/index)
-
 [OpenShift Group Management](https://ai-on-openshift.io/odh-rhoai/openshift-group-management/)
 
+## Role Based Access Controls for RHOAI Projects:
+To add Groups or specific users to a RHOAI project, set up a role binding as such below:
+```
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: dashboard-permissions-ai-test-group
+  namespace: ai-example-project
+  labels:
+    opendatahub.io/dashboard: 'true'
+    opendatahub.io/project-sharing: 'true'
+subjects:
+  - kind: Group
+    apiGroup: rbac.authorization.k8s.io
+    name: test-group
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: edit ##or admin
+```
+
+For Users:
+```
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: dashboard-permissions-user1
+  namespace: ai-example-project
+  labels:
+    opendatahub.io/dashboard: 'true'
+    opendatahub.io/project-sharing: 'true'
+subjects:
+  - kind: User
+    apiGroup: rbac.authorization.k8s.io
+    name: user1
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: edit ##or admin
+```
 
 ## Non-GitOps Installation
 Install supporting operators from `nongitops_yaml/operators/`:
