@@ -1,31 +1,51 @@
 apiVersion: serving.kserve.io/v1alpha1
 kind: ServingRuntime
 metadata:
-  labels:
-    opendatahub.io/dashboard: "true"
   annotations:
-    openshift.io/display-name: vLLM
-  name: vllm
+    opendatahub.io/accelerator-name: ''
+    opendatahub.io/apiProtocol: REST
+    opendatahub.io/template-display-name: vLLM123
+    opendatahub.io/template-name: vllm123
+    openshift.io/display-name: granite2
+  name: granite2
+  namespace: ai-example-single-model-serving
+  labels:
+    opendatahub.io/dashboard: 'true'
 spec:
   builtInAdapter:
     modelLoadingTimeoutMillis: 90000
   containers:
-    - name: kserve-container
-      args:
-        - --model
+    - args:
+        - '--model'
         - /mnt/models/
-        - --download-dir
+        - '--download-dir'
         - /models-cache
-        - --port
-        - "8080"
-        - --max-model-len
-        - "2048"
-      image: quay.io/rh-aiservices-bu/vllm-openai-ubi9:0.4.2
+        - '--port'
+        - '8080'
+        - '--max-model-len'
+        - '2048'
+      image: 'quay.io/rh-aiservices-bu/vllm-openai-ubi9:0.4.2'
+      name: kserve-container
       ports:
         - containerPort: 8080
           name: http1
           protocol: TCP
+      resources:
+        limits:
+          cpu: '2'
+          memory: 8Gi
+        requests:
+          cpu: '1'
+          memory: 4Gi
+      volumeMounts:
+        - mountPath: /dev/shm
+          name: shm
   multiModel: false
   supportedModelFormats:
     - autoSelect: true
       name: pytorch
+  volumes:
+    - emptyDir:
+        medium: Memory
+        sizeLimit: 2Gi
+      name: shm

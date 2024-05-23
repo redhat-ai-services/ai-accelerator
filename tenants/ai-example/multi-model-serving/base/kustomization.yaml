@@ -2,22 +2,33 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - service-account-demo-setup.yaml
-  - role-binding-demo-setup.yaml
-  - create-ds-connection-secret.yaml
-  - create-bucket-job.yaml
-  - serving-runtime.yaml
+  - ./setup-jobs
+  - data-connection.yaml
   - inference-service.yaml
+  - serving-runtime.yaml
 
 generatorOptions:
   disableNameSuffixHash: true
 
-configMapGenerator:
-  - name: create-bucket-script
-    namespace: ai-example-multi-model-serving
-    files:
-      - create-bucket.py
-  - name: upload-model-to-s3
-    namespace: ai-example-multi-model-serving
-    files:
-      - upload-model-to-s3.py
+patches:
+  - path: patch-model-details.yaml
+    target:
+      kind: Job
+      name: upload-model-to-s3-multi-model
+
+replacements:
+  - source:
+      kind: Secret
+      name: aws-connection-multi-model
+      fieldPath: metadata.name
+    targets:
+      - select:
+          kind: Job
+          name: create-buckets-multi-model
+        fieldPaths:
+          - spec.template.spec.containers.0.envFrom.0.secretRef.name
+      - select:
+          kind: Job
+          name: upload-model-to-s3-multi-model
+        fieldPaths:
+          - spec.template.spec.containers.0.envFrom.0.secretRef.name

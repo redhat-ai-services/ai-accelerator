@@ -15,7 +15,7 @@ spec:
         version: '1'
       name: ''
       resources: {}
-      runtime: sample-model-server
+      runtime: multi-model-server
       storage:
-        key: multi-model-serving-ds-connection
-        path: models/tenants/ai-example/multi-model-serving/models/frauddetectionmodel.onnx
+        key: aws-connection-multi-model
+        path: models/fraud-detection-model/tenants/ai-example/multi-model-serving/models/frauddetectionmodel.onnx
