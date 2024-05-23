@@ -5,7 +5,7 @@ metadata:
     opendatahub.io/dashboard: "true"
   annotations:
     openshift.io/display-name: vLLM
-    opendatahub.io/accelerator-name: ''
+    opendatahub.io/accelerator-name: ""
     opendatahub.io/apiProtocol: REST
     opendatahub.io/template-name: vLLM
   name: vllm
