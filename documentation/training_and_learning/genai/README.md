@@ -32,7 +32,7 @@ You can use the Automated install using GitOps (if installed) or using kustomize
 <details>
 <summary>Using kustomize to create manifests:</summary>
 
-You can also use kustomize to apply all the yamls at once:
+You can also use kustomize to apply all the manifests at once:
 `kustomize build https://github.com/rh-aiservices-bu/llm-on-openshift.git/llm-servers/vllm/gitops | oc apply -f -`
 
 This applies the pvc, service, route, and deployment in one command. Make sure you are in the correct namespace. Make sure to add your HuggingFace token to the deployment environment variable.
@@ -77,7 +77,7 @@ Navigate to the deployment pod logs and wait for the startup to complete:
 
 ## Test vLLM
 
-Navigate to the vllm route and add `/docs` to the end of it (https://vllm-vllm.apps.cluster-1abcd.sandbox123.opentlc.com/docs) to open the openAPI webpage to test the vLLM.
+Navigate to the vllm route and add `/docs` to the end of it (https://vllm-vllm.apps.cluster-1.sandbox123.opentlc.com/docs) to open the openAPI web page to test the vLLM.
 
 ![api](./images/fastapi_vllm.png "vllm api")
 
@@ -174,7 +174,7 @@ Follow the instructions to install PostgreSQL. Make sure the vector extension is
 ## Combining everything together in RHOAI
 Login to RHOAI and create a new Data Science Project.
 
-Before creating a DSP, navigate in the `RHOAI Dashboard > Settings > Accelerator profiles` and make sure the NVIDIA GPU is enabled.
+Before creating a Data Science Project, navigate in the `RHOAI Dashboard > Settings > Accelerator profiles` and make sure the NVIDIA GPU is enabled.
 
 Create a Data Science Project named `rag-demo` with a `Standard Data Science` Notebook image and either `Small` or `Medium` Container size. After the notebook is running, open and go into it.
 
