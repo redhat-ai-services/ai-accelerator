@@ -18,4 +18,4 @@ spec:
       runtime: multi-model-server
       storage:
         key: aws-connection-multi-model
-        path: models/fraud-detection-model/tenants/ai-example/multi-model-serving/models/frauddetectionmodel.onnx
+        path: models/fraud-detection-model/frauddetectionmodel.onnx

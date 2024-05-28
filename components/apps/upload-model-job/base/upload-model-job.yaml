@@ -14,12 +14,12 @@ spec:
             - secretRef:
                 name: aws-connection-example
           env:
-            - name: MODEL_NAME
-              value: granite-3b-code-base
+            - name: SUBDIR_MODEL_PATH
+              value: ""
             - name: PREFIX_PATH
-              value: "models"
+              value: models #since repo is in the models dir, copy whatever is in the models folder
             - name: MODEL_PATH
-              value: "$(PREFIX_PATH)/$(MODEL_NAME)"
+              value: "$(PREFIX_PATH)/$(SUBDIR_MODEL_PATH)"
           command:
             - /bin/bash
           args:
