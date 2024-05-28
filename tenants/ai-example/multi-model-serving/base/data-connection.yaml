@@ -13,4 +13,5 @@ stringData:
   AWS_S3_BUCKET: multi-model
   AWS_S3_ENDPOINT: http://minio.ai-example-multi-model-serving.svc.cluster.local:9000
   AWS_SECRET_ACCESS_KEY: minio123
+  AWS_DEFAULT_REGION: east-1
 type: Opaque
