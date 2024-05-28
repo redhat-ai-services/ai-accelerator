@@ -4,4 +4,4 @@ kind: Kustomization
 namespace: ai-example-multi-model-serving
 
 resources:
-  - ../../../../components/apps/minio/overlays/large-files
+  - ../../../../components/apps/minio/overlays/default
