@@ -17,7 +17,7 @@ spec:
             - name: SUBDIR_MODEL_PATH
               value: ""
             - name: PREFIX_PATH
-              value: models #since repo is in the models dir, copy whatever is in the models folder
+              value: models # since repo is in the models dir, copy whatever is in the models folder
             - name: MODEL_PATH
               value: "$(PREFIX_PATH)/$(SUBDIR_MODEL_PATH)"
           command:
