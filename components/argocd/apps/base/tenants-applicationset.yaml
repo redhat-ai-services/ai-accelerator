@@ -42,4 +42,4 @@ spec:
       ignoreDifferences:
         - kind: Notebook
           jqPathExpressions:
-            - /spec/template/spec/containers[] | select(.name == "oauth-proxy")
+            - .spec.template.spec.containers[] | select(.name == "oauth-proxy")
