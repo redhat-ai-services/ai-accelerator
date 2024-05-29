@@ -48,6 +48,7 @@ EOF
 Elasticsearch
 Eventing
 FullAccess
+GenAI
 GPUs
 Gi
 GitOps
@@ -97,6 +98,7 @@ OAuth
 OCSInitialization
 ODH
 OLM
+ONNX
 Observability
 OpenDataHub
 OpenShift

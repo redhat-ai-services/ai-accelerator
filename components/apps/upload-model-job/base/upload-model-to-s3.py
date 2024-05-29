@@ -23,7 +23,7 @@ s3_resource = session.resource(
 bucket = s3_resource.Bucket(bucket_name)
 
 local_directory = os.getenv("MODEL_PATH")
-s3_prefix = os.getenv("MODEL_PATH")
+s3_prefix = os.getenv("PREFIX_PATH")
 
 print(f"Attempting to upload files from {local_directory}")
 print(os.listdir(local_directory))

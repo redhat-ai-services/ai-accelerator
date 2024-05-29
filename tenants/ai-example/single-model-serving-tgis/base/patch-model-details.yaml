@@ -1,7 +1,4 @@
 - op: replace
-  path: /spec/template/spec/containers/0/env/0/value
-  value: flan-t5-small
-- op: replace
   path: /spec/template/spec/initContainers/0/env/0/value
   value: flan-t5-small
 - op: replace
