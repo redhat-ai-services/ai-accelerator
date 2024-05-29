@@ -43,3 +43,5 @@ spec:
         - kind: Notebook
           jqPathExpressions:
             - .spec.template.spec.containers[] | select(.name == "oauth-proxy")
+            - .spec.template.spec.containers[] | select(.name == "oauth-config")
+            - .spec.template.spec.volumes[] | select(.name == "tls-certificates")
