@@ -41,6 +41,7 @@ spec:
         server: https://kubernetes.default.svc
       ignoreDifferences:
         - kind: Notebook
+          group: kubeflow.org
           # jqPathExpressions:
           #   - .spec.template.spec.containers[] | select(.name == "oauth-proxy")
           #   - .spec.template.spec.containers[] | select(.name == "oauth-config")
