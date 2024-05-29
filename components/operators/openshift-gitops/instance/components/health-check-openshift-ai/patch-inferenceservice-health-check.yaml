@@ -12,16 +12,23 @@
           degraded = false
           for i, condition in pairs(obj.status.conditions) do
 
+            if condition.message == nil then
+              message = ""
+            else
+              message = condition.message
+            end
+
             if condition.status == "Unknown" then
               progressing = true
-              msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. condition.message .. "\n"
+
+              msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. message .. "\n"
             elseif condition.status == "False" then
               if condition.type == "LatestDeploymentReady" then
                 progressing = true
               else
                 degraded = true
               end
-              msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. condition.message .. "\n"
+              msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. message .. "\n"
             end
 
           end
