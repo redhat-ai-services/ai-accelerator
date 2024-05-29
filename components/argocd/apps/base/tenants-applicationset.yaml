@@ -47,7 +47,7 @@ spec:
           #   - .spec.template.spec.volumes[] | select(.name == "tls-certificates")
           jsonPointers:
             - /spec/template/spec/containers/1
-            - /spec/template/spec/volumes/
+            - /spec/template/spec/volumes
         - kind: ConfigMap
           jsonPointers:
             - /data/my-data
