@@ -46,6 +46,7 @@ spec:
           #   - .spec.template.spec.containers[] | select(.name == "oauth-config")
           #   - .spec.template.spec.volumes[] | select(.name == "tls-certificates")
           jsonPointers:
+            - /metadata/annotations/test
             - /spec/template/spec/containers/1
             - /spec/template/spec/volumes
         - kind: ConfigMap

@@ -8,6 +8,7 @@ metadata:
     opendatahub.io/accelerator-name: ''
     openshift.io/description: ''
     openshift.io/display-name: example-workbench
+    test: test
     notebooks.opendatahub.io/last-image-selection: 's2i-minimal-notebook:2024.1'
   name: example-workbench
 spec:
