@@ -41,10 +41,8 @@ spec:
         server: https://kubernetes.default.svc
       ignoreDifferences:
         - kind: Notebook
-          # jqPathExpressions:
-          #   - .spec.template.spec.containers[] | select(.name == "oauth-proxy")
-          #   - .spec.template.spec.containers[] | select(.name == "oauth-config")
-          #   - .spec.template.spec.volumes[] | select(.name == "tls-certificates")
-          jsonPointers:
-            - /spec/template/spec/containers/1
-            - /spec/template/spec/volumes/
+          group: kubeflow.org
+          jqPathExpressions:
+            - .spec.template.spec.containers[] | select(.name == "oauth-proxy")
+            - .spec.template.spec.volumes[] | select(.name == "oauth-config")
+            - .spec.template.spec.volumes[] | select(.name == "tls-certificates")
