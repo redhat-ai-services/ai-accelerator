@@ -39,3 +39,7 @@ spec:
         path: '{{path}}'
       destination:
         server: https://kubernetes.default.svc
+      ignoreDifferences:
+        - kind: Notebook
+          jqPathExpressions:
+            - /spec/template/spec/containers[] | select(.name == "oauth-proxy")
