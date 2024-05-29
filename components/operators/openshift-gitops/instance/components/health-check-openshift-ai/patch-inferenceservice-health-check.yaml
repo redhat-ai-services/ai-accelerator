@@ -16,7 +16,7 @@
               progressing = true
               msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. condition.message .. "\n"
             elseif condition.status == "False" then
-              if condition.type = "LatestDeploymentReady" then
+              if condition.type == "LatestDeploymentReady" then
                 progressing = true
               else
                 degraded = true
