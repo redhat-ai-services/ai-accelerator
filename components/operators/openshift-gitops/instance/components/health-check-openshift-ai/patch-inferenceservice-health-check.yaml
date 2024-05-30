@@ -16,7 +16,7 @@
             progressing = true
           end
         end
-        
+
         if obj.status.conditions ~= nil then
           msg = ""
 
