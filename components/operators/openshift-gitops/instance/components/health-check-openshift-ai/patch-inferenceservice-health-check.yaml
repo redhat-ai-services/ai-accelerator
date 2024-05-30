@@ -12,7 +12,7 @@
       if obj.status ~= nil then
 
         local progressing = false
-        local degraded = true
+        local degraded = false
         local status_false = 0
         local status_unknown = 0
         msg = ""
