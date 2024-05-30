@@ -50,7 +50,7 @@
 
           end
 
-          if progressing == false and degraded = false and status_unknown == 0 and status_false == 0 then
+          if progressing == false and degraded == false and status_unknown == 0 and status_false == 0 then
             health_status.status = "Healthy"
             msg = "InferenceService is healthy."
           elseif progressing == true and status_unknown >= 0 then
