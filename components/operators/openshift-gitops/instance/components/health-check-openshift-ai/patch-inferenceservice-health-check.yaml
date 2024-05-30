@@ -54,10 +54,10 @@
             health_status.status = "Healthy"
             msg = "InferenceService is healthy."
           elseif degraded == false and status_unknown >= 0 then
-            msg = msg .. " || unknown: " .. status_unknown .. " || false: " .. status_false .. " || degraded: " .. degraded .. " || progressing: " .. progressing
+            msg = msg .. " || unknown: " .. status_unknown .. " || false: " .. status_false .. " || degraded: " .. tostring(degraded) .. " || progressing: " .. tostring(progressing)
             health_status.status = "Progressing"
           else
-            msg = msg .. " || unknown: " .. status_unknown .. " || false: " .. status_false .. " || degraded: " .. degraded .. " || progressing: " .. progressing
+            msg = msg .. " || unknown: " .. status_unknown .. " || false: " .. status_false .. " || degraded: " .. tostring(degraded) .. " || progressing: " .. tostring(progressing)
             health_status.status = "Degraded"
           end
 
