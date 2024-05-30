@@ -25,8 +25,6 @@
             status_false = 0
             status_unknown = 0
 
-
-
             if condition.status == "Unknown" then
               status_unknown = status_unknown + 1
             elseif condition.status == "False" then
@@ -36,10 +34,10 @@
             if condition.status ~= "True" then
               msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status
               if condition.reason ~= nil and condition.reason ~= "" then
-                msg = msg .. " | " condition.reason
+                msg = msg .. " | " .. condition.reason
               end
               if condition.message ~= nil and condition.message ~= "" then
-                msg = msg .. " | " condition.message
+                msg = msg .. " | " .. condition.message
               end
               msg = msg .. "\n"
             end
