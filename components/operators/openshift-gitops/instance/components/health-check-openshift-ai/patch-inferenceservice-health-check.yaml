@@ -18,14 +18,14 @@
         msg = ""
 
         if obj.modelStatus ~= nil then
-          if obj.modelStatus.transitionStatus ~= "UpToDate" then
+          -- if obj.modelStatus.transitionStatus ~= "UpToDate" then
             if obj.modelStatus.transitionStatus == "InProgress" then
               progressing = true
             else
               degraded = true
             end
             msg = msg .. "0: transitionStatus | " .. obj.modelStatus.transitionStatus .. "\n"
-          end
+          -- end
         end
         
         if obj.status.conditions ~= nil then
