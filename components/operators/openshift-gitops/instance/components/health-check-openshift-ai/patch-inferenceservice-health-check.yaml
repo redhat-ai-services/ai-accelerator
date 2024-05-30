@@ -15,7 +15,7 @@
         local degraded = false
         local status_false = 0
         local status_unknown = 0
-        msg = ""
+        local msg = ""
 
         if obj.status.modelStatus ~= nil then
           if obj.status.modelStatus.transitionStatus ~= "UpToDate" then
