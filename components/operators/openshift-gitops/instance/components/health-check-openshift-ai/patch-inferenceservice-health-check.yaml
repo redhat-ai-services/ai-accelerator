@@ -14,16 +14,18 @@
         local progressing = false
         local status_false = 0
         local status_unknown = 0
+        msg = ""
 
         if obj.modelStatus ~= nil then
-          if obj.modelStatus.transitionStatus == "InProgress" then
-            progressing = true
+          if obj.modelStatus.transitionStatus ~= "UpToDate" then
+            if obj.modelStatus.transitionStatus == "InProgress" then
+              progressing = true
+            end
+            msg = msg .. "0: transitionStatus | " .. obj.modelStatus.transitionStatus .. "\n"
           end
         end
         
         if obj.status.conditions ~= nil then
-          msg = ""
-
           for i, condition in pairs(obj.status.conditions) do
 
             if condition.status == "Unknown" then
