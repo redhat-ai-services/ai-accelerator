@@ -21,7 +21,7 @@
           -- if obj.modelStatus.transitionStatus == "UpToDate" then
           if obj.modelStatus.transitionStatus == "InProgress" then
             progressing = true
-          else
+          elseif obj.modelStatus.transitionStatus == "BlockedByFailedLoad" or obj.modelStatus.transitionStatus == "InvalidSpec" then
             degraded = true
           end
           -- end
