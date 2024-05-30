@@ -18,17 +18,23 @@
               message = condition.message
             end
 
+            if condition.reason == nil then
+              reason = ""
+            else
+              message = condition.reason
+            end
+
             if condition.status == "Unknown" then
               progressing = true
 
-              msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. message .. "\n"
+              msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. reason .. " | " .. message .. "\n"
             elseif condition.status == "False" then
               if condition.type == "LatestDeploymentReady" then
                 progressing = true
               else
                 degraded = true
               end
-              msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. message .. "\n"
+              msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. reason .. " | " .. message .. "\n"
             end
 
           end
