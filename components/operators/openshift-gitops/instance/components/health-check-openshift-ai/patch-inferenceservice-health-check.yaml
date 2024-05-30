@@ -18,7 +18,7 @@
         msg = ""
 
         if obj.status.modelStatus ~= nil then
-          if obj.status.modelStatus.transitionStatus == "UpToDate" then
+          if obj.status.modelStatus.transitionStatus ~= "UpToDate" then
             if obj.status.modelStatus.transitionStatus == "InProgress" then
               progressing = true
             else
