@@ -11,13 +11,6 @@ patches:
   - path: patch-notebook-health-check.yaml
     target:
       kind: ArgoCD
-  # These have not yet been implimented/tested
-  # - path: patch-inferencegraph-health-check.yaml
-  #   target:
-  #     kind: ArgoCD
   - path: patch-inferenceservice-health-check.yaml
     target:
       kind: ArgoCD
-  # - path: patch-servingruntime-health-check.yaml
-  #   target:
-  #     kind: ArgoCD
