@@ -1,4 +1,3 @@
----
 apiVersion: serving.kserve.io/v1beta1
 kind: InferenceService
 metadata:
@@ -20,25 +19,3 @@ spec:
       storage:
         key: aws-connection-multi-model
         path: models/fraud-detection-model/frauddetectionmodel.onnx
----
-apiVersion: serving.kserve.io/v1beta1
-kind: InferenceService
-metadata:
-  annotations:
-    openshift.io/display-name: bad
-    serving.kserve.io/deploymentMode: ModelMesh
-  name: bad
-  labels:
-    opendatahub.io/dashboard: 'true'
-spec:
-  predictor:
-    model:
-      modelFormat:
-        name: onnx
-        version: '1'
-      name: ''
-      resources: {}
-      runtime: multi-model-server
-      storage:
-        key: aws-connection-multi-model
-        path: models/bad/bad.onnx
