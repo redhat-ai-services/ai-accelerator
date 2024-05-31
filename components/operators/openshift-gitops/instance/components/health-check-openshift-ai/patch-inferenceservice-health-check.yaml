@@ -27,7 +27,7 @@
             msg = msg .. "0: transitionStatus | " .. obj.status.modelStatus.transitionStatus .. "\n"
           end
         end
-        
+
         if obj.status.conditions ~= nil then
           for i, condition in pairs(obj.status.conditions) do
 
