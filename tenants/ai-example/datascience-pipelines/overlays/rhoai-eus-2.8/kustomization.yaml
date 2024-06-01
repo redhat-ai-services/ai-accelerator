@@ -3,3 +3,8 @@ kind: Kustomization
 
 resources:
   - ../../base
+
+patches:
+  - target:
+      kind: DataSciencePipelinesApplication
+    path: patch-dspa-for-2.8.yaml
