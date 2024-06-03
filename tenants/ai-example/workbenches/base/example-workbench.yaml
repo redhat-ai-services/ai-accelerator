@@ -4,7 +4,7 @@ metadata:
   annotations:
     notebooks.opendatahub.io/inject-oauth: 'true'
     opendatahub.io/image-display-name: Minimal Python
-    notebooks.opendatahub.io/oauth-logout-url: 'https://rhods-dashboard-redhat-ods-applications.apps.cluster-pmhtr.pmhtr.sandbox831.opentlc.com/projects/ai-example-training?notebookLogout=example-workbench'
+    notebooks.opendatahub.io/oauth-logout-url: ''
     opendatahub.io/accelerator-name: ''
     openshift.io/description: ''
     openshift.io/display-name: example-workbench
@@ -52,7 +52,7 @@ spec:
                 --ServerApp.password=''
                 --ServerApp.base_url=/notebook/ai-example-training/example-workbench
                 --ServerApp.quit_button=False
-                --ServerApp.tornado_settings={"user":"user1","hub_host":"https://rhods-dashboard-redhat-ods-applications.apps.cluster-pmhtr.pmhtr.sandbox831.opentlc.com","hub_prefix":"/projects/ai-example-training"}
+                --ServerApp.tornado_settings={"user":"user1","hub_host":"","hub_prefix":"/projects/ai-example-training"}
             - name: JUPYTER_IMAGE
               value: 'image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-minimal-notebook:2024.1'
             - name: PIP_CERT
