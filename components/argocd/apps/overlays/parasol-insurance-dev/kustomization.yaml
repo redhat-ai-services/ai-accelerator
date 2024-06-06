@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+patches:
+  - path: patch-cluster-config-app-of-apps.yaml
+    target:
+      kind: Application
+      name: cluster-config-app-of-apps
+  - path: patch-operators-list.yaml
+    target:
+      kind: ApplicationSet
+      name: cluster-operators
+  - path: patch-configs-list.yaml
+    target:
+      kind: ApplicationSet
+      name: cluster-configs
+  - path: patch-tenants-applicationset.yaml
+    target:
+      kind: ApplicationSet
+      name: tenants
+  - path: patch-tenants-applicationset.yaml
+    target:
+      kind: ApplicationSet
+      name: tenants
