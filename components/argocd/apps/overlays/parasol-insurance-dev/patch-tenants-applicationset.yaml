@@ -1,3 +1,0 @@
-- op: replace
-  path: /spec/generators/0/git/directories/0/path
-  value: tenants/*/*/overlays/parasol-insurance-dev
