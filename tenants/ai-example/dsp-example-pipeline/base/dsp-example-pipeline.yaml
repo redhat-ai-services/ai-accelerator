@@ -8,6 +8,10 @@ spec:
       description: Repo URL
       name: GIT_URL
       type: string
+    - default: 'pipelines/11_iris_training_pipeline.py'
+      description: The location of the python script containing the kfp pipeline
+      name: KFP_SCRIPT
+      type: string
     - default: main
       name: GIT_REVISION
       type: string
@@ -58,7 +62,7 @@ spec:
         - name: TAG
           value: latest
         - name: SCRIPT
-          value: pipelines/11_iris_training_pipeline.py
+          value: $(params.KFP_SCRIPT)
         - name: KUBEFLOW_ENDPOINT
           value: $(params.KUBEFLOW_ENDPOINT)
       runAfter:
