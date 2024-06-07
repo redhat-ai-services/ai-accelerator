@@ -27,8 +27,6 @@ In short, since you are most likely a developer, **provide a ticket that you wou
 
 We **love** pull requests! Before [forking the repo](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) and [creating a pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/proposing-changes-to-your-work-with-pull-requests) for non-trivial changes, it is usually best to first open an issue to discuss the changes, or discuss your intended approach for solving the problem in the comments for an existing issue.
 
-For most contributions, after your first pull request is accepted and merged, you will be [invited to the project](https://help.github.com/en/github/setting-up-and-managing-your-github-user-account/inviting-collaborators-to-a-personal-repository) and given **push access**. :tada:
-
 *Note: All contributions will be licensed under the project's license.*
 
 - **Smaller is better.** Submit **one** pull request per bug fix or feature. A pull request should contain isolated changes pertaining to a single bug fix or feature implementation. **Do not** refactor or reformat code that is unrelated to your change. It is better to **submit many small pull requests** rather than a single large one. Enormous pull requests will take enormous amounts of time to review, or may be rejected altogether. 
@@ -52,10 +50,3 @@ For most contributions, after your first pull request is accepted and merged, yo
 - When writing comments, use properly constructed sentences
 
 - Use spaces, not tabs.
-
-## Coding Style
-
-This repo includes several GitHub actions to help catch issues with coding formats, especially related to YAML formatting.
-
-Please attempt to resolve all of the issues raised by the automatic linting when opening a PR.  If you need assistance please feel free to comment on your PR to ask for recommendations.
-
