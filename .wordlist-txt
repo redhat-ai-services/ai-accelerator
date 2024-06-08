@@ -48,8 +48,8 @@ EOF
 Elasticsearch
 Eventing
 FullAccess
-GenAI
 GPUs
+GenAI
 Gi
 GitOps
 HTPasswd
@@ -165,6 +165,7 @@ auth
 authorino
 autocompletion
 aws
+backticks
 buildah
 canada
 ceph
@@ -245,6 +246,7 @@ ldap
 letsencrypt
 libvirt
 lifecycle
+linter
 linux
 llm
 machineset
@@ -285,6 +287,7 @@ rbac
 redhat
 redistributions
 repo
+repo's
 resourceNames
 rh
 rhel
