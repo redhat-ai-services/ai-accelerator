@@ -24,5 +24,7 @@ spec:
       env:
         - name: KUBEFLOW_ENDPOINT
           value: $(inputs.params.KUBEFLOW_ENDPOINT)
+        - name: BASE_IMAGE
+          value: $(inputs.params.IMAGE):$(inputs.params.TAG)
       script: |
         python $(inputs.params.SCRIPT)
