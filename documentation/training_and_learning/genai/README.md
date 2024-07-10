@@ -47,16 +47,15 @@ You can skip to testing the vLLM after this step
 2. Create PVC, deployment, & service in __vllm__ namespace.
 
 #### PVC: 
-`oc apply -f https://raw.githubusercontent.com/rh-aiservices-bu/llm-on-openshift/main/llm-servers/vllm/gitops/pvc.yaml`
+`oc apply -f https://raw.githubusercontent.com/rh-aiservices-bu/llm-on-openshift/main/llm-servers/vllm/gpu/gitops/pvc.yaml`
 
 #### Service: 
-`oc apply -f https://raw.githubusercontent.com/rh-aiservices-bu/llm-on-openshift/main/llm-servers/vllm/gitops/service.yaml`
+`oc apply -f https://raw.githubusercontent.com/rh-aiservices-bu/llm-on-openshift/main/llm-servers/vllm/gpu/gitops/service.yaml`
 
 #### Route: 
-`oc apply -f https://raw.githubusercontent.com/rh-aiservices-bu/llm-on-openshift/main/llm-servers/vllm/gitops/route.yaml`
+`oc apply -f https://raw.githubusercontent.com/rh-aiservices-bu/llm-on-openshift/main/llm-servers/vllm/gpu/gitops/route.yaml`
 
 #### Deployment: 
-
 For the deployment, we'll need to edit the __env variable: HUGGING_FACE_HUB_TOKEN__ with your hugging face token.
 
 We need this use this token because the model we're using, _Mistral-7B-Instruct-v0.2_, is gated. You must be authenticated to access it. Navigate to https://huggingface.co/settings/tokens and create a new token and copy it for the environment variable.
@@ -64,7 +63,7 @@ We need this use this token because the model we're using, _Mistral-7B-Instruct-
 ![mistralhf](./images/mistralhf_login.png "mistralhf")
 
 
-Download the __deployment.yaml__: https://github.com/rh-aiservices-bu/llm-on-openshift/blob/main/llm-servers/vllm/gitops/deployment.yaml#L52 and add your token.
+Download the __deployment.yaml__: https://github.com/rh-aiservices-bu/llm-on-openshift/blob/main/llm-servers/vllm/gpu/gitops/deployment.yaml#L52 and add your token.
 
 ![env hf token](./images/hf_hub_token.png "env hf token")
 
