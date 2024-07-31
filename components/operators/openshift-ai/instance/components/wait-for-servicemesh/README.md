@@ -1,7 +1,7 @@
 # wait-for-servicemesh
 
 ## Purpose
-This component is designed prevent OpenShift AI before the ServiceMesh resources have been successfully installed that are required for KServe.
+This component is designed prevent installing OpenShift AI before the ServiceMesh resources have been successfully installed that are required for KServe.
 
 ## Usage
 
