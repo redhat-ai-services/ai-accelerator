@@ -1,7 +1,7 @@
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
-  name: elasticsearch-eck-operator-certified
+  name: elasticsearch-operator
   namespace: openshift-operators-redhat
 spec:
   channel: "patch-me-in-overlay"
