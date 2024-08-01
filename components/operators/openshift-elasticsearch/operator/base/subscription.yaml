@@ -4,7 +4,7 @@ metadata:
   name: elasticsearch-operator
   namespace: openshift-operators-redhat
 spec:
-  channel: "patch-me-in-overlay"
+  channel: stable
   installPlanApproval: Automatic
   name: elasticsearch-eck-operator-certified
   source: certified-operators
