@@ -14,23 +14,8 @@ spec:
       - cluster: local
         url: https://kubernetes.default.svc
         values:
-          name: jaeger-operator
-          path: components/operators/jaeger/operator/overlays/stable
-      - cluster: local
-        url: https://kubernetes.default.svc
-        values:
-          name: kiali-operator
-          path: components/operators/kiali/operator/overlays/stable
-      - cluster: local
-        url: https://kubernetes.default.svc
-        values:
           name: openshift-ai-operator
           path: components/operators/openshift-ai/aggregate/overlays/fast
-      - cluster: local
-        url: https://kubernetes.default.svc
-        values:
-          name: openshift-elasticsearch-operator
-          path: components/operators/openshift-elasticsearch/operator/overlays/stable
       - cluster: local
         url: https://kubernetes.default.svc
         values:
