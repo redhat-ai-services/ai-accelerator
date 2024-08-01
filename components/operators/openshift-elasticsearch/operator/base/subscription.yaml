@@ -6,6 +6,6 @@ metadata:
 spec:
   channel: "patch-me-in-overlay"
   installPlanApproval: Automatic
-  name: elasticsearch-operator
-  source: redhat-operators
+  name: elasticsearch-eck-operator-certified
+  source: certified-operators
   sourceNamespace: openshift-marketplace
