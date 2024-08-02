@@ -3,4 +3,4 @@
   value: 'https://github.com/redhat-ai-services/ai-accelerator.git'
 - op: replace
   path: /spec/source/targetRevision
-  value: main
+  value: v2.11
