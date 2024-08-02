@@ -1,6 +1,3 @@
 - op: replace
   path: /spec/channel
   value: 'stable'
-- op: replace
-  path: /spec/startingCSV
-  value: servicemeshoperator.v2.5.0
