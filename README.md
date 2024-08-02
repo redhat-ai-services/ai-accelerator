@@ -17,11 +17,8 @@ Once the initial components are deployed, several ArgoCD Application objects are
 
 * [Authorino Operator](components/operators/authorino-operator/)
 * [NVIDIA GPU Operator](components/operators/gpu-operator-certified/)
-* [Jaeger Operator](components/operators/jaeger/)
-* [Kiali Operator](components/operators/kiali/)
 * [Node Feature Discovery Operator](components/operators/nfd/)
 * [OpenShift AI](components/operators/openshift-ai/)
-* [OpenShift Elasticsearch](components/operators/openshift-elasticsearch/)
 * [OpenShift Pipelines](components/operators/openshift-pipelines/)
 * [OpenShift Serverless](components/operators/openshift-serverless/)
 * [OpenShift ServiceMesh](components/operators/openshift-servicemesh/)
