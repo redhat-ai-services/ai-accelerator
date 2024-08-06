@@ -9,9 +9,9 @@ spec:
     - name: git-clone
       params:
         - name: url
-          value: 'https://github.com/redhat-na-stp-ai-practice/ai-accelerator'
+          value: 'https://github.com/redhat-ai-services/ai-accelerator'
         - name: revision
-          value: custom-wb-pipeline
+          value: ''
         - name: refspec
           value: ''
         - name: submodules
@@ -55,7 +55,7 @@ spec:
         - name: STORAGE_DRIVER
           value: vfs
         - name: DOCKERFILE
-          value: ./custom_workbench/Dockerfile
+          value: documentation/training_and_learning/custom_workbench/Dockerfile
         - name: CONTEXT
           value: .
         - name: TLSVERIFY
@@ -76,5 +76,10 @@ spec:
       workspaces:
         - name: source
           workspace: output
+        #  CHANGEME Uncomment lines below if pushing to external registry
+        # - name: dockerconfig
+        #   workspace: docker-credentials
   workspaces:
     - name: output
+    # CHANGEME Uncomment line below if pushing to external registry
+    # - name: docker-credentials 
