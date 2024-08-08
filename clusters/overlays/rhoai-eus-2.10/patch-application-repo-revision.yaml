@@ -1,0 +1,8 @@
+- op: replace
+  path: /spec/source/repoURL
+  # TODO Change back when ready to merge back to upstream.
+  # value: 'https://github.com/redhat-ai-services/ai-accelerator.git'
+  value: 'https://github.com/fgharo/ai-accelerator.git'
+- op: replace
+  path: /spec/source/targetRevision
+  value: main
