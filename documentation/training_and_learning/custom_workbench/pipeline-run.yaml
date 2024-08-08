@@ -1,0 +1,22 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: new-pipeline-6
+  namespace: redhat-ods-applications
+  labels:
+    tekton.dev/pipeline: new-pipeline
+spec:
+  pipelineRef:
+    name: new-pipeline
+  taskRunTemplate:
+    serviceAccountName: pipeline
+  timeouts:
+    pipeline: 1h0m0s
+  workspaces:
+    - name: output
+      persistentVolumeClaim:
+        claimName: pipeline-pvc
+    # CHANGEME Uncomment lines and set the correct secret name below if pushing to external registry
+    # - name: docker-credentials
+    #   secret:
+    #     secretName: your-registry-secret
