@@ -5,4 +5,6 @@
   value: 'https://github.com/fgharo/ai-accelerator.git'
 - op: replace
   path: /spec/source/targetRevision
-  value: main
+  # TODO Change back when ready to merge back to upstream.
+  # value: main  
+  value: rhoai-2.10-gitops-acceleration

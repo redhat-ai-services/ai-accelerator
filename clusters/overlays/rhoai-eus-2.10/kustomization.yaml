@@ -14,16 +14,18 @@ patches:
     group: argoproj.io
     kind: Application
     # Uncomment patches to disable automatic sync
-    # - path: patch-applicationset-manual-sync.yaml
-    #   target:
-    #     group: argoproj.io
-    #     version: v1alpha1
-    #     kind: ApplicationSet
-    # - path: patch-application-manual-sync.yaml
-    #   target:
-    #     group: argoproj.io
-    #     kind: Application
-    #     version: v1alpha1
+    # TODO Comment back when merging back to upstream.
+    # TODO Also test with automatic sync.
+    - path: patch-applicationset-manual-sync.yaml
+      target:
+        group: argoproj.io
+        version: v1alpha1
+        kind: ApplicationSet
+    - path: patch-application-manual-sync.yaml
+      target:
+        group: argoproj.io
+        kind: Application
+        version: v1alpha1
 
 replacements:
 # copy the repo from the application to the applicationsets
