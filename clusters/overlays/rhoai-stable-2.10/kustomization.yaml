@@ -5,7 +5,7 @@ namespace: openshift-gitops
 
 resources:
 - ../../base
-- ../../../components/argocd/apps/overlays/rhoai-eus-2.10
+- ../../../components/argocd/apps/overlays/rhoai-stable-2.10
 
 patches:
 # set the repo and branch for applications
