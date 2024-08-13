@@ -1,3 +1,6 @@
 - op: replace
+  path: /spec/source
+  value: cs-redhat-operator-index
+- op: replace
   path: /spec/channel
   value: stable
