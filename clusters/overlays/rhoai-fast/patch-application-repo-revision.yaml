@@ -1,6 +1,8 @@
 - op: replace
   path: /spec/source/repoURL
-  value: 'https://github.com/redhat-ai-services/ai-accelerator.git'
+  value: http://simple-gitea-gitea.apps.disco.lab/redhat-ai-services/ai-accelerator.git
+
+    #  value: 'https://github.com/redhat-ai-services/ai-accelerator.git'
 - op: replace
   path: /spec/source/targetRevision
   value: main
