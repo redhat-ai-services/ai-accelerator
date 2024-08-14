@@ -28,3 +28,7 @@ spec:
     mirrors:
     - ip-10-0-54-104.us-east-2.compute.internal:8443/minio
     source: quay.io/minio
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/opendatahub
+    source: quay.io/opendatahub
