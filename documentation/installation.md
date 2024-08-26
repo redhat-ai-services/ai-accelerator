@@ -14,8 +14,6 @@ The cluster must also have a functional storage provisioner available with a def
 
 For GPU deployments, this repo is designed specifically to work with AWS to provision additional GPU nodes, but this can still act as an example to deploy GPU resources in any cloud environment or a self-hosted cluster with some minor modifications.
 
-
-
 > [!NOTE]  
 > Red Hat employees can request a demo cluster using [demo.redhat.com](https://demo.redhat.com) to provision OpenShift AI. For more information see the [Red Hat Demo Environment](redhat_demo_environment.md) documentation.
 

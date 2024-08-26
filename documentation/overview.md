@@ -48,23 +48,36 @@ The `components` folder contains the bulk of the configuration.
 
 ### ArgoCD
 
-The `argocd` folder is used for ArgoCD related objects.
+The `argocd` folder is used for ArgoCD related objects and contains an `apps` and `projects` folder.
 
-The folders contains the different custom resources used by ArgoCD that refer back to objects in the `apps` folder.
+#### Apps
+
+A set of ArgoCD Application and ApplicationSets used to install the required components.
+
+#### Project
+
+A set of ArgoCD Projects setting up basic RBAC at the ArgoCD layer.
 
 ### Operators
 
-Operators contain the operators we wish to configure on the cluster and the details of how we would like them to be configured.
+The `operators` folder contains objects for the installation and configuration of the operators required on the cluster.
 
-The operators folder general follows a pattern where each folder in `operators` is intended to be a separate ArgoCD application.  The majority of the folder structure utilized inside of those folders is a direct reference to the [redhat-cop/gitops-catalog](https://github.com/redhat-cop/gitops-catalog).  When attempting to add new operators to the cluster, be sure to check there first and feel free to contribute new components back to the catalog as well.
+> [!TIP]  
+> The `operators` folder general follows a pattern where each subfolder is intended to be a separate ArgoCD application. Most of the examples on this repository were pulled directly from [redhat-cop/gitops-catalog](https://github.com/redhat-cop/gitops-catalog).  
+>
+> If other operators are required check there first. And feel free to contribute new components back to the catalog as well! :smiley:
 
-### Cluster Configs
+### Cluster-Configs
 
-TODO
+The `cluster-configs` folder contains suggested configuration files for features that come default with Openshfit, such as work load monitoring.
 
 ## Scripts
 
-Contains the shell scripts used to initialize the installation.
+The `scripts` folder contains shell scripts used to initialize the installation.
+
+## Documentation
+
+The `documentation` folder contains the public documentation associated with this repository.
 
 ## References
 
