@@ -23,31 +23,34 @@ This project structure is based on the opinionated configuration found [here](ht
 
 ## Bootstrap
 
-The bootstrap folder contains the initial set of resources utilized to deploy the cluster.
+The `bootstrap` folder contains the initial set of resources utilized to deploy the cluster.
 
 ## Clusters
 
 The `clusters` folder contains the main aggregation layer for all of the elements of the cluster. This includes a `base` folder containing common elements, as well as cluster/environment specific configuration.
 
-These overlays are contains in sub-directories that include a kustomization.yaml file. The Kustomization file contains a set of references to other kustomization directories as bases. Each Kustomization file that is referenced will either have another overlay or a base definition, as illustrated in the following figure:
+These overlays are contained in sub-directories that include a `kustomization.yaml` file. The [Kustomization](https://kustomize.io/) file contains a set of references to other base directories. Each Kustomization file that is referenced will either have another overlay or a base definition, as illustrated in the following figure:
 
 ![Kustomize and ArgoCD.jpeg](images/Kustomize%20and%20ArgoCD.jpeg)
 
-It's expected that you will copy some of these examples and adapted them for your specific requirements for an installation of RHOAI on your OpenShift clusters - however you can also use these "as-is" for a demonstration cluster.
+> [!NOTE]  
+> These examples are designed to be customized to fit the specific requirements for an installation of RHOAI on your OpenShift clusters. However they are useable "as-is" for a demonstration cluster.
+
+> [!IMPORTANT]  
+> If repo was cloned, make sure to update the git url in `clusters/overlays/rhoai-xxx/patch-application-repo-revision` to point to your repository.
 
 ## Components
 
-Components contains the bulk of the configuration.
+The `components` folder contains the bulk of the configuration.
 
-- argocd
-- operators
-- cluster-configs
-
-The opinionated configuration referenced above recommends several other folders in the `components` folder that we are not utilizing today but may be useful to add in the future.
+> [!NOTE]  
+> Other folders may be required based on the configuration reference above and individual team's requirements
 
 ### ArgoCD
 
-The argocd folder contains the ArgoCD specific objects needed to configure the items in the apps folder.  The folders inside of Argo represent the different custom resources ArgoCD supports and refer back to objects in the `apps` folder.
+The `argocd` folder is used for ArgoCD related objects.
+
+The folders contains the different custom resources used by ArgoCD that refer back to objects in the `apps` folder.
 
 ### Operators
 
