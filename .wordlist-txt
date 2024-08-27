@@ -10,6 +10,7 @@ AmazonS
 AmazonSageMakerFullAccess
 Ansible
 ApplicationSet
+ApplicationSets
 ArgoCD
 ArgoCD's
 Authorino
@@ -313,6 +314,7 @@ servicemesh
 sfdc
 ssa
 strimzi
+subfolder
 sublicense
 subnet
 tekton
