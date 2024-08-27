@@ -34,7 +34,7 @@ These overlays are contained in sub-directories that include a `kustomization.ya
 ![Kustomize and ArgoCD.jpeg](images/Kustomize%20and%20ArgoCD.jpeg)
 
 > [!NOTE]  
-> These examples are designed to be customized to fit the specific requirements for an installation of RHOAI on your OpenShift clusters. However they are useable "as-is" for a demonstration cluster.
+> These examples are designed to be customized to fit the specific requirements for an installation of RHOAI on your OpenShift clusters. However they are usable "as-is" for a demonstration cluster.
 
 > [!IMPORTANT]  
 > If repo was cloned, make sure to update the git url in `clusters/overlays/rhoai-xxx/patch-application-repo-revision` to point to your repository.
