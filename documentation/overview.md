@@ -69,7 +69,7 @@ The `operators` folder contains objects for the installation and configuration o
 
 ### Cluster-Configs
 
-The `cluster-configs` folder contains suggested configuration files for features that come default with Openshfit, such as work load monitoring.
+The `cluster-configs` folder contains suggested configuration files for features that come default with Openshift, such as work load monitoring.
 
 ## Scripts
 
