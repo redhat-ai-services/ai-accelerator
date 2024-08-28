@@ -23,16 +23,17 @@ spec:
         tenant: '{{path[1]}}'
     spec:
       project: tenants
-      syncPolicy:
-        automated:
-          prune: false
-          selfHeal: true
-        retry:
-          limit: 5
-          backoff:
-            duration: 5s
-            factor: 2
-            maxDuration: 20m
+      syncPolicy: {}
+      # syncPolicy:
+      #   automated:
+      #     prune: false
+      #     selfHeal: true
+      #   retry:
+      #     limit: 5
+      #     backoff:
+      #       duration: 5s
+      #       factor: 2
+      #       maxDuration: 20m
       source:
         repoURL: patch-me-see-clusters-overlays
         targetRevision: patch-me-see-clusters-overlays
