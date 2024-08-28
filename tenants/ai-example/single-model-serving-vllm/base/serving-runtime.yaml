@@ -10,8 +10,6 @@ metadata:
     opendatahub.io/template-name: vLLM
   name: vllm
 spec:
-  annotations:
-    serving.knative.dev/progress-deadline: 30m
   builtInAdapter:
     modelLoadingTimeoutMillis: 90000
   containers:
