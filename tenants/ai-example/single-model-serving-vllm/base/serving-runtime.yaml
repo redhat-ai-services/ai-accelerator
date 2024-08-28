@@ -8,6 +8,7 @@ metadata:
     opendatahub.io/accelerator-name: ""
     opendatahub.io/apiProtocol: REST
     opendatahub.io/template-name: vLLM
+    serving.knative.dev/progress-deadline: 30m
   name: vllm
 spec:
   builtInAdapter:
