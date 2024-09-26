@@ -92,7 +92,7 @@ verify_repo(){
     if [[ "${CLUSTER_REPO}" != "${EXPECTED_REPO}" ]]; then
 
         if ${GITHUB}; then
-            line_number=$(get_cluster_branch ${PATCH_FILE} true)
+            line_number=$(get_cluster_repo ${PATCH_FILE} true)
             message="Expected \`${EXPECTED_REPO}\` but got \`${CLUSTER_REPO}\`"
             echo "::error file=${PATCH_FILE},line=${line_number},col=10,title=Incorrect-Branch::${message}"
         else
