@@ -3,4 +3,4 @@
   value: 'https://github.com/redhat-ai-services/ai-accelerator.git'  # Update me on fork
 - op: replace
   path: /spec/source/targetRevision
-  value: again
+  value: wrong-branch
