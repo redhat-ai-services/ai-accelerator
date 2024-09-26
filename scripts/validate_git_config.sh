@@ -51,13 +51,13 @@ verify_branch(){
     CLUSTER_BRANCH=$(get_cluster_branch ${PATCH_FILE})
 
     if [[ "${CLUSTER_BRANCH}" != "${EXPECTED_BRANCH}" ]]; then
-        message="Expected ${PATCH_FILE} to be set to \`${EXPECTED_BRANCH}\` but got \`${CLUSTER_BRANCH}\`"
 
         if ${GITHUB}; then
             line_number=$(get_cluster_branch ${PATCH_FILE} true)
+            message="Expected \`${EXPECTED_BRANCH}\` but got \`${CLUSTER_BRANCH}\`"
             echo "::error file=${PATCH_FILE},line=${line_number},col=10,title=Incorrect-Branch::${message}"
         else
-            echo ${message}
+            echo "Expected ${PATCH_FILE} to be set to \`${EXPECTED_BRANCH}\` but got \`${CLUSTER_BRANCH}\`"
         fi
 
         exit 1
