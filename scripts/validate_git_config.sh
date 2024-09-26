@@ -55,7 +55,7 @@ verify_branch(){
 
         if ${GITHUB}; then
             line_number=$(get_cluster_branch ${PATCH_FILE} true)
-            echo "::error file=${PATCH_FILE},line=${line_number},title=Incorrect-Branch::${message}"
+            echo "::error file=${PATCH_FILE},line=${line_number},col=10,title=Incorrect-Branch::${message}"
         else
             echo ${message}
         fi
