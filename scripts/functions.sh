@@ -229,7 +229,7 @@ get_patch_value() {
   fi
 
   if [ -z "$2" ]; then
-    echo "No patch value supplied."
+    echo "No path value supplied."
     exit 1
   else
     PATH_VALUE=$2
