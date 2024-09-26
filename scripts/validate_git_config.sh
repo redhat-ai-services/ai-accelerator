@@ -51,7 +51,7 @@ verify_branch(){
     CLUSTER_BRANCH=$(get_cluster_branch ${PATCH_FILE})
 
     if [[ "${CLUSTER_BRANCH}" != "${EXPECTED_BRANCH}" ]]; then
-        message="Expected ${PATCH_FILE} to be set to ${EXPECTED_BRANCH} but got ${CLUSTER_BRANCH}"
+        message="Expected ${PATCH_FILE} to be set to \`${EXPECTED_BRANCH}\` but got \`${CLUSTER_BRANCH}\`"
 
         if ${GITHUB}; then
             line_number=$(get_cluster_branch ${PATCH_FILE} true)
