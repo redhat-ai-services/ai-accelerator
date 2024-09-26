@@ -1,8 +1,5 @@
 name: Manifests Validation
 on:  # yamllint disable-line rule:truthy
-  push:
-    branches:
-      - "*"
   pull_request:
     branches:
       - "*"
