@@ -246,7 +246,7 @@ get_patch_value(){
       query=".[] | select(.path == \"${PATH_VALUE}\") | .value"
     fi
 
-    VALUE=$(yq -r ${query} ${PATCH_FILE})
+    VALUE=$(yq -r "${query}" ${PATCH_FILE})
 
     echo ${VALUE}
 }
