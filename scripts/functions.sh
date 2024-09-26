@@ -186,9 +186,15 @@ get_cluster_branch(){
         PATCH_FILE=$1
     fi
 
+    if [ -z "$2" ]; then
+      RETURN_LINE_NUMBER=false
+    else
+      RETURN_LINE_NUMBER=$2
+    fi
+
     PATH_VALUE="/spec/source/targetRevision"
 
-    BRANCH=$(get_patch_value ${PATCH_FILE} ${PATH_VALUE})
+    BRANCH=$(get_patch_value ${PATCH_FILE} ${PATH_VALUE} ${RETURN_LINE_NUMBER})
 
     echo ${BRANCH}
 }
@@ -201,9 +207,15 @@ get_cluster_repo(){
         PATCH_FILE=$1
     fi
 
+    if [ -z "$2" ]; then
+      RETURN_LINE_NUMBER=false
+    else
+      RETURN_LINE_NUMBER=$2
+    fi
+
     PATH_VALUE="/spec/source/repoURL"
 
-    REPO=$(get_patch_value ${PATCH_FILE} ${PATH_VALUE})
+    REPO=$(get_patch_value ${PATCH_FILE} ${PATH_VALUE} ${RETURN_LINE_NUMBER})
 
     echo ${REPO}
 }
@@ -223,9 +235,43 @@ get_patch_value(){
         PATH_VALUE=$2
     fi
 
-    VALUE=$(yq -r ".[] | select(.path == \"${PATH_VALUE}\") | .value" ${PATCH_FILE})
+    if [ -z "$3" ]; then
+      RETURN_LINE_NUMBER=false
+    else
+      RETURN_LINE_NUMBER=$3
+    fi
+
+    if ${RETURN_LINE_NUMBER}; then
+      query=".[] | select(.path == \"${PATH_VALUE}\") | .value | line"
+    else
+      query=".[] | select(.path == \"${PATH_VALUE}\") | .value"
+    fi
+
+    VALUE=$(yq -r ${query} ${PATCH_FILE})
 
     echo ${VALUE}
+}
+
+get_patch_value_line(){
+    if [ -z "$1" ]; then
+        echo "No patch file supplied."
+        exit 1
+    else
+        PATCH_FILE=$1
+    fi
+
+    if [ -z "$2" ]; then
+        echo "No patch value supplied."
+        exit 1
+    else
+        PATH_VALUE=$2
+    fi
+
+    query=".[] | select(.path == \"${PATH_VALUE}\") | .value | line "
+
+    line=$(yq -r ${query} ${PATCH_FILE})
+
+    echo ${line}
 }
 
 check_branch(){
