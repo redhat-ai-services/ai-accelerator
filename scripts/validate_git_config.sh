@@ -11,6 +11,8 @@ EXPECTED_BRANCH="main"
 DEBUG=false
 GITHUB=true
 
+ERROR_DETECTED=false
+
 verifiy_patch_file(){
     if [ -z "$1" ]; then
         echo "No patch file supplied."
@@ -25,7 +27,7 @@ verifiy_patch_file(){
 
     if [ ! -f "${PATCH_FILE}" ]; then
         echo "${PATCH_FILE} was not found."
-        exit 1
+        ERROR_DETECTED=true
     fi
 }
 
@@ -60,7 +62,7 @@ verify_branch(){
             echo "Expected ${PATCH_FILE} to be set to \`${EXPECTED_BRANCH}\` but got \`${CLUSTER_BRANCH}\`"
         fi
 
-        exit 1
+        ERROR_DETECTED=true
     fi
 }
 
@@ -85,9 +87,19 @@ verify_repo(){
 
     CLUSTER_REPO=$(get_cluster_repo ${PATCH_FILE})
 
+
+
     if [[ "${CLUSTER_REPO}" != "${EXPECTED_REPO}" ]]; then
-        echo "Expected ${PATCH_FILE} to be set to ${EXPECTED_REPO} but got ${CLUSTER_REPO}"
-        exit 1
+
+        if ${GITHUB}; then
+            line_number=$(get_cluster_branch ${PATCH_FILE} true)
+            message="Expected \`${EXPECTED_REPO}\` but got \`${CLUSTER_REPO}\`"
+            echo "::error file=${PATCH_FILE},line=${line_number},col=10,title=Incorrect-Branch::${message}"
+        else
+            echo "Expected ${PATCH_FILE} to be set to \`${EXPECTED_REPO}\` but got \`${CLUSTER_REPO}\`"
+        fi
+
+        ERROR_DETECTED=true
     fi
 }
 
@@ -97,5 +109,9 @@ for cluster in ${CLUSTERS_FOLDER}; do
       verifiy_patch_file "${cluster}/${GIT_PATCH_FILE}"
       verify_branch "${cluster}/${GIT_PATCH_FILE}" ${EXPECTED_BRANCH}
       verify_repo "${cluster}/${GIT_PATCH_FILE}" ${EXPECTED_REPO}
+
+      if ${ERROR_DETECTED}; then
+        exit 1
+      fi
     fi
 done
