@@ -67,7 +67,7 @@ verify_branch() {
     if ${GITHUB}; then
       line_number=$(get_cluster_branch ${PATCH_FILE} true)
             message="Expected \`${EXPECTED_BRANCH}\` but got \`${CLUSTER_BRANCH}\`"
-      echo "::error file=${PATCH_FILE},line=${line_number},col=10,title=Incorrect-Branch::${message}"
+      echo "::error file=${PATCH_FILE},line=${line_number},col=10,title=Incorrect Branch::${message}"
     else
             echo "Expected ${PATCH_FILE} to be set to \`${EXPECTED_BRANCH}\` but got \`${CLUSTER_BRANCH}\`"
     fi
@@ -102,7 +102,7 @@ verify_repo() {
     if ${GITHUB}; then
       line_number=$(get_cluster_repo ${PATCH_FILE} true)
             message="Expected \`${EXPECTED_REPO}\` but got \`${CLUSTER_REPO}\`"
-      echo "::error file=${PATCH_FILE},line=${line_number},col=10,title=Incorrect-Branch::${message}"
+      echo "::error file=${PATCH_FILE},line=${line_number},col=10,title=Incorrect Repo URL::${message}"
     else
             echo "Expected ${PATCH_FILE} to be set to \`${EXPECTED_REPO}\` but got \`${CLUSTER_REPO}\`"
     fi
