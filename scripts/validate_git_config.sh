@@ -9,6 +9,7 @@ EXPECTED_REPO="https://github.com/redhat-ai-services/ai-accelerator.git"
 EXPECTED_BRANCH="main"
 
 DEBUG=false
+GITHUB=true
 
 verifiy_patch_file(){
     if [ -z "$1" ]; then
@@ -51,6 +52,11 @@ verify_branch(){
 
     if [[ "${CLUSTER_BRANCH}" != "${EXPECTED_BRANCH}" ]]; then
         echo "Expected ${PATCH_FILE} to be set to ${EXPECTED_BRANCH} but got ${CLUSTER_BRANCH}"
+
+        if ${GIHUB}; then
+            line_number=$(get_cluster_branch ${PATCH_FILE} true)
+            echo "::error file=${PATCH_FILE},line=${line_number},title=Incorrect-Branch::Branch should be ${EXPECTED_BRANCH}"
+        fi
         exit 1
     fi
 }
