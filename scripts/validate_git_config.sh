@@ -9,9 +9,19 @@ EXPECTED_REPO="https://github.com/redhat-ai-services/ai-accelerator.git"
 EXPECTED_BRANCH="main"
 
 DEBUG=false
-GITHUB=true
+GITHUB=false
 
 ERROR_DETECTED=false
+
+help() {
+  echo "A script to help validate the repo and branch for the cluster."
+  echo
+  echo "usage:"
+  echo "    $0 [-h|g]"
+  echo "options:"
+  echo "-h   Print this help menu."
+  echo "-g   Report error messages using the GitHub Actions annotation format."
+}
 
 verifiy_patch_file() {
   if [ -z "$1" ]; then
@@ -101,14 +111,28 @@ verify_repo() {
   fi
 }
 
-for cluster in ${CLUSTERS_FOLDER}; do
-  if [ -d "${cluster}" ]; then
-    verifiy_patch_file "${cluster}/${GIT_PATCH_FILE}"
-    verify_branch "${cluster}/${GIT_PATCH_FILE}" ${EXPECTED_BRANCH}
-    verify_repo "${cluster}/${GIT_PATCH_FILE}" ${EXPECTED_REPO}
+main() {
+  for cluster in ${CLUSTERS_FOLDER}; do
+    if [ -d "${cluster}" ]; then
+      verifiy_patch_file "${cluster}/${GIT_PATCH_FILE}"
+      verify_branch "${cluster}/${GIT_PATCH_FILE}" ${EXPECTED_BRANCH}
+      verify_repo "${cluster}/${GIT_PATCH_FILE}" ${EXPECTED_REPO}
 
-    if ${ERROR_DETECTED}; then
-      exit 1
+      if ${ERROR_DETECTED}; then
+        exit 1
+      fi
     fi
-  fi
+  done
+}
+
+while getopts ":hg" option; do
+   case $option in
+      h) # display Help
+         help
+         exit;;
+      g)
+        GITHUB=true
+   esac
 done
+
+main
