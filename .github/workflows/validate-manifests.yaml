@@ -75,7 +75,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Validate Repo and Revision
         run: |
-          ./scripts/validate_git_config.sh
+          ./scripts/validate_git_config.sh -g
 
   check-spelling:
     runs-on: ubuntu-latest
