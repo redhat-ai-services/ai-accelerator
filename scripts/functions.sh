@@ -177,6 +177,56 @@ wait_for_openshift_gitops(){
   done
 }
 
+get_cluster_branch(){
+    if [ -z "$1" ]; then
+        echo "No patch file supplied."
+        exit 1
+    else
+        PATCH_FILE=$1
+    fi
+
+    PATH_VALUE="/spec/source/targetRevision"
+
+    BRANCH=$(get_patch_value ${PATCH_FILE} ${PATH_VALUE})
+
+    echo ${BRANCH}
+}
+
+get_cluster_repo(){
+    if [ -z "$1" ]; then
+        echo "No patch file supplied."
+        exit 1
+    else
+        PATCH_FILE=$1
+    fi
+
+    PATH_VALUE="/spec/source/repoURL"
+
+    REPO=$(get_patch_value ${PATCH_FILE} ${PATH_VALUE})
+
+    echo ${REPO}
+}
+
+get_patch_value(){
+    if [ -z "$1" ]; then
+        echo "No patch file supplied."
+        exit 1
+    else
+        PATCH_FILE=$1
+    fi
+
+    if [ -z "$2" ]; then
+        echo "No patch value supplied."
+        exit 1
+    else
+        PATH_VALUE=$2
+    fi
+
+    VALUE=$(yq -r ".[] | select(.path == \"${PATH_VALUE}\") | .value" ${PATCH_FILE})
+
+    echo ${VALUE}
+}
+
 check_branch(){
   echo "FORCE is set to ${FORCE}"
   if [ -z "$1" ]; then
@@ -193,7 +243,7 @@ check_branch(){
     print_warning "yq could not be found.  We are unable to verify the branch of your repo."
   else
     GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    APP_BRANCH=$(yq -r ".[1].value" ${APP_PATCH_FILE})
+    APP_BRANCH=$(get_cluster_branch ${APP_PATCH_FILE})
     if [[ ${GIT_BRANCH} == ${APP_BRANCH} ]] ; then
       echo "Your working branch ${GIT_BRANCH}, matches your cluster overlay branch ${APP_BRANCH}"
     elif [[ ${FORCE} == "true" ]] ; then
