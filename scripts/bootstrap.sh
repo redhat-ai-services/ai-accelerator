@@ -10,6 +10,45 @@ OPERATOR_NS="openshift-gitops-operator"
 ARGO_NS="openshift-gitops"
 GITOPS_OVERLAY=components/operators/openshift-gitops/operator/overlays/latest/
 
+CURRENT_REPO_URL="https://github.com/redhat-ai-services/ai-accelerator.git"
+NEW_REPO_URL=""
+
+CURRENT_REPO_REVISION="main"
+NEW_REPO_REVISION=""
+
+
+confirm_repo_update(){
+#!/bin/bash
+
+# Prompt the user for a new Repo, defaulting to the old repo if no input is given
+read -p "Your environment will be provisioned through ArgoCD using the following Git repo, you can use default (press Enter) or change it:
+- Git Repository [$CURRENT_REPO_URL]: " NEW_REPO_URL
+
+read -p "- Git Repository Revision [$CURRENT_REPO_REVISION]: " NEW_REPO_REVISION
+
+# Use the old URL if no new URL is provided
+if [ -z "$NEW_REPO_URL" ]; then
+    NEW_REPO_URL=$CURRENT_REPO_URL
+    echo "No new Repo URL provided. Using the old URL: $CURRENT_REPO_URL"
+fi
+
+if [ -z "$NEW_REPO_REVISION" ]; then
+    NEW_REPO_REVISION=$CURRENT_REPO_REVISION
+    echo "No new Repo Revision provided. Using the old URL: $CURRENT_REPO_REVISION"
+fi
+
+echo "rep: $NEW_REPO_URL Revision: $NEW_REPO_REVISION"
+# Use sed to replace the old variables with the new ones in the YAML file
+sed -i.bak "s|\${REPO_URL}|$NEW_REPO_URL|g; s|\${REPO_REVISION}|$NEW_REPO_REVISION|g" ./components/argocd/apps/base/cluster-config-app-of-apps.yaml
+
+
+}
+
+cleanup_repo_changes(){
+  mv ./components/argocd/apps/base/cluster-config-app-of-apps.yaml.bak ./components/argocd/apps/base/cluster-config-app-of-apps.yaml
+  echo "Backup files cleaned up."
+}
+
 apply_firmly(){
   if [ ! -f "${1}/kustomization.yaml" ]; then
     echo "Please provide a dir with \"kustomization.yaml\""
@@ -74,7 +113,7 @@ bootstrap_cluster(){
   echo "Selected: ${bootstrap_dir}"
   echo
 
-  check_branch $(basename ${bootstrap_dir})
+  #check_branch $(basename ${bootstrap_dir}) #no need to check branch, now user has flexibility to apply bootstrap code from their choice of repository and branch
   
   echo "Apply overlay to override default instance"
   kustomize build "${bootstrap_dir}" | oc apply -f -
@@ -105,5 +144,7 @@ check_oc_login
 #check_sealed_secret
 
 # Execute bootstrap functions
+confirm_repo_update
 install_gitops
 bootstrap_cluster
+cleanup_repo_changes

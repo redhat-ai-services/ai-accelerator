@@ -7,13 +7,9 @@ resources:
   - ../../base
   - ../../../components/argocd/apps/overlays/rhoai-fast
 
-patches:
-  # set the repo and branch for applications
-  - path: patch-application-repo-revision.yaml
-    target:
-      group: argoproj.io
-      kind: Application
+
   # Uncomment patches to disable automatic sync
+#patches:
   # - path: patch-applicationset-manual-sync.yaml
   #   target:
   #     group: argoproj.io

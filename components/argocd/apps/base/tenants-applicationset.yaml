@@ -9,8 +9,8 @@ metadata:
 spec:
   generators:
   - git:
-      repoURL: 'https://github.com/redhat-ai-services/ai-accelerator.git'  # Update me on fork
-      revision: main
+      repoURL: will-be-populated-by-bootstrap-var
+      revision: will-be-populated-by-bootstrap-var
       directories:
       - path: tenants/*/*/overlays/patch-me-see-overlay
   template:
@@ -34,8 +34,8 @@ spec:
             factor: 2
             maxDuration: 20m
       source:
-        repoURL: patch-me-see-clusters-overlays
-        targetRevision: patch-me-see-clusters-overlays
+        repoURL: will-be-populated-by-bootstrap-var
+        targetRevision: will-be-populated-by-bootstrap-var
         path: '{{path}}'
       destination:
         server: https://kubernetes.default.svc
