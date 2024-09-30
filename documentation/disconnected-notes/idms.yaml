@@ -1,0 +1,123 @@
+---
+apiVersion: config.openshift.io/v1
+kind: ImageDigestMirrorSet
+metadata:
+  name: generic-0
+spec:
+  imageDigestMirrors:
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/alpine
+    source: docker.io/alpine
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/openshift4
+    source: registry.redhat.io/openshift4
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/modh
+    source: quay.io/modh
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/rhoai
+    source: quay.io/rhoai
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/rhel8
+    source: registry.redhat.io/rhel8
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/integreatly
+    source: quay.io/integreatly
+---
+apiVersion: config.openshift.io/v1
+kind: ImageDigestMirrorSet
+metadata:
+  labels:
+    operators.openshift.org/catalog: "true"
+  name: operator-0
+spec:
+  imageDigestMirrors:
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/rh-sso-7
+    source: registry.redhat.io/rh-sso-7
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/rhel8
+    source: registry.redhat.io/rhel8
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/source-to-image
+    source: registry.redhat.io/source-to-image
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/rhel7
+    source: registry.redhat.io/rhel7
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/rhoai
+    source: registry.redhat.io/rhoai
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/openshift4
+    source: registry.redhat.io/openshift4
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/openshift-pipelines
+    source: registry.redhat.io/openshift-pipelines
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/3scale-tech-preview
+    source: registry.redhat.io/3scale-tech-preview
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/openshift-serverless-1-tech-preview
+    source: registry.redhat.io/openshift-serverless-1-tech-preview
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/ubi8-minimal
+    source: registry.redhat.io/ubi8-minimal
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/openshift-serverless-1
+    source: registry.redhat.io/openshift-serverless-1
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/web-terminal
+    source: registry.redhat.io/web-terminal
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/openshift-gitops-1
+    source: registry.redhat.io/openshift-gitops-1
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/ubi8
+    source: registry.redhat.io/ubi8
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/devworkspace
+    source: registry.redhat.io/devworkspace
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/ubi9
+    source: registry.redhat.io/ubi9
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/openshift-service-mesh
+    source: registry.redhat.io/openshift-service-mesh
+---
+apiVersion: config.openshift.io/v1
+kind: ImageDigestMirrorSet
+metadata:
+  name: release-0
+spec:
+  imageDigestMirrors:
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/openshift/release
+    source: quay.io/openshift-release-dev/ocp-v4.0-art-dev
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/openshift/release-images
+    source: quay.io/openshift-release-dev/ocp-release

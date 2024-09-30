@@ -1,0 +1,34 @@
+apiVersion: config.openshift.io/v1
+kind: ImageTagMirrorSet
+metadata:
+  name: generic-0
+spec:
+  imageTagMirrors:
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/openshift4
+    source: registry.redhat.io/openshift4
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/gogs
+    source: registry-1.docker.io/v2/gogs
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/rhpds
+    source: quay.io/rhpds
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/kubebuilder
+    source: gcr.io/kubebuilder
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/rhel8
+    source: registry.redhat.io/rhel8
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/minio
+    source: quay.io/minio
+  - mirrorSourcePolicy: NeverContactSource
+    mirrors:
+    - ip-10-0-54-104.us-east-2.compute.internal:8443/opendatahub
+    source: quay.io/opendatahub

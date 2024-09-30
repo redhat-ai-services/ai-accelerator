@@ -53,12 +53,17 @@ GPUs
 GenAI
 Gi
 GitOps
+Gitea
 HTPasswd
 Hashicorp
 HuggingFace
 IAM
+IDMS
 IOV
+ISCP
+ITMS
 IgnoreExtraneous
+ImageSetConfiguration
 ImageStreams
 Infiniband
 Jaeger
@@ -103,6 +108,7 @@ ONNX
 Observability
 OpenDataHub
 OpenShift
+OperaterHub
 OperatorGroup
 PCI
 PV
@@ -298,6 +304,7 @@ rhpds
 roleRef
 rollout
 rollouts
+rsync
 runtime
 runtimes
 sa
@@ -313,6 +320,7 @@ serviceaccount
 servicemesh
 sfdc
 ssa
+storageConfig
 strimzi
 subfolder
 sublicense
