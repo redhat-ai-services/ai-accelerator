@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091
 
+set -e
+
 ocp_aws_cluster(){
   TARGET_NS=kube-system
   OBJ=secret/aws-creds
