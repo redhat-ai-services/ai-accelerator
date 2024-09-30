@@ -72,7 +72,7 @@ https://docs.openshift.com/container-platform/4.16/installing/disconnected_insta
 
 
 
-### ImageSetConfigruation
+### ImageSetConfiguration
 
 You'll need to define an ImageSetConfiguration for oc-mirror to know what images to download and package for the mirror.
 

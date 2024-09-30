@@ -63,7 +63,7 @@ IOV
 ISCP
 ITMS
 IgnoreExtraneous
-ImageSetConfigruation
+ImageSetConfiguration
 ImageStreams
 Infiniband
 Jaeger
@@ -108,6 +108,7 @@ ONNX
 Observability
 OpenDataHub
 OpenShift
+OperaterHub
 OperatorGroup
 PCI
 PV
