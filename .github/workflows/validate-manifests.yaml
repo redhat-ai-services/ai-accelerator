@@ -45,14 +45,7 @@ jobs:
 
   lint-helm:
     runs-on: ubuntu-latest
-    env:
-      HELM_VERSION: 3.9.4
-      HELM_DIRS: .
     steps:
-      - name: Install Helm
-        run: |
-          sudo curl -L -o /usr/bin/helm https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz
-          sudo chmod +x /usr/bin/helm
       - name: Code Checkout
         uses: actions/checkout@v4
       - name: Validate Charts
