@@ -28,5 +28,5 @@ spec:
         path: models/granite-3b-code-base
     tolerations:
       - effect: NoSchedule
-        key: nvidia-gpu-only
+        key: nvidia.com/gpu
         operator: Exists

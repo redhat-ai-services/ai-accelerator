@@ -11,5 +11,5 @@ spec:
           node-role.kubernetes.io/gpu: ""
           cluster-api/accelerator: "nvidia-gpu"
       taints:
-        - key: nvidia-gpu-only
+        - key: nvidia.com/gpu
           effect: NoSchedule
