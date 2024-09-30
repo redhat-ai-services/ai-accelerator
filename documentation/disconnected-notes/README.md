@@ -1,6 +1,6 @@
 # Disconnected Install of the ai-accelerator
 
-You'll need to follow the installation directions at https://github.com/redhat-ai-services/ai-accelerator/blob/main/documentation/installation.md
+You'll need to follow the [installation directions](https://github.com/redhat-ai-services/ai-accelerator/blob/main/documentation/installation.md)
 
 Typically, in a disconnected installation there are two sides to the network, a low side security network that can talk to the world wide web, and
 a high security network that can talk to the OCP cluster and the low side network but can not talk to the world wide web.  
@@ -48,8 +48,7 @@ After that, you'll want to rsync the git repo to high side
 
 ### Login to the cluster on the high side
 
-Login to your cluster as per
-https://github.com/redhat-ai-services/ai-accelerator/blob/main/documentation/installation.md#access-to-an-openshift-cluster
+Login to your cluster as per [Access Instructions](https://github.com/redhat-ai-services/ai-accelerator/blob/main/documentation/installation.md#access-to-an-openshift-cluster)
 
 ## Syncing resources to OCP
 
