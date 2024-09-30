@@ -14,4 +14,4 @@ configMapGenerator:
     namespace: nvidia-gpu-operator
     files:
       - job.sh
-      - machine-set-taint-patch.yaml
+      - machineset-patch.yaml
