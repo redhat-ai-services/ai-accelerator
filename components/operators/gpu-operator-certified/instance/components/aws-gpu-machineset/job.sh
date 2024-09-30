@@ -28,8 +28,6 @@ ocp_aws_create_gpu_machineset(){
 
   MACHINE_SET_TYPE=$(oc -n openshift-machine-api get machinesets.machine.openshift.io -o name | grep "${INSTANCE_TYPE%.*}" | head -n1)
 
-  echo "Patching: ${MACHINE_SET_TYPE}"
-
   PATCH_FILE="$(dirname "$0")/machineset-patch.yaml"
 
   if [ -f ${PATCH_FILE} ]; then
