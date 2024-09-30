@@ -1,17 +1,17 @@
-# Disconnected Install of the ai-accelator
+# Disconnected Install of the ai-accelerator
 
 You'll need to follow the installation directions at https://github.com/redhat-ai-services/ai-accelerator/blob/main/documentation/installation.md
 
 Typically, in a disconnected installation there are two sides to the network, a low side security network that can talk to the world wide web, and
 a high security network that can talk to the OCP cluster and the low side network but can not talk to the world wide web.  
 
-The res tof this document will refer to the server that can manage with the disconnected OCP cluster as the "high side" and the server that can fetch
+The rest of this document will refer to the server that can manage with the disconnected OCP cluster as the "high side" and the server that can fetch
 various resources as the low side. 
 
 In general, the main additional work required is to download the necessary resources on the low side and then upload them to the high side for use
 with the OCP cluster.
 
-## Pre-reqs
+## Prerequisites
 
 You'll need to get `kustomize` on your "high-side" by downloading on "low-side" and then rsync it up.
 For example:
@@ -20,20 +20,20 @@ curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack
 rysnc -avP /mnt/low-side-data/ highside:/mnt/high-side-data/
 ```
 
-On highside put kustomize on the path, for example:
+On high side put kustomize on the path, for example:
 ```
 sudo cp /mnt/high-side-data/kustomize /bin/
 ```
 
 ### install kubeseal
 
-On the lowside
+On the low side
 ```
 curl -L -o kubeseal-0.27.1-linux-amd64.tar.gz https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.27.1/kubeseal-0.27.1-linux-amd64.tar.gz
 rysnc -avP /mnt/low-side-data/ highside:/mnt/high-side-data/
 ```
 
-And then on the highside, extract and place it on the path.
+And then on the high side, extract and place it on the path.
 ```
 tar -xzvf kubeseal-0.27.1-linux-amd64.tar.gz 
 sudo cp /mnt/high-side-data/kubeseal /bin/
@@ -41,12 +41,12 @@ sudo cp /mnt/high-side-data/kubeseal /bin/
 
 ### Clone this repo
 
-Clone the repo ai-accelerator git repo on the lowside and checkout this branch.
+Clone the repo ai-accelerator git repo on the low side and checkout this branch.
 
-After that, you'll want to rsync the git repo to highside/
+After that, you'll want to rsync the git repo to high side
 
 
-### Login to the cluster on the highside
+### Login to the cluster on the high side
 
 Login to your cluster as per
 https://github.com/redhat-ai-services/ai-accelerator/blob/main/documentation/installation.md#access-to-an-openshift-cluster
@@ -62,9 +62,9 @@ This write up utilized oc-mirror v1; there is currently a newer version (v2) tha
 ### Common pitfalls
 
 #### Disk utilization
-The mirroring process utilizes a large amount of diskspace during this process, we required 250gb of available 
-diskspace for downloading the images, creating the oc-mirror workspace and finally the tar containing the images 
-for loading the mirror.  On the highside, we required at least 450 GB.
+The mirroring process utilizes a large amount of disk space during this process, we required 250GB of available 
+disk space for downloading the images, creating the oc-mirror workspace and finally the tar containing the images 
+for loading the mirror.  On the high side, we required at least 450 GB.
 
 #### Missing images
 See 
@@ -184,7 +184,7 @@ The list of images and hashes will vary from version to version of the AI operat
 
 ### Sync the data
 
-Once the oc-mirror process has finished, you can sync the data to the highside for loading into your image registry
+Once the oc-mirror process has finished, you can sync the data to the high side for loading into your image registry
 
 ```rsync -avP /mnt/low-side-data/ highside:/mnt/high-side-data/```
 
@@ -386,8 +386,8 @@ spec:
     source: quay.io/minio
 ```
 
-The ai-accelerator uses RedHat GitOps (argocd) to define what to install.  As such, you'll need a git repo that 
-argocd can dial out to.  For this PoC, we utilized gitea as described by rhpds - https://github.com/rhpds/gitea-operator
+The ai-accelerator uses Red Hat GitOps (argocd) to define what to install.  As such, you'll need a git repo that 
+argocd can dial out to.  For this Proof of Concept, we utilized Gitea as described by rhpds - https://github.com/rhpds/gitea-operator
 
 
 

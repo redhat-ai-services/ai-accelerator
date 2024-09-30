@@ -53,12 +53,17 @@ GPUs
 GenAI
 Gi
 GitOps
+Gitea
 HTPasswd
 Hashicorp
 HuggingFace
 IAM
+IDMS
 IOV
+ISCP
+ITMS
 IgnoreExtraneous
+ImageSetConfigruation
 ImageStreams
 Infiniband
 Jaeger
@@ -298,6 +303,7 @@ rhpds
 roleRef
 rollout
 rollouts
+rsync
 runtime
 runtimes
 sa
@@ -313,6 +319,7 @@ serviceaccount
 servicemesh
 sfdc
 ssa
+storageConfig
 strimzi
 subfolder
 sublicense
