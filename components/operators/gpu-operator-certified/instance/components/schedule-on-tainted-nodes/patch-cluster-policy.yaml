@@ -6,5 +6,5 @@ spec:
   daemonsets:
     tolerations:
       - effect: NoSchedule
-        key: nvidia-gpu-only
+        key: nvidia.com/gpu
         operator: Exists
