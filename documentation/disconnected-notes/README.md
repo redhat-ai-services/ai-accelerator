@@ -385,5 +385,5 @@ spec:
     source: quay.io/minio
 ```
 
-The ai-accelerator uses Red Hat GitOps (argocd) to define what to install.  As such, you'll need a git repo that 
-argocd can dial out to.  For this Proof of Concept, we utilized Gitea as described by rhpds - [Gitea Operator](https://github.com/rhpds/gitea-operator)
+The ai-accelerator uses Red Hat GitOps (ArgoCD) to define what to install.  As such, you'll need a git repo that 
+ArgoCD can dial out to.  For this Proof of Concept, we utilized Gitea as described by RHPDS - [Gitea Operator](https://github.com/rhpds/gitea-operator)
