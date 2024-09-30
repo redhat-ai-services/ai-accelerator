@@ -28,7 +28,7 @@ ocp_aws_create_gpu_machineset(){
 
   echo "Patching: ${MACHINE_SET_TYPE}"
 
-  DEFAULT_PATCH_FILE=$(dirname "$0")/machine-set-taint-patch.yaml
+  DEFAULT_PATCH_FILE=$(dirname "$0")/machineset-patch.yaml
   PATCH_FILE=${2:DEFAULT_PATCH_FILE}
 
   if [ -f ${PATCH_FILE} ]; then
