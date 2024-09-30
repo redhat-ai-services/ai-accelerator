@@ -6,3 +6,4 @@ resources:
 
 components:
   - ../../components/mig-single
+  - ../../components/schedule-on-tainted-nodes
