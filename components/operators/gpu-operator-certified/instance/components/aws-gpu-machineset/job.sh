@@ -36,7 +36,7 @@ ocp_aws_create_gpu_machineset(){
     echo "Patching ${MACHINE_SET_TYPE} with ${PATCH_FILE}."
     oc -n openshift-machine-api \
       patch "${MACHINE_SET_TYPE}" \
-      --patch-file ${PATCH_FILE}
+      --type=merge --patch-file ${PATCH_FILE}
   else
     echo "Unable to taint nodes, patch file ${PATCH_FILE} not found."
     exit 1
