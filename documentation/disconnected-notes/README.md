@@ -387,9 +387,4 @@ spec:
 ```
 
 The ai-accelerator uses Red Hat GitOps (argocd) to define what to install.  As such, you'll need a git repo that 
-argocd can dial out to.  For this Proof of Concept, we utilized Gitea as described by rhpds - https://github.com/rhpds/gitea-operator
-
-
-
-
-
+argocd can dial out to.  For this Proof of Concept, we utilized Gitea as described by rhpds - [Gitea Operator](https://github.com/rhpds/gitea-operator)
