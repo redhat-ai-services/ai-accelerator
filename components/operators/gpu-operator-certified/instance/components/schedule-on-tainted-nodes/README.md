@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This component is designed to allow the GPU Operator Daemonsets to run on tainted GPU nodes.
+This component is designed to allow the GPU Operator DaemonSets to run on tainted GPU nodes.
 
 ## Usage
 
