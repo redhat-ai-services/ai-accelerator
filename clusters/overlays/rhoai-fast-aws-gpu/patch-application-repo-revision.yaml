@@ -1,6 +1,6 @@
 - op: replace
   path: /spec/source/repoURL
-  value: 'https://github.com/redhat-ai-services/ai-accelerator.git' # Update me on fork
+  value: 'https://github.com/redhat-ai-services/ai-accelerator.git'  # Update me on fork
 - op: replace
   path: /spec/source/targetRevision
   value: taint-updates
