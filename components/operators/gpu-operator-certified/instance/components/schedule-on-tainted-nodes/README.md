@@ -19,6 +19,4 @@ components:
   - ../../components/schedule-on-tainted-nodes
 ```
 
-This component is intended to be used with additional configurations to set the number of replicas.
-
-Please refer to [schedule-on-tainted-nodes](../schedule-on-tainted-nodes) and [schedule-on-tainted-nodes](../schedule-on-tainted-nodes) for complete implementations of the time slicing configuration.
+To customize the toleration to match your node taints, please update [patch-cluster-policy.yaml](./patch-cluster-policy.yaml)
