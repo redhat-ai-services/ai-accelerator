@@ -15,7 +15,7 @@ spec:
     gpus:
       - type: nvidia.com/gpu
         min: 0
-        max: 1
+        max: 2
   scaleDown:
     enabled: true
     delayAfterAdd: 5m
