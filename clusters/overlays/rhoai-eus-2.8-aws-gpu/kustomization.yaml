@@ -7,12 +7,13 @@ resources:
   - ../../base
   - ../../../components/argocd/apps/overlays/rhoai-eus-2.8-aws-gpu
 
-patches:
-  # set the repo and branch for applications
-  - path: patch-application-repo-revision.yaml
-    target:
-      group: argoproj.io
-      kind: Application
+#Uncomment below patching for repo setup for each overlay
+#patches:
+# set the repo and branch for applications
+#- path: patch-application-repo-revision.yaml
+#  target:
+#    group: argoproj.io
+#    kind: Application
   # Uncomment patches to disable automatic sync
   # - path: patch-applicationset-manual-sync.yaml
   #   target:
