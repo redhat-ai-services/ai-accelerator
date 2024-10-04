@@ -278,6 +278,9 @@ check_branch(){
     else 
       echo "Your current working branch is ${GIT_BRANCH}, and your cluster overlay branch is ${APP_BRANCH}.
       Do you wish to update it to ${GIT_BRANCH}?"
+
+      PS3="Please enter a number to select: "
+
       select yn in "Yes" "No"; do
           case $yn in
               Yes ) update_branch ${CLUSTER_OVERLAY}; break;;
@@ -307,4 +310,88 @@ update_branch(){
   git add ${APP_PATCH_FILE}
   git commit -m "automatic update to branch by bootstrap script"
   git push origin ${GIT_BRANCH}
+}
+
+get_git_basename(){
+  if [ -z "$1" ]; then
+    echo "No repo provided."
+    exit 1
+  else
+    REPO_URL=$1
+  fi
+
+  QUERY='s#(git@|https://)github.com[:/]([a-zA-Z0-9_.-]+/[a-zA-Z0-9_.-]+)\.git#\2#'
+  REPO_BASENAME=$(echo ${REPO_URL} | sed -E  ${QUERY})
+  echo ${REPO_BASENAME}
+}
+
+update_repo(){
+  if [ -z "$1" ]; then
+    echo "No cluster overlay supplied."
+    exit 1
+  else
+    CLUSTER_OVERLAY=$1
+  fi
+
+  if [ -z "$2" ]; then
+    echo "No repo url provided."
+    exit 1
+  else
+    REPO_URL=$2
+  fi
+
+  GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+  yq ".[0].value = \"${REPO_URL}\"" -i ${APP_PATCH_FILE}
+
+  git add ${APP_PATCH_FILE}
+  git commit -m "automatic update to repo by bootstrap script"
+  git push origin ${GIT_BRANCH}
+}
+
+check_repo(){
+  if [ -z "$1" ]; then
+    echo "No cluster overlay supplied."
+    exit 1
+  else
+    CLUSTER_OVERLAY=$1
+  fi
+
+  CLUSTERS_FOLDER="clusters/overlays"
+  APP_PATCH_FILE="${CLUSTERS_FOLDER}/${CLUSTER_OVERLAY}/patch-application-repo-revision.yaml"
+
+  if ! command -v yq &> /dev/null; then
+    echo "yq could not be found.  We are unable to verify the repo."
+  else
+
+    GIT_REPO=$(git config --get remote.origin.url)
+    GIT_REPO_BASENAME=$(get_git_basename ${GIT_REPO})
+    APP_REPO=$(yq -r ".[0].value" ${APP_PATCH_FILE})
+    APP_REPO_BASENAME=$(get_git_basename ${APP_REPO})
+
+    GITHUB_URL="https://github.com/${GIT_REPO_BASENAME}.git"
+
+    if [[ ${GIT_REPO_BASENAME} == ${APP_REPO_BASENAME} ]] ; then
+      echo "Your working repo ${GIT_REPO}, matches your cluster overlay branch ${APP_REPO}"
+    else 
+      echo
+      echo "Your current working repo is"
+      echo "  ${GIT_REPO}"
+      echo "Your cluster overlay repo is"
+      echo "  ${APP_REPO}"
+      echo
+      echo "Do you wish to update it to the following?"
+      echo "  ${GITHUB_URL}"
+      echo
+
+      PS3="Please enter a number to select: "
+
+      select yn in "Yes" "No"; do
+          case $yn in
+              Yes ) update_repo ${CLUSTER_OVERLAY} ${GITHUB_URL}; break;;
+              No ) break;;
+          esac
+      done
+    fi
+  fi
 }

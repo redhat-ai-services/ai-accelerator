@@ -92,12 +92,8 @@ bootstrap_cluster(){
         echo ">>> Invalid Selection";
     done
 
-    echo
-    echo "Selected: ${bootstrap_dir}"
-    echo
-  fi
-
-  check_branch $bootstrap_dir
+  check_branch $(basename ${bootstrap_dir})
+  check_repo $(basename ${bootstrap_dir})
   
   echo "Apply overlay to override default instance"
   kustomize build "${base_dir}/${bootstrap_dir}" | oc apply -f -
