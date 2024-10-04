@@ -48,6 +48,13 @@ Execute the bootstrap script to begin the installation process:
 ./scripts/bootstrap.sh
 ```
 
+By default, the script uses the repository `(https://github.com/redhat-ai-services/ai-accelerator.git)` and the main branch. The script will prompt you to input a different repository and revision if desired. If you choose to provide alternate values, the following will occur:
+
+Temporary Change: The repository change is temporary and will not be committed to the Git repository.
+Out-of-Sync ArgoCD Application: The `cluster-config-app-of-apps` application in ArgoCD will show as out-of-sync. If you manually sync it, the repository will revert to the default `(https://github.com/redhat-ai-services/ai-accelerator.git)` repo.
+Testing with a Local Repository: You can update the default repository to a local repository to test code changes before committing.
+
+
 When prompted to select a bootstrap folder, choose the overlay that matches your cluster version, for example: `bootstrap/overlays/rhoai-eus-2.8/`.
 
 The `bootstrap.sh` script will now install the OpenShift GitOps Operator, create an ArgoCD instance once the operator is deployed in the `openshift-gitops` namespace, then bootstrap a set of ArgoCD applications to configure the cluster.
