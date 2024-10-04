@@ -15,6 +15,56 @@ export OCP_VERSION=4.11
 source "$(dirname "$0")/functions.sh"
 source "$(dirname "$0")/util.sh"
 source "$(dirname "$0")/command_flags.sh" "$@"
+YAML_FILE="./components/argocd/apps/base/cluster-config-app-of-apps.yaml"
+
+CURRENT_REPO_URL="https://github.com/redhat-ai-services/ai-accelerator.git"
+CURRENT_REPO_REVISION="main"
+NEW_REPO_URL=""
+NEW_REPO_REVISION=""
+
+
+confirm_repo_update(){
+
+CURRENT_REPO_URL=$(yq eval '.spec.source.repoURL' "$YAML_FILE")
+CURRENT_REPO_REVISION=$(yq eval '.spec.source.targetRevision' "$YAML_FILE")
+
+
+# Prompt the user for a new Repo, defaulting to the old repo if no input is given
+read -p "Your environment will be provisioned through ArgoCD using the following Git repo, you can use default (press Enter) or change it:
+- Git Repository [$CURRENT_REPO_URL]: " NEW_REPO_URL
+
+read -p "- Git Repository Revision [$CURRENT_REPO_REVISION]: " NEW_REPO_REVISION
+
+echo "User entered rep: $NEW_REPO_URL Revision: $NEW_REPO_REVISION"
+
+# Use the old URL if no new URL is provided
+if [ -z "$NEW_REPO_URL" ]; then
+    NEW_REPO_URL=$CURRENT_REPO_URL
+    echo "No new Repo URL provided. Using the old URL: $CURRENT_REPO_URL"
+fi
+
+if [ -z "$NEW_REPO_REVISION" ]; then
+    NEW_REPO_REVISION=$CURRENT_REPO_REVISION
+    echo "No new Repo Revision provided. Using the old URL: $CURRENT_REPO_REVISION"
+fi
+
+if [[ "$CURRENT_REPO_URL" != "$NEW_REPO_URL" ]] || [[ "$CURRENT_REPO_REVISION" != "$NEW_REPO_REVISION" ]]; then
+  echo "updating rep: $NEW_REPO_URL Revision: $NEW_REPO_REVISION" in the file $YAML_FILE
+  # Use sed to replace the old variables with the new ones in the YAML file
+  cp $YAML_FILE $YAML_FILE.bak
+  yq eval ".spec.source.repoURL = \"$NEW_REPO_URL\"" -i $YAML_FILE
+  yq eval ".spec.source.targetRevision = \"$NEW_REPO_REVISION\"" -i $YAML_FILE
+  yq eval 'del(.spec.syncPolicy)' -i $YAML_FILE
+
+fi
+
+}
+
+cleanup_repo_changes(){
+  if [[ "$CURRENT_REPO_URL" != "$NEW_REPO_URL" ]] || [[ "$CURRENT_REPO_REVISION" != "$NEW_REPO_REVISION" ]]; then
+    mv $YAML_FILE.bak $YAML_FILE
+  fi
+}
 
 apply_firmly(){
   if [ ! -f "${1}/kustomization.yaml" ]; then
@@ -124,5 +174,7 @@ check_oc_login
 #check_sealed_secret
 
 # Execute bootstrap functions
+confirm_repo_update
 install_gitops
 bootstrap_cluster
+cleanup_repo_changes

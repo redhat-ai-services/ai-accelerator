@@ -12,8 +12,8 @@ spec:
   project: cluster-config
   source:
     path: patch-me-see-overlays
-    repoURL: patch-me-see-clusters-overlays
-    targetRevision: patch-me-see-clusters-overlays
+    repoURL: https://github.com/redhat-ai-services/ai-accelerator.git  # Update me on fork
+    targetRevision: main
   syncPolicy:
     automated:
       prune: false
