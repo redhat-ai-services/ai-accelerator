@@ -4,6 +4,7 @@ kind: Component
 resources:
   # - ../../../../../../scripts/library
   - job.yaml
+  - rbac.yaml
 
 generatorOptions:
   disableNameSuffixHash: true
@@ -13,3 +14,4 @@ configMapGenerator:
     namespace: nvidia-gpu-operator
     files:
       - job.sh
+      - machineset-patch.yaml

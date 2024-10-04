@@ -51,10 +51,7 @@ spec:
     updateStrategy: RollingUpdate
     rollingUpdate:
       maxUnavailable: '1'
-    tolerations:
-      - effect: NoSchedule
-        key: nvidia-gpu-only
-        operator: Exists
+    tolerations: []
   devicePlugin:
     enabled: true
     config:

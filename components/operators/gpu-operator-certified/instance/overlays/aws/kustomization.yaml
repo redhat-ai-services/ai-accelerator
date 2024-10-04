@@ -6,3 +6,4 @@ resources:
 
 components:
   - ../../components/aws-gpu-machineset
+  - ../../components/schedule-on-tainted-nodes

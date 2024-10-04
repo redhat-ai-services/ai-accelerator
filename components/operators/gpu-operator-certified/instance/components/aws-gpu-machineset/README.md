@@ -22,3 +22,6 @@ resources:
 components:
   - ../../components/aws-gpu-machineset
 ```
+
+
+You can customize the taint applied to the GPU nodes by updating [machineset-patch.yaml](./machineset-patch.yaml) file.
