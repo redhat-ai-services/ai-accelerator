@@ -33,43 +33,57 @@ apply_firmly(){
 }
 
 install_gitops(){
-  echo ""
-  echo "Installing GitOps Operator."
+  echo
+  echo "Checking if GitOps Operator is already installed"
+  if [[ $(oc get pod -n ${OPERATOR_NS} --no-headers -o custom-columns=":status.phase") == "Running" ]]; then
+    echo
+    echo "GitOps operator is already installed."
+  else
+    echo
+    echo "Installing GitOps Operator."
 
-  apply_firmly ${GITOPS_OVERLAY} 
+    apply_firmly ${GITOPS_OVERLAY} 
 
-  # oc wait docs:
-  # https://docs.openshift.com/container-platform/4.11/cli_reference/openshift_cli/developer-cli-commands.html#oc-wait
-  #
-  # kubectl wait docs:
-  # https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#wait
+    # oc wait docs:
+    # https://docs.openshift.com/container-platform/4.11/cli_reference/openshift_cli/developer-cli-commands.html#oc-wait
+    #
+    # kubectl wait docs:
+    # https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#wait
 
-  echo "Waiting for deployment of the openshift-gitops-operator-controller-manager to begin..."
-  until oc get deployment openshift-gitops-operator-controller-manager -n ${OPERATOR_NS}
-  do
-    sleep 5
-  done
+    echo "Waiting for deployment of the openshift-gitops-operator-controller-manager to begin..."
+    until oc get deployment openshift-gitops-operator-controller-manager -n ${OPERATOR_NS}
+    do
+      sleep 5
+    done
 
-  echo "Waiting for openshift-gitops-operator-controller-manager to start..."
-  oc wait --for=condition=Available deployment/openshift-gitops-operator-controller-manager -n ${OPERATOR_NS} --timeout=${TIMEOUT_SECONDS}s
+    echo "Waiting for openshift-gitops-operator-controller-manager to start..."
+    oc wait --for=condition=Available deployment/openshift-gitops-operator-controller-manager -n ${OPERATOR_NS} --timeout=${TIMEOUT_SECONDS}s
 
-  echo "Waiting for ${ARGO_NS} namespace to be created..."
-  oc wait --for=jsonpath='{.status.phase}'=Active namespace/${ARGO_NS} --timeout=${TIMEOUT_SECONDS}s
+    echo "Waiting for ${ARGO_NS} namespace to be created..."
+    oc wait --for=jsonpath='{.status.phase}'=Active namespace/${ARGO_NS} --timeout=${TIMEOUT_SECONDS}s
 
-  echo "Waiting for deployments to start..."
-  oc wait --for=condition=Available deployment/cluster -n ${ARGO_NS} --timeout=${TIMEOUT_SECONDS}s
+    echo "Waiting for deployments to start..."
+    oc wait --for=condition=Available deployment/cluster -n ${ARGO_NS} --timeout=${TIMEOUT_SECONDS}s
 
-  wait_for_openshift_gitops
+    wait_for_openshift_gitops
 
-  echo ""
-  echo "OpenShift GitOps successfully installed."
+    echo ""
+    echo "OpenShift GitOps successfully installed."
+  fi
 }
 
 
 
 bootstrap_cluster(){
 
-  base_dir="bootstrap/overlays"
+  PS3="Please enter a number to select a bootstrap folder: "
+  
+  echo
+  select bootstrap_dir in bootstrap/overlays/*/; 
+  do
+      test -n "$bootstrap_dir" && break;
+      echo ">>> Invalid Selection";
+  done
 
   # Check if bootstrap_dir is already set
   if [ -n "$BOOTSTRAP_DIR" ]; then
