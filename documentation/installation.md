@@ -48,6 +48,12 @@ Execute the bootstrap script to begin the installation process:
 ```sh
 ./scripts/bootstrap.sh
 ```
+The script defaults to using the central repository at `(https://github.com/redhat-ai-services/ai-accelerator.git)` and the main branch for GitOps configuration. If your working remote repository differs, the script will prompt you to update the GitOps configuration to match. Selecting this option will:
+
+- Update the repository and branch in `cluster-config-app-of-apps`.
+- Commit the changes locally.
+- Require you to push the updated file `cluster-config-app-of-apps` to the central - repository `(https://github.com/redhat-ai-services/ai-accelerator.git)` and the main branch before submitting a pull request.
+
 
 When prompted to select a bootstrap folder, choose the overlay that matches your cluster version, for example: `bootstrap/overlays/rhoai-eus-2.8/`.
 
