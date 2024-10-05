@@ -17,53 +17,41 @@ source "$(dirname "$0")/util.sh"
 source "$(dirname "$0")/command_flags.sh" "$@"
 YAML_FILE="./components/argocd/apps/base/cluster-config-app-of-apps.yaml"
 
-CURRENT_REPO_URL="https://github.com/redhat-ai-services/ai-accelerator.git"
-CURRENT_REPO_REVISION="main"
-NEW_REPO_URL=""
-NEW_REPO_REVISION=""
-
 
 confirm_repo_update(){
 
-CURRENT_REPO_URL=$(yq eval '.spec.source.repoURL' "$YAML_FILE")
-CURRENT_REPO_REVISION=$(yq eval '.spec.source.targetRevision' "$YAML_FILE")
+REPO_URL=$(yq eval '.spec.source.repoURL' "$YAML_FILE")
+REPO_REVISION=$(yq eval '.spec.source.targetRevision' "$YAML_FILE")
 
+# Get the current working repo URL (from the 'origin' remote)
+WORKING_REPO_URL=$(git remote get-url origin)
+# Get the current working repo branch
+WORKING_REPO_REVISION=$(git rev-parse --abbrev-ref HEAD) 
 
-# Prompt the user for a new Repo, defaulting to the old repo if no input is given
-read -p "Your environment will be provisioned through ArgoCD using the following Git repo, you can use default (press Enter) or change it:
-- Git Repository [$CURRENT_REPO_URL]: " NEW_REPO_URL
+if [[ "$REPO_URL" != "$WORKING_REPO_URL" ]] || [[ "$REPO_REVISION" != "$WORKING_REPO_REVISION" ]]; then
 
-read -p "- Git Repository Revision [$CURRENT_REPO_REVISION]: " NEW_REPO_REVISION
+  # Prompt the user for a new Repo, defaulting to the gitops configured repo if no input is given
+  read -p "Your GitOps process is currently configured to use the repository $REPO_URL on branch $REPO_REVISION, 
+  but your current working repository is $WORKING_REPO_URL on branch $WORKING_REPO_REVISION. 
+  Do you want to reconfigure the GitOps process to use the current working repository? (Y/N): N " USER_CHOICE
 
-echo "User entered rep: $NEW_REPO_URL Revision: $NEW_REPO_REVISION"
+  echo "You selected" $USER_CHOICE
+  # Use the old URL if no new URL is provided
+  if [[ -z "$USER_CHOICE" ]] || ([[ "$USER_CHOICE" != 'y' ]] && [[ "$USER_CHOICE" != 'Y' ]]); then
+      echo "No change in repository proceed with default option"
+  else
+      echo "updaing working repository"
+      yq eval ".spec.source.repoURL = \"$WORKING_REPO_URL\"" -i "$YAML_FILE"
+      yq eval ".spec.source.targetRevision = \"$WORKING_REPO_REVISION\"" -i "$YAML_FILE"
 
-# Use the old URL if no new URL is provided
-if [ -z "$NEW_REPO_URL" ]; then
-    NEW_REPO_URL=$CURRENT_REPO_URL
-    echo "No new Repo URL provided. Using the old URL: $CURRENT_REPO_URL"
-fi
-
-if [ -z "$NEW_REPO_REVISION" ]; then
-    NEW_REPO_REVISION=$CURRENT_REPO_REVISION
-    echo "No new Repo Revision provided. Using the old URL: $CURRENT_REPO_REVISION"
-fi
-
-if [[ "$CURRENT_REPO_URL" != "$NEW_REPO_URL" ]] || [[ "$CURRENT_REPO_REVISION" != "$NEW_REPO_REVISION" ]]; then
-  echo "updating rep: $NEW_REPO_URL Revision: $NEW_REPO_REVISION" in the file $YAML_FILE
-  # Use sed to replace the old variables with the new ones in the YAML file
-  cp $YAML_FILE $YAML_FILE.bak
-  yq eval ".spec.source.repoURL = \"$NEW_REPO_URL\"" -i $YAML_FILE
-  yq eval ".spec.source.targetRevision = \"$NEW_REPO_REVISION\"" -i $YAML_FILE
-  yq eval 'del(.spec.syncPolicy)' -i $YAML_FILE
-
-fi
-
-}
-
-cleanup_repo_changes(){
-  if [[ "$CURRENT_REPO_URL" != "$NEW_REPO_URL" ]] || [[ "$CURRENT_REPO_REVISION" != "$NEW_REPO_REVISION" ]]; then
-    mv $YAML_FILE.bak $YAML_FILE
+      git add "$YAML_FILE"
+      git commit -m "updated by bootstrap process" --  "$YAML_FILE"
+      git push origin "$WORKING_REPO_REVISION"
   fi
+else
+  echo "No mismatch in repository"
+fi
+
 }
 
 apply_firmly(){
@@ -177,4 +165,3 @@ check_oc_login
 confirm_repo_update
 install_gitops
 bootstrap_cluster
-cleanup_repo_changes
