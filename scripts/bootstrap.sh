@@ -88,6 +88,7 @@ bootstrap_cluster(){
         test -n "$base_dir/$bootstrap_dir" && break;
         echo ">>> Invalid Selection";
     done
+  fi
 
   check_branch
   check_repo
