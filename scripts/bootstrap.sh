@@ -81,6 +81,7 @@ bootstrap_cluster(){
     test -n "$base_dir/$bootstrap_dir";
     echo "Using bootstrap folder: $bootstrap_dir"
   else
+    echo
     PS3="Please enter a number to select a bootstrap folder: "
     
     select bootstrap_dir in $(basename -a $base_dir/*/); 

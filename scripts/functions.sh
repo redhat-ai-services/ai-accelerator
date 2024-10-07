@@ -258,18 +258,24 @@ check_branch(){
 
   if ! command -v yq &> /dev/null; then
     print_warning "yq could not be found.  We are unable to verify the branch of your repo."
-  else
-    GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    APP_BRANCH=$(yq -r "${APP_PATCH_PATH}" ${APP_PATCH_FILE})
-    if [[ ${GIT_BRANCH} == ${APP_BRANCH} ]] ; then
-      echo "Your working branch ${GIT_BRANCH}, matches your cluster overlay branch ${APP_BRANCH}"
-    elif [[ ${FORCE} == "true" ]] ; then
-      echo "Your current working branch is ${GIT_BRANCH}, and your cluster overlay branch is ${APP_BRANCH}.
-      Updating to ${GIT_BRANCH}"
+    exit 1
+  fi
+
+  GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+  APP_BRANCH=$(yq -r "${APP_PATCH_PATH}" ${APP_PATCH_FILE})
+
+  if [[ ${GIT_BRANCH} == ${APP_BRANCH} ]] ; then
+    echo
+    echo "Your working branch ${GIT_BRANCH}, matches your cluster overlay branch ${APP_BRANCH}"
+  else 
+    echo
+    echo "Your current working branch is ${GIT_BRANCH}, and your cluster overlay branch is ${APP_BRANCH}."
+
+    if [[ ${FORCE} == "true" ]] ; then
+      echo "Updating to ${GIT_BRANCH}"
       update_branch ${CLUSTER_OVERLAY};
-    else 
-      echo "Your current working branch is ${GIT_BRANCH}, and your cluster overlay branch is ${APP_BRANCH}.
-      Do you wish to update it to ${GIT_BRANCH}?"
+    else
+      echo "Do you wish to update it to ${GIT_BRANCH}?"
 
       PS3="Please enter a number to select: "
 
@@ -281,6 +287,7 @@ check_branch(){
       done
     fi
   fi
+
 }
 
 update_branch(){
