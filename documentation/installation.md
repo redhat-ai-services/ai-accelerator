@@ -6,36 +6,35 @@ This document contains the steps for installing and configuring Red Hat OpenShif
 
 ### OpenShift Cluster
 
-Prior to deploying OpenShift AI, it is recommended you review the [Supported Configurations](https://access.redhat.com/articles/rhoai-supported-configs) documentation.
+- (Recommended) Review [Supported Configurations](https://access.redhat.com/articles/rhoai-supported-configs) documentation.
 
-Ensure that you have cluster-admin access to an OpenShift cluster, since we will be installing several operators and configuring various components on the cluster.
+- Account with appropriate permissions for installing operator and configuration installation (typically `kubeadmin`).
 
-The cluster must also have a functional storage provisioner available with a default StorageClass.
+- Functional storage provisioner available with a default StorageClass.
 
-For GPU deployments, this repo is designed specifically to work with AWS to provision additional GPU nodes, but this can still act as an example to deploy GPU resources in any cloud environment or a self-hosted cluster with some minor modifications.
+> [!Note]  
+> If using GPUs (not required): This repo is designed and tested to work with AWS for provisioning additional GPU nodes. 
+> 
+> Can still act as an example to deploy GPU resources in any cloud environment or a self-hosted cluster with some minor modifications.
 
-> [!NOTE]  
+> [!Tip]  
 > Red Hat employees can request a demo cluster using [demo.redhat.com](https://demo.redhat.com) to provision OpenShift AI. For more information see the [Red Hat Demo Environment](redhat_demo_environment.md) documentation.
 
 ### Client Tooling
 
-The bootstrap script relies on the following command line tools. If they're not already available on your system path, the bootstrap script will attempt to download them from the internet, and will place then in a `.\tmp` folder location where the bootstrap script was run:
+The following are required for the bootstrap scripts. If unavailable the scripts will attempt to download required tools and store them at `.\tmp`:
 
-- [oc](https://docs.openshift.com/container-platform/4.11/cli_reference/openshift_cli/getting-started-cli.html) - the OpenShift command-line interface (CLI) that allows for creation of applications, and can manage OpenShift Container Platform projects from a terminal.
+- [oc](https://docs.openshift.com/container-platform/4.11/cli_reference/openshift_cli/getting-started-cli.html) - OpenShift command-line interface (CLI).
 
-- [kustomize](https://kubectl.docs.kubernetes.io/installation/kustomize/) - a Kubernetes configuration transformation tool that enables you to customize un-templated YAML files, leaving the original files untouched.
+- [kustomize](https://kubectl.docs.kubernetes.io/installation/kustomize/) - Kubernetes native configuration and transformation tool.
 
-- [kubeseal](https://github.com/bitnami-labs/sealed-secrets#installation) - uses asymmetric crypto to encrypt secrets that only the controller can decrypt. These encrypted secrets are encoded in a SealedSecret resource, which you can see as a recipe for creating a secret.
+- [kubeseal](https://github.com/bitnami-labs/sealed-secrets#overview) - Encryption tool used for creating the SealedSecret resource.
 
-- [openshift-install](https://github.com/openshift/installer/releases) (optional) - tooling that could be used for monitoring the [cluster installation progress](https://access.redhat.com/documentation/en-us/openshift_container_platform/4.11/html/installing/installing-on-a-single-node#install-sno-monitoring-the-installation-manually_install-sno-installing-sno-with-the-assisted-installer).
+- [openshift-install](https://github.com/openshift/installer/releases) (optional) - Tool used for monitoring the [cluster installation progress](https://access.redhat.com/documentation/en-us/openshift_container_platform/4.11/html/installing/installing-on-a-single-node#install-sno-monitoring-the-installation-manually_install-sno-installing-sno-with-the-assisted-installer).
 
 ### Access to an OpenShift Cluster
 
-Before running the bootstrap script, ensure that you have login access to your OpenShift cluster.
-
-Make sure you are [logged into your cluster](https://docs.openshift.com/online/pro/cli_reference/get_started_cli.html) using the `oc login ...` command.  You can obtain a login token if required by utilizing the "Copy Login Command" found under your user profile in the OpenShift Web Console.
-
-The scripts require a user with sufficient permissions for installing and configuring operators, typically the `kubeadmin` user account on a Red Hat Demo System hosted cluster.
+Login to the cluster using `oc login...` using an account with appropriate permissions.
 
 ## Bootstrapping a Cluster
 
