@@ -371,29 +371,38 @@ check_repo(){
     APP_REPO=$(yq -r "${APP_PATCH_PATH}" ${APP_PATCH_FILE})
     APP_REPO_BASENAME=$(get_git_basename ${APP_REPO})
 
-    GITHUB_URL="https://github.com/${GIT_REPO_BASENAME}.git"
-
     if [[ ${GIT_REPO_BASENAME} == ${APP_REPO_BASENAME} ]] ; then
       echo "Your working repo ${GIT_REPO}, matches your cluster overlay branch ${APP_REPO}"
     else 
+
+      GITHUB_URL="https://github.com/${GIT_REPO_BASENAME}.git"
+
       echo
       echo "Your current working repo is"
       echo "  ${GIT_REPO}"
+      echo
       echo "Your cluster overlay repo is"
       echo "  ${APP_REPO}"
-      echo
-      echo "Do you wish to update it to the following?"
-      echo "  ${GITHUB_URL}"
-      echo
 
-      PS3="Please enter a number to select: "
+      if [[ ${FORCE} == "true" ]] ; then
+        echo "Updating to ${GITHUB_URL}"
+        update_repo ${APP_PATCH_FILE} ${APP_PATCH_PATH} ${GITHUB_URL};
+      else
 
-      select yn in "Yes" "No"; do
-          case $yn in
-              Yes ) update_repo ${CLUSTER_OVERLAY} ${GITHUB_URL}; break;;
-              No ) break;;
-          esac
-      done
+        echo
+        echo "Do you wish to update it to the following?"
+        echo "  ${GITHUB_URL}"
+        echo
+
+        PS3="Please enter a number to select: "
+
+        select yn in "Yes" "No"; do
+            case $yn in
+                Yes ) update_repo ${APP_PATCH_FILE} ${APP_PATCH_PATH} ${GITHUB_URL}; break;;
+                No ) break;;
+            esac
+        done
+      fi
     fi
   fi
 }
