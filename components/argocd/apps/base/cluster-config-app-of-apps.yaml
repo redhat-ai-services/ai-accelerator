@@ -13,7 +13,7 @@ spec:
   source:
     path: patch-me-see-overlays
     repoURL: https://github.com/redhat-ai-services/ai-accelerator.git # Update me on fork
-    targetRevision: repo-bootstrap-updates-2
+    targetRevision: main
   syncPolicy:
     automated:
       prune: false
