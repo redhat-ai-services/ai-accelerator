@@ -74,6 +74,7 @@ bootstrap_cluster(){
   # Check if bootstrap_dir is already set
   if [ -n "$BOOTSTRAP_DIR" ]; then
     bootstrap_dir=$BOOTSTRAP_DIR
+    test -n "$base_dir/$bootstrap_dir";
     echo "Using bootstrap folder: $bootstrap_dir"
   else
     PS3="Please enter a number to select a bootstrap folder: "
