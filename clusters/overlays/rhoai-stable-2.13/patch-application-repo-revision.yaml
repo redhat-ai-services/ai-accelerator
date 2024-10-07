@@ -3,5 +3,4 @@
   value: 'https://github.com/redhat-ai-services/ai-accelerator.git'
 - op: replace
   path: /spec/source/targetRevision
-  value: rhoai-2.13-stable # TODO: Revert back to `main` branch before merging
-  
+  value: rhoai-2.13-stable  # TODO: Revert back to `main` branch before merging
