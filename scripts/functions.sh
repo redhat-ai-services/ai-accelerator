@@ -190,7 +190,7 @@ check_branch(){
   APP_PATCH_FILE="${CLUSTERS_FOLDER}/${CLUSTER_OVERLAY}/patch-application-repo-revision.yaml"
 
   if ! command -v yq &> /dev/null; then
-    print_error "yq could not be found.  We are unable to verify the branch of your repo."
+    print_warning "yq could not be found.  We are unable to verify the branch of your repo."
   else
     GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
     APP_BRANCH=$(yq -r ".[1].value" ${APP_PATCH_FILE})
