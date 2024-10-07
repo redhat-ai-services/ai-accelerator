@@ -1,0 +1,14 @@
+---
+apiVersion: pfe.rhpds.com/v1
+kind: Gitea
+metadata:
+  name: simple-gitea
+  namespace: gitea
+spec:
+  giteaImageTag: 1.20.0
+  giteaVolumeSize: 4Gi
+  giteaSsl: false
+  postgresqlVolumeSize: 4Gi
+  giteaAdminUser: hank
+  giteaAdminEmail: hhellbusch@redhat.com
+  giteaAdminPassword: hank

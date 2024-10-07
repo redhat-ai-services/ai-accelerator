@@ -1,0 +1,10 @@
+kind: ClusterPolicy
+apiVersion: nvidia.com/v1
+metadata:
+  name: gpu-cluster-policy
+spec:
+  daemonsets:
+    tolerations:
+      - effect: NoSchedule
+        key: nvidia.com/gpu
+        operator: Exists

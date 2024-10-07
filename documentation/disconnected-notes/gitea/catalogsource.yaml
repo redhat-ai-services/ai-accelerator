@@ -1,0 +1,10 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: redhat-rhpds-gitea
+  namespace: gitea-operator
+spec:
+  sourceType: grpc
+  image: ip-10-0-54-104.us-east-2.compute.internal:8443/rhpds/gitea-catalog:latest
+  displayName: Red Hat Demo Platform (Gitea)
+  publisher: Red Hat Demo Platform
