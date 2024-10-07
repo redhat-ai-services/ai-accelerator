@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-OCP_VERSION=4.11
 TMP_DIR=tmp
 SEALED_SECRETS_FOLDER=components/operators/sealed-secrets-operator/overlays/default/
 SEALED_SECRETS_SECRET=bootstrap/base/sealed-secrets-secret.yaml
@@ -179,6 +178,7 @@ wait_for_openshift_gitops(){
 }
 
 check_branch(){
+  echo "FORCE is set to ${FORCE}"
   if [ -z "$1" ]; then
     echo "No cluster overlay supplied."
     exit 1
@@ -190,12 +190,16 @@ check_branch(){
   APP_PATCH_FILE="${CLUSTERS_FOLDER}/${CLUSTER_OVERLAY}/patch-application-repo-revision.yaml"
 
   if ! command -v yq &> /dev/null; then
-    echo "yq could not be found.  We are unable to verify the branch of your repo."
+    print_error "yq could not be found.  We are unable to verify the branch of your repo."
   else
     GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
     APP_BRANCH=$(yq -r ".[1].value" ${APP_PATCH_FILE})
     if [[ ${GIT_BRANCH} == ${APP_BRANCH} ]] ; then
       echo "Your working branch ${GIT_BRANCH}, matches your cluster overlay branch ${APP_BRANCH}"
+    elif [[ ${FORCE} == "true" ]] ; then
+      echo "Your current working branch is ${GIT_BRANCH}, and your cluster overlay branch is ${APP_BRANCH}.
+      Updating to ${GIT_BRANCH}"
+      update_branch ${CLUSTER_OVERLAY};
     else 
       echo "Your current working branch is ${GIT_BRANCH}, and your cluster overlay branch is ${APP_BRANCH}.
       Do you wish to update it to ${GIT_BRANCH}?"
