@@ -2,6 +2,7 @@
 set -e
 
 # Default values
+LANG=C
 TIMEOUT_SECONDS=45
 OPERATOR_NS="openshift-gitops-operator"
 ARGO_NS="openshift-gitops"
