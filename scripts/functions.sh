@@ -253,22 +253,14 @@ get_patch_value() {
 
 
 check_branch(){
-  echo "FORCE is set to ${FORCE}"
-  if [ -z "$1" ]; then
-    echo "No cluster overlay supplied."
-    exit 1
-  else
-    CLUSTER_OVERLAY=$1
-  fi
-
-  CLUSTERS_FOLDER="clusters/overlays"
-  APP_PATCH_FILE="${CLUSTERS_FOLDER}/${CLUSTER_OVERLAY}/patch-application-repo-revision.yaml"
+  APP_PATCH_FILE="./components/argocd/apps/base/cluster-config-app-of-apps.yaml"
+  APP_PATCH_PATH=".spec.source.targetRevision"
 
   if ! command -v yq &> /dev/null; then
     print_warning "yq could not be found.  We are unable to verify the branch of your repo."
   else
     GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    APP_BRANCH=$(get_cluster_branch ${APP_PATCH_FILE})
+    APP_BRANCH=$(yq -r "${APP_PATCH_PATH}" ${APP_PATCH_FILE})
     if [[ ${GIT_BRANCH} == ${APP_BRANCH} ]] ; then
       echo "Your working branch ${GIT_BRANCH}, matches your cluster overlay branch ${APP_BRANCH}"
     elif [[ ${FORCE} == "true" ]] ; then
@@ -283,7 +275,7 @@ check_branch(){
 
       select yn in "Yes" "No"; do
           case $yn in
-              Yes ) update_branch ${CLUSTER_OVERLAY}; break;;
+              Yes ) update_branch ${APP_PATCH_FILE} ${APP_PATCH_PATH}; break;;
               No ) break;;
           esac
       done
@@ -292,20 +284,23 @@ check_branch(){
 }
 
 update_branch(){
-  if [ -z "$1" ]; then
-    echo "No cluster overlay supplied."
+ if [ -z "$1" ]; then
+    echo "No patch file supplied."
     exit 1
   else
-    CLUSTER_OVERLAY=$1
+    APP_PATCH_FILE=$1
   fi
 
-  CLUSTERS_FOLDER="clusters/overlays"
-
-  APP_PATCH_FILE="${CLUSTERS_FOLDER}/${CLUSTER_OVERLAY}/patch-application-repo-revision.yaml"
+ if [ -z "$2" ]; then
+    echo "No patch path supplied."
+    exit 1
+  else
+    APP_PATCH_PATH=$2
+  fi
 
   GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
-  yq ".[1].value = \"${GIT_BRANCH}\"" -i ${APP_PATCH_FILE}
+  yq "${APP_PATCH_PATH} = \"${GIT_BRANCH}\"" -i ${APP_PATCH_FILE}
 
   git add ${APP_PATCH_FILE}
   git commit -m "automatic update to branch by bootstrap script"

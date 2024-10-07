@@ -130,8 +130,8 @@ bootstrap_cluster(){
         echo ">>> Invalid Selection";
     done
 
-  check_branch $(basename ${bootstrap_dir})
-  check_repo $(basename ${bootstrap_dir})
+  check_branch
+  # check_repo $(basename ${bootstrap_dir})
   
   echo "Apply overlay to override default instance"
   kustomize build "${base_dir}/${bootstrap_dir}" | oc apply -f -
@@ -162,6 +162,5 @@ check_oc_login
 #check_sealed_secret
 
 # Execute bootstrap functions
-confirm_repo_update
 install_gitops
 bootstrap_cluster
