@@ -131,7 +131,7 @@ bootstrap_cluster(){
     done
 
   check_branch
-  # check_repo $(basename ${bootstrap_dir})
+  check_repo
   
   echo "Apply overlay to override default instance"
   kustomize build "${base_dir}/${bootstrap_dir}" | oc apply -f -

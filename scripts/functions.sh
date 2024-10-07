@@ -321,23 +321,30 @@ get_git_basename(){
 }
 
 update_repo(){
-  if [ -z "$1" ]; then
-    echo "No cluster overlay supplied."
+ if [ -z "$1" ]; then
+    echo "No patch file supplied."
     exit 1
   else
-    CLUSTER_OVERLAY=$1
+    APP_PATCH_FILE=$1
   fi
 
-  if [ -z "$2" ]; then
+ if [ -z "$2" ]; then
+    echo "No patch path supplied."
+    exit 1
+  else
+    APP_PATCH_PATH=$2
+  fi
+
+  if [ -z "$3" ]; then
     echo "No repo url provided."
     exit 1
   else
-    REPO_URL=$2
+    REPO_URL=$3
   fi
 
   GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
-  yq ".[0].value = \"${REPO_URL}\"" -i ${APP_PATCH_FILE}
+  yq "${APP_PATCH_PATH} = \"${REPO_URL}\"" -i ${APP_PATCH_FILE}
 
   git add ${APP_PATCH_FILE}
   git commit -m "automatic update to repo by bootstrap script"
@@ -345,15 +352,8 @@ update_repo(){
 }
 
 check_repo(){
-  if [ -z "$1" ]; then
-    echo "No cluster overlay supplied."
-    exit 1
-  else
-    CLUSTER_OVERLAY=$1
-  fi
-
-  CLUSTERS_FOLDER="clusters/overlays"
-  APP_PATCH_FILE="${CLUSTERS_FOLDER}/${CLUSTER_OVERLAY}/patch-application-repo-revision.yaml"
+  APP_PATCH_FILE="./components/argocd/apps/base/cluster-config-app-of-apps.yaml"
+  APP_PATCH_PATH=".spec.source.repoURL"
 
   if ! command -v yq &> /dev/null; then
     echo "yq could not be found.  We are unable to verify the repo."
@@ -361,7 +361,7 @@ check_repo(){
 
     GIT_REPO=$(git config --get remote.origin.url)
     GIT_REPO_BASENAME=$(get_git_basename ${GIT_REPO})
-    APP_REPO=$(yq -r ".[0].value" ${APP_PATCH_FILE})
+    APP_REPO=$(yq -r "${APP_PATCH_PATH}" ${APP_PATCH_FILE})
     APP_REPO_BASENAME=$(get_git_basename ${APP_REPO})
 
     GITHUB_URL="https://github.com/${GIT_REPO_BASENAME}.git"
