@@ -1,27 +1,34 @@
 #!/bin/bash
 set -e
 
-# shellcheck source=/dev/null
-source "$(dirname "$0")/functions.sh"
-
+# Default values
 LANG=C
 TIMEOUT_SECONDS=45
 OPERATOR_NS="openshift-gitops-operator"
 ARGO_NS="openshift-gitops"
 GITOPS_OVERLAY=components/operators/openshift-gitops/operator/overlays/latest/
 
+# Default used by child scripts
+export OCP_VERSION=4.11
+
+# shellcheck source=/dev/null
+source "$(dirname "$0")/functions.sh"
+source "$(dirname "$0")/util.sh"
+source "$(dirname "$0")/command_flags.sh" "$@"
+
 apply_firmly(){
   if [ ! -f "${1}/kustomization.yaml" ]; then
-    echo "Please provide a dir with \"kustomization.yaml\""
+    print_error "Please provide a dir with \"kustomization.yaml\""
     return 1
   fi
 
   # kludge
   until oc kustomize "${1}" --enable-helm | oc apply -f- 2>/dev/null
   do
-    echo "again..."
-    sleep 20
+    echo -n "."
+    sleep 5
   done
+  echo ""
   # until_true oc apply -k "${1}" 2>/dev/null
 }
 
@@ -62,22 +69,31 @@ install_gitops(){
 
 bootstrap_cluster(){
 
-  PS3="Please enter a number to select a bootstrap folder: "
-  
-  select bootstrap_dir in bootstrap/overlays/*/; 
-  do
-      test -n "$bootstrap_dir" && break;
-      echo ">>> Invalid Selection";
-  done
+  base_dir="bootstrap/overlays"
 
-  echo
-  echo "Selected: ${bootstrap_dir}"
-  echo
+  # Check if bootstrap_dir is already set
+  if [ -n "$BOOTSTRAP_DIR" ]; then
+    bootstrap_dir=$BOOTSTRAP_DIR
+    test -n "$base_dir/$bootstrap_dir";
+    echo "Using bootstrap folder: $bootstrap_dir"
+  else
+    PS3="Please enter a number to select a bootstrap folder: "
+    
+    select bootstrap_dir in $(basename -a $base_dir/*/); 
+    do
+        test -n "$base_dir/$bootstrap_dir" && break;
+        echo ">>> Invalid Selection";
+    done
 
-  check_branch $(basename ${bootstrap_dir})
+    echo
+    echo "Selected: ${bootstrap_dir}"
+    echo
+  fi
+
+  check_branch $bootstrap_dir
   
   echo "Apply overlay to override default instance"
-  kustomize build "${bootstrap_dir}" | oc apply -f -
+  kustomize build "${base_dir}/${bootstrap_dir}" | oc apply -f -
 
   wait_for_openshift_gitops
 
