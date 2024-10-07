@@ -12,7 +12,7 @@ spec:
   project: cluster-config
   source:
     path: patch-me-see-overlays
-    repoURL: https://github.com/redhat-ai-services/ai-accelerator-test.git # Update me on fork
+    repoURL: https://github.com/redhat-ai-services/ai-accelerator.git # Update me on fork
     targetRevision: repo-bootstrap-updates-2
   syncPolicy:
     automated:
