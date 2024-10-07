@@ -76,14 +76,7 @@ install_gitops(){
 
 bootstrap_cluster(){
 
-  PS3="Please enter a number to select a bootstrap folder: "
-  
-  echo
-  select bootstrap_dir in bootstrap/overlays/*/; 
-  do
-      test -n "$bootstrap_dir" && break;
-      echo ">>> Invalid Selection";
-  done
+  base_dir="bootstrap/overlays"
 
   # Check if bootstrap_dir is already set
   if [ -n "$BOOTSTRAP_DIR" ]; then
