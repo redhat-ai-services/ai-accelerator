@@ -34,10 +34,10 @@ apply_firmly(){
 
 install_gitops(){
   echo
-  echo "Checking if GitOps Operator is already installed"
+  echo "Checking if GitOps Operator is already installed and running"
   if [[ $(oc get pod -n ${OPERATOR_NS} --no-headers -o custom-columns=":status.phase") == "Running" ]]; then
     echo
-    echo "GitOps operator is already installed."
+    echo "GitOps operator is already installed and running"
   else
     echo
     echo "Installing GitOps Operator."
