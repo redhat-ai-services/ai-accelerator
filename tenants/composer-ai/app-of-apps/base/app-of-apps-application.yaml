@@ -11,7 +11,7 @@ spec:
     server: 'https://kubernetes.default.svc'
   source:
     path: appOfApps
-    repoURL: 'https://gitlab.consulting.redhat.com/redprojectai/infrastructure/appdeploy-v2.git'
+    repoURL: 'https://github.com/redhat-composer-ai/appOfApps.git'
     targetRevision: HEAD
     helm:
       parameters:
