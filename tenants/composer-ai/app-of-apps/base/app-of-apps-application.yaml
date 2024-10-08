@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: composer-ai-app-of-apps
+  name: composer-ai-config
   namespace: openshift-gitops
   labels:
     gitops.ownedBy: cluster-config
