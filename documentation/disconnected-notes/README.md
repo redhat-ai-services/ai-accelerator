@@ -387,3 +387,31 @@ spec:
 
 The ai-accelerator uses Red Hat GitOps (ArgoCD) to define what to install.  As such, you'll need a git repo that 
 ArgoCD can dial out to.  For this Proof of Concept, we utilized Gitea as described by RHPDS - [Gitea Operator](https://github.com/rhpds/gitea-operator)
+### Certificate Issue
+
+You may see below certificate error while downloading models from model storage or external storage. This error comes when the certificates to be trusted are missing from clusterwide certificate authority bundle.
+
+```
+
+2024-10-01714:55:39Z
+Failed to pull model from storage
+{"model_id": "fraud_isvc-28e3d254da", "error": "rc
+error:
+code = Unknown desc = Failed to pull model from storage due to error: unable to list objects in bucket
+'my-storage': RequestError: send request failedincaused by: Get \"htts://minio-s3-cc-f
+raud-det-demo-apps.ilab-ctigtdc12d.ecs.dyn.nsroot.net/my-storage?list-type=28max-keys=100&prefix=models%2Ffraud\": *509: certificate signed by unknown authority"}
+
+```
+
+Please follow the below steps to fix the issue
+
+```
+$ oc get secret -n openshift-ingress-operator router-ca -o jsonpath='{.data.tls\.crt}' | base64 -d > openshift-ca-bundle.pem
+$ oc get configmap -n openshift-config openshift-service-ca.crt -o jsonpath='{.data.service-ca\.crt}' >> openshift-ca-bundle.pem
+$ CA_BUNDLE_FILE=./openshift-ca-bundle.pem
+$ oc patch dscinitialization default-dsci --type='json' -p='[{"op":"replace","path":"/spec/trustedCABundle/customCABundle","value":"'"$(awk '{printf "%s\\n", $0}' $CA_BUNDLE_FILE)"'"}]'
+
+```
+For more information see below link
+
+https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.13/html/installing_and_uninstalling_openshift_ai_self-managed/working-with-certificates_certs
