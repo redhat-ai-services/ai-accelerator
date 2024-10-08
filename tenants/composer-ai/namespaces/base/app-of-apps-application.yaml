@@ -1,8 +1,11 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: app-of-apps
+  name: composer-ai-app-of-apps
   namespace: openshift-gitops
+  labels:
+    gitops.ownedBy: cluster-config
+    tenant: composer-ai
 spec:
   destination:
     server: 'https://kubernetes.default.svc'
