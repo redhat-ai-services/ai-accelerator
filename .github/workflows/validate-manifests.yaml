@@ -74,8 +74,10 @@ jobs:
       - name: Code Checkout
         uses: actions/checkout@v4
       - name: Validate Repo and Revision
+        env:
+          EXPECTED_REPO: ${{ github.repositoryUrl }}
         run: |
-          ./scripts/validate_git_config.sh -g
+          ./scripts/validate_git_config.sh --expected-repo=${EXPECTED_REPO} --github
 
   check-spelling:
     runs-on: ubuntu-latest
