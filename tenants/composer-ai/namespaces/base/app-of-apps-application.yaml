@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-of-apps
+  namespace: openshift-gitops
+spec:
+  destination:
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: appOfApps
+    repoURL: 'https://gitlab.consulting.redhat.com/redprojectai/infrastructure/appdeploy-v2.git'
+    targetRevision: HEAD
+    helm:
+      parameters:
+        - name: application.defaultNamespace
+          value: composer-ai
+  project: default
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
