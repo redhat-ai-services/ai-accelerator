@@ -77,7 +77,7 @@ jobs:
         env:
           EXPECTED_REPO: ${{ github.repositoryUrl }}
         run: |
-          REPO_URL=$(echo "${EXPECTED_REPO}" | sed 's/git:\/\//http:\/\//')
+          REPO_URL=$(echo "${EXPECTED_REPO}" | sed 's/git:\/\//https:\/\//')
           ./scripts/validate_git_config.sh --expected-repo=${REPO_URL} --github
 
   check-spelling:
