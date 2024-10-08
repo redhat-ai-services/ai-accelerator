@@ -1,46 +1,34 @@
 #!/bin/bash
 set -e
 
-# source "$(dirname "$0")/functions.sh"
-
-while getopts ":hgr" option; do
-   case $option in
-      h) # display Help
-         help
-         exit;;
-      g)
-        GITHUB=true;;
-   esac
-done
-
 # Help function
-# function show_help {
-#   echo "Usage: $0 [OPTIONS]"
-#   echo "Options:"
-#   echo "  --ocp_version=4.11    Target Openshift Version"
-#   echo "  --BOOTSTRAP_DIR=<bootstrap_directory>    Base folder inside of bootstrap/overlays (Optional, pick during script execution if not set)"
-#   echo "  --timeout=45          Timeout in seconds for waiting for each resource to be ready"
-#   echo "  -f                    If set, will update the `patch-application-repo-revision` folder inside of your overlay with the current git information and push a checkin"
-#   echo "  --help                Show this help message"
-# }
-
 show_help() {
-  echo "A script to help validate the repo and branch for the cluster."
-  echo
-  echo "usage:"
-  echo "    $0 [-h|g|r]"
-  echo "options:"
-  echo "-h   Print this help menu."
-  echo "-g   Report error messages using the GitHub Actions annotation format."
-  echo "-r   Provide the expected repo URL."
+  echo "Usage: $0 [OPTIONS]"
+  echo "Options:"
+  echo "  --expected-repo=http://github.com/my-repo    The repo URL that is expected to be set"
+  echo "  --expected-branch=main    The branch that is expected to be set"
+  echo "  --github    Report error messages using the GitHub Actions annotation format."
+  echo "  --debug     Print additional debug information."
+  echo "  --help                Show this help message"
 }
-
 
 for arg in "$@"
 do
   case $arg in
     --expected-repo=*)
     export EXPECTED_REPO="${arg#*=}"
+    shift
+    ;;
+    --expected-branch=*)
+    export EXPECTED_BRANCH"${arg#*=}"
+    shift
+    ;;
+    --github)
+    export GITHUB=true
+    shift
+    ;;
+    --debug)
+    export DEBUG=true
     shift
     ;;
     --help)
@@ -50,13 +38,11 @@ do
   esac
 done
 
-CLUSTERS_FOLDER="clusters/overlays/*"
-GIT_PATCH_FILE="patch-application-repo-revision.yaml"
 EXPECTED_REPO=${EXPECTED_REPO:-"https://github.com/redhat-ai-services/ai-accelerator.git"}
-EXPECTED_BRANCH="main"
+EXPECTED_BRANCH=${EXPECTED_BRANCH:-"main"}
 
-DEBUG=false
-GITHUB=false
+DEBUG=${DEBUG:-false}
+GITHUB=${GITHUB:-false}
 
 ERROR_DETECTED=false
 
@@ -213,20 +199,6 @@ main() {
   if ${ERROR_DETECTED}; then
     exit 1
   fi
-
-  # for cluster in ${CLUSTERS_FOLDER}; do
-  #   if [ -d "${cluster}" ]; then
-  #     verifiy_patch_file "${cluster}/${GIT_PATCH_FILE}"
-  #     verify_branch "${cluster}/${GIT_PATCH_FILE}" ${EXPECTED_BRANCH}
-  #     verify_repo "${cluster}/${GIT_PATCH_FILE}" ${EXPECTED_REPO}
-
-  #     if ${ERROR_DETECTED}; then
-  #       exit 1
-  #     fi
-  #   fi
-  # done
 }
-
-
 
 main
