@@ -389,7 +389,7 @@ The ai-accelerator uses Red Hat GitOps (ArgoCD) to define what to install.  As s
 ArgoCD can dial out to.  For this Proof of Concept, we utilized Gitea as described by RHPDS - [Gitea Operator](https://github.com/rhpds/gitea-operator)
 ### Certificate Issue
 
-You may see below certificate error while downloading models from model storage or external storage. This error comes when the certificates to be trusted are missing from clusterwide certificate authority bundle.
+You may see below certificate error while downloading models from model storage or external storage. This error comes when the certificates to be trusted are missing from cluster wide certificate authority bundle.
 
 ```
 
