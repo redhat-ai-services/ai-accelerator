@@ -10,19 +10,12 @@ on:  # yamllint disable-line rule:truthy
 jobs:
   lint-kustomize:
     runs-on: ubuntu-latest
-    env:
-      KUSTOMIZE_VERSION: 4.5.7
-      KUSTOMIZE_URL: https://github.com/kubernetes-sigs/kustomize/releases/download/v${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_amd64
-      BIN_PATH: /usr/bin
     steps:
-      - name: Install Kustomize
-        run: |
-          sudo curl "${KUSTOMIZE_URL}" -L -o ${BIN_PATH}/kustomize
-          sudo chmod +x ${BIN_PATH}/kustomize
       - name: Code Checkout
         uses: actions/checkout@v4
       - name: Validate Manifests
         run: |
+          kustomize version
           touch bootstrap/base/sealed-secrets-secret.yaml
           ./scripts/validate_manifests.sh
 
