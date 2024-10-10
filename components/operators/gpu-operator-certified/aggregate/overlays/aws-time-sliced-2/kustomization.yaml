@@ -6,4 +6,4 @@ commonAnnotations:
 
 resources:
   - ../../../operator/overlays/stable
-  - ../../../instance/overlays/aws-time-sliced-4
+  - ../../../instance/overlays/aws-time-sliced-2
