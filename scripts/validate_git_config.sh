@@ -101,24 +101,6 @@ get_cluster_repo() {
   echo ${VALUE}
 }
 
-verifiy_patch_file() {
-  if [ -z "$1" ]; then
-    echo "No patch file supplied."
-    exit 1
-  else
-    PATCH_FILE=$1
-  fi
-
-  if ${DEBUG}; then
-    echo "Verifying if ${PATCH_FILE} exists"
-  fi
-
-  if [ ! -f "${PATCH_FILE}" ]; then
-    echo "${PATCH_FILE} was not found."
-    ERROR_DETECTED=true
-  fi
-}
-
 verify_branch() {
   if [ -z "$1" ]; then
     echo "No patch file supplied."
