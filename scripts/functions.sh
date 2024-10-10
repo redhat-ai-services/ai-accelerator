@@ -178,58 +178,156 @@ wait_for_openshift_gitops(){
 }
 
 check_branch(){
-  echo "FORCE is set to ${FORCE}"
-  if [ -z "$1" ]; then
-    echo "No cluster overlay supplied."
-    exit 1
-  else
-    CLUSTER_OVERLAY=$1
-  fi
-
-  CLUSTERS_FOLDER="clusters/overlays"
-  APP_PATCH_FILE="${CLUSTERS_FOLDER}/${CLUSTER_OVERLAY}/patch-application-repo-revision.yaml"
+  APP_PATCH_FILE="./components/argocd/apps/base/cluster-config-app-of-apps.yaml"
+  APP_PATCH_PATH=".spec.source.targetRevision"
 
   if ! command -v yq &> /dev/null; then
     print_warning "yq could not be found.  We are unable to verify the branch of your repo."
-  else
-    GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    APP_BRANCH=$(yq -r ".[1].value" ${APP_PATCH_FILE})
-    if [[ ${GIT_BRANCH} == ${APP_BRANCH} ]] ; then
-      echo "Your working branch ${GIT_BRANCH}, matches your cluster overlay branch ${APP_BRANCH}"
-    elif [[ ${FORCE} == "true" ]] ; then
-      echo "Your current working branch is ${GIT_BRANCH}, and your cluster overlay branch is ${APP_BRANCH}.
-      Updating to ${GIT_BRANCH}"
+    exit 1
+  fi
+
+  GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+  APP_BRANCH=$(yq -r "${APP_PATCH_PATH}" ${APP_PATCH_FILE})
+
+  if [[ ${GIT_BRANCH} == ${APP_BRANCH} ]] ; then
+    echo
+    echo "Your working branch ${GIT_BRANCH}, matches your cluster overlay branch ${APP_BRANCH}"
+  else 
+    echo
+    echo "Your current working branch is ${GIT_BRANCH}, and your cluster overlay branch is ${APP_BRANCH}."
+
+    if [[ ${FORCE} == "true" ]] ; then
+      echo "Updating to ${GIT_BRANCH}"
       update_branch ${CLUSTER_OVERLAY};
-    else 
-      echo "Your current working branch is ${GIT_BRANCH}, and your cluster overlay branch is ${APP_BRANCH}.
-      Do you wish to update it to ${GIT_BRANCH}?"
+    else
+      echo "Do you wish to update it to ${GIT_BRANCH}?"
+
+      PS3="Please enter a number to select: "
+
       select yn in "Yes" "No"; do
           case $yn in
-              Yes ) update_branch ${CLUSTER_OVERLAY}; break;;
+              Yes ) update_branch ${APP_PATCH_FILE} ${APP_PATCH_PATH}; break;;
               No ) break;;
           esac
       done
     fi
   fi
+
 }
 
 update_branch(){
-  if [ -z "$1" ]; then
-    echo "No cluster overlay supplied."
+ if [ -z "$1" ]; then
+    echo "No patch file supplied."
     exit 1
   else
-    CLUSTER_OVERLAY=$1
+    APP_PATCH_FILE=$1
   fi
 
-  CLUSTERS_FOLDER="clusters/overlays"
-
-  APP_PATCH_FILE="${CLUSTERS_FOLDER}/${CLUSTER_OVERLAY}/patch-application-repo-revision.yaml"
+ if [ -z "$2" ]; then
+    echo "No patch path supplied."
+    exit 1
+  else
+    APP_PATCH_PATH=$2
+  fi
 
   GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
-  yq ".[1].value = \"${GIT_BRANCH}\"" -i ${APP_PATCH_FILE}
+  yq "${APP_PATCH_PATH} = \"${GIT_BRANCH}\"" -i ${APP_PATCH_FILE}
 
   git add ${APP_PATCH_FILE}
   git commit -m "automatic update to branch by bootstrap script"
   git push origin ${GIT_BRANCH}
+}
+
+get_git_basename(){
+  if [ -z "$1" ]; then
+    echo "No repo provided."
+    exit 1
+  else
+    REPO_URL=$1
+  fi
+
+  QUERY='s#(git@|https://)github.com[:/]([a-zA-Z0-9_.-]+/[a-zA-Z0-9_.-]+)\.git#\2#'
+  REPO_BASENAME=$(echo ${REPO_URL} | sed -E  ${QUERY})
+  echo ${REPO_BASENAME}
+}
+
+update_repo(){
+ if [ -z "$1" ]; then
+    echo "No patch file supplied."
+    exit 1
+  else
+    APP_PATCH_FILE=$1
+  fi
+
+ if [ -z "$2" ]; then
+    echo "No patch path supplied."
+    exit 1
+  else
+    APP_PATCH_PATH=$2
+  fi
+
+  if [ -z "$3" ]; then
+    echo "No repo url provided."
+    exit 1
+  else
+    REPO_URL=$3
+  fi
+
+  GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+  yq "${APP_PATCH_PATH} = \"${REPO_URL}\"" -i ${APP_PATCH_FILE}
+
+  git add ${APP_PATCH_FILE}
+  git commit -m "automatic update to repo by bootstrap script"
+  git push origin ${GIT_BRANCH}
+}
+
+check_repo(){
+  APP_PATCH_FILE="./components/argocd/apps/base/cluster-config-app-of-apps.yaml"
+  APP_PATCH_PATH=".spec.source.repoURL"
+
+  if ! command -v yq &> /dev/null; then
+    echo "yq could not be found.  We are unable to verify the repo."
+  else
+
+    GIT_REPO=$(git config --get remote.origin.url)
+    GIT_REPO_BASENAME=$(get_git_basename ${GIT_REPO})
+    APP_REPO=$(yq -r "${APP_PATCH_PATH}" ${APP_PATCH_FILE})
+    APP_REPO_BASENAME=$(get_git_basename ${APP_REPO})
+
+    if [[ ${GIT_REPO_BASENAME} == ${APP_REPO_BASENAME} ]] ; then
+      echo "Your working repo ${GIT_REPO}, matches your cluster overlay branch ${APP_REPO}"
+    else 
+
+      GITHUB_URL="https://github.com/${GIT_REPO_BASENAME}.git"
+
+      echo
+      echo "Your current working repo is"
+      echo "  ${GIT_REPO}"
+      echo
+      echo "Your cluster overlay repo is"
+      echo "  ${APP_REPO}"
+
+      if [[ ${FORCE} == "true" ]] ; then
+        echo "Updating to ${GITHUB_URL}"
+        update_repo ${APP_PATCH_FILE} ${APP_PATCH_PATH} ${GITHUB_URL};
+      else
+
+        echo
+        echo "Do you wish to update it to the following?"
+        echo "  ${GITHUB_URL}"
+        echo
+
+        PS3="Please enter a number to select: "
+
+        select yn in "Yes" "No"; do
+            case $yn in
+                Yes ) update_repo ${APP_PATCH_FILE} ${APP_PATCH_PATH} ${GITHUB_URL}; break;;
+                No ) break;;
+            esac
+        done
+      fi
+    fi
+  fi
 }

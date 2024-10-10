@@ -8,9 +8,6 @@ OPERATOR_NS="openshift-gitops-operator"
 ARGO_NS="openshift-gitops"
 GITOPS_OVERLAY=components/operators/openshift-gitops/operator/overlays/latest/
 
-# Default used by child scripts
-export OCP_VERSION=4.11
-
 # shellcheck source=/dev/null
 source "$(dirname "$0")/functions.sh"
 source "$(dirname "$0")/util.sh"
@@ -84,6 +81,7 @@ bootstrap_cluster(){
     test -n "$base_dir/$bootstrap_dir";
     echo "Using bootstrap folder: $bootstrap_dir"
   else
+    echo
     PS3="Please enter a number to select a bootstrap folder: "
     
     select bootstrap_dir in $(basename -a $base_dir/*/); 
@@ -97,7 +95,8 @@ bootstrap_cluster(){
     echo
   fi
 
-  check_branch $bootstrap_dir
+  check_branch
+  check_repo
   
   echo "Apply overlay to override default instance"
   kustomize build "${base_dir}/${bootstrap_dir}" | oc apply -f -
