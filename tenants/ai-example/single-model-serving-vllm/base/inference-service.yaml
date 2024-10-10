@@ -11,8 +11,8 @@ metadata:
     opendatahub.io/dashboard: 'true'
 spec:
   predictor:
-    maxReplicas: 1
-    minReplicas: 1
+    maxReplicas: 2
+    minReplicas: 2
     model:
       modelFormat:
         name: pytorch
