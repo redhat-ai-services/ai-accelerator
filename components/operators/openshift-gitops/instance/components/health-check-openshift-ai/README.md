@@ -1,7 +1,12 @@
-# health-check-build
+# health-check-openshift-ai
 
 ## Purpose
-This component is designed to enable custom health checks for OpenShift build objects including `builds` and `imagestreams`.
+This component is designed to enable custom health checks for OpenShift AI objects:
+
+* `DataScienceCluster`
+* `DataSciencePipelineApplication`
+* `InferenceService`
+* `Notebook`
 
 ## Usage
 
@@ -15,5 +20,5 @@ resources:
   - ../../base
 
 components:
-  - ../../components/health-check-openshift-builds
+  - ../../components/health-check-openshift-openshift-ai
 ```
