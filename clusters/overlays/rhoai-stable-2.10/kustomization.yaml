@@ -7,12 +7,7 @@ resources:
 - ../../base
 - ../../../components/argocd/apps/overlays/rhoai-stable-2.10
 
-patches:
-# set the repo and branch for applications
-- path: patch-application-repo-revision.yaml
-  target:
-    group: argoproj.io
-    kind: Application
+# patches:
 # Uncomment patches to disable automatic sync
 # - path: patch-applicationset-manual-sync.yaml
 #   target:

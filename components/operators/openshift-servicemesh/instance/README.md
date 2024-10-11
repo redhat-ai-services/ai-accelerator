@@ -11,7 +11,7 @@ First, install the following operators in your cluster:
 - [Kiali Operator](../../kaili-operator)
 - [OpenShift ServiceMesh Operator](../operator)
 
-Review the [Service Mesh Install](https://docs.openshift.com/container-platform/4.7/service_mesh/v1x/installing-ossm.html#jaeger-operator-install-elasticsearch_installing-ossm-v1x) documentation for information on specific versions of the operators to install for your cluster version.
+Review the [Service Mesh Install](https://docs.openshift.com/container-platform/latest/service_mesh/v1x/installing-ossm.html#jaeger-operator-install-elasticsearch_installing-ossm-v1x) documentation for information on specific versions of the operators to install for your cluster version.
 
 Do not use the `base` directory directly, as you will need to patch the `channel` based on the version of OpenShift you are using, or the version of the operator you want to use.
 

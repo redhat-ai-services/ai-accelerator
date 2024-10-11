@@ -69,8 +69,6 @@ for loading the mirror.  On the high side, we required at least 450 GB.
 See 
 https://docs.openshift.com/container-platform/4.16/installing/disconnected_install/installing-mirroring-disconnected.html#oc-mirror-updating-cluster-manifests_installing-mirroring-disconnected
 
-
-
 ### ImageSetConfiguration
 
 You'll need to define an ImageSetConfiguration for oc-mirror to know what images to download and package for the mirror.

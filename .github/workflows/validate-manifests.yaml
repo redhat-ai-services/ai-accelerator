@@ -1,8 +1,5 @@
 name: Manifests Validation
 on:  # yamllint disable-line rule:truthy
-  push:
-    branches:
-      - "*"
   pull_request:
     branches:
       - "*"
@@ -63,6 +60,18 @@ jobs:
 
           echo
           echo "Charts successfully validated!"
+
+  validate-git-config:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v4
+      - name: Validate Repo and Revision
+        env:
+          EXPECTED_REPO: ${{ github.repositoryUrl }}
+        run: |
+          REPO_URL=$(echo "${EXPECTED_REPO}" | sed 's/git:\/\//https:\/\//')
+          ./scripts/validate_git_config.sh --expected-repo=${REPO_URL} --github
 
   check-spelling:
     runs-on: ubuntu-latest
