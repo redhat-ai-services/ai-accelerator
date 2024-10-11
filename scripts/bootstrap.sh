@@ -42,7 +42,7 @@ install_gitops(){
     apply_firmly ${GITOPS_OVERLAY} 
 
     # oc wait docs:
-    # https://docs.openshift.com/container-platform/4.11/cli_reference/openshift_cli/developer-cli-commands.html#oc-wait
+    # https://docs.openshift.com/container-platform/latest/cli_reference/openshift_cli/developer-cli-commands.html#oc-wait
     #
     # kubectl wait docs:
     # https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#wait
