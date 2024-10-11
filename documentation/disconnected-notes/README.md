@@ -54,7 +54,7 @@ Login to your cluster as per [Access Instructions](https://github.com/redhat-ai-
 
 Red Hat delivers a tool called `oc-mirror` to help with syncing images from registries to a private disconnected registry.  
 
-To learn more about oc-mirror visit https://docs.openshift.com/container-platform/latest/installing/disconnected_install/installing-mirroring-disconnected.html
+To learn more about oc-mirror visit https://docs.openshift.com/container-platform/4.16/installing/disconnected_install/installing-mirroring-disconnected.html
 
 This write up utilized oc-mirror v1; there is currently a newer version (v2) that is in technology preview.
 
@@ -67,9 +67,7 @@ for loading the mirror.  On the high side, we required at least 450 GB.
 
 #### Missing images
 See 
-https://docs.openshift.com/container-platform/latest/installing/disconnected_install/installing-mirroring-disconnected.html#oc-mirror-updating-cluster-manifests_installing-mirroring-disconnected
-
-
+https://docs.openshift.com/container-platform/4.16/installing/disconnected_install/installing-mirroring-disconnected.html#oc-mirror-updating-cluster-manifests_installing-mirroring-disconnected
 
 ### ImageSetConfiguration
 

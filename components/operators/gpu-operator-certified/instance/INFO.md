@@ -41,7 +41,7 @@ Time-slicing GPU can be any Nvidia type (as documented by Nvidia):
 
 - [Docs - AWS GPU Instances](https://aws.amazon.com/ec2/instance-types/#Accelerated_Computing)
 - [Docs - Nvidia GPU Operator on Openshift](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/openshift/contents.html)
-- [Docs - Nvidia GPU admin dashboard](https://docs.openshift.com/container-platform/latest/monitoring/nvidia-gpu-admin-dashboard.html)
+- [Docs - Nvidia GPU Features](https://docs.openshift.com/container-platform/4.17/architecture/nvidia-gpu-architecture-overview.html#nvidia-gpu-features_nvidia-gpu-architecture-overview)
 - [Docs - MIG support in OCP](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/openshift/mig-ocp.html)
 - [Blog - Red Hat Nvidia GPUs on OpenShift](https://cloud.redhat.com/blog/autoscaling-nvidia-gpus-on-red-hat-openshift)
 - [Demo - GPU DevSpaces](https://github.com/bkoz/devspaces)
