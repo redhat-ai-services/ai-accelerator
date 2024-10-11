@@ -29,6 +29,8 @@ The bootstrap script relies on the following command line tools. If they're not 
 
 - [openshift-install](https://github.com/openshift/installer/releases) (optional) - tooling that could be used for monitoring the [cluster installation progress](https://access.redhat.com/documentation/en-us/openshift_container_platform/4.11/html/installing/installing-on-a-single-node#install-sno-monitoring-the-installation-manually_install-sno-installing-sno-with-the-assisted-installer).
 
+- [yq](https://github.com/mikefarah/yq?tab=readme-ov-file#install) - a lightweight and portable command-line YAML, JSON and XML processor. Used by installation scripts when working with configuration files.
+
 ### Access to an OpenShift Cluster
 
 Before running the bootstrap script, ensure that you have login access to your OpenShift cluster.
