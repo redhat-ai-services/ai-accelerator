@@ -1,8 +1,0 @@
-apiVersion: serving.kserve.io/v1alpha1
-kind: ServingRuntime
-metadata:
-  name: vllm
-spec:
-  annotations:
-    # update the progress deadline to allow time for the GPU nodes to autoscale
-    serving.knative.dev/progress-deadline: 30m
