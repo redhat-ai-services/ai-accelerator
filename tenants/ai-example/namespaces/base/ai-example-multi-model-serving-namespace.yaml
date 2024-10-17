@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: ai-example-multi-model-serving
-  labels:
-    modelmesh-enabled: 'true'
