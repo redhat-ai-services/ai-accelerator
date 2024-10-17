@@ -3,4 +3,4 @@ kind: Kustomization
 
 resources:
 - ../../base
-- ../../../clusters/overlays/rhoai-stable-2.10
+- ../../../clusters/overlays/aws-open-environment
