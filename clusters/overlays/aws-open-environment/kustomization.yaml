@@ -5,14 +5,9 @@ namespace: openshift-gitops
 
 resources:
 - ../../base
-- ../../../components/argocd/apps/overlays/rhoai-stable-2.13-aws-gpu
+- ../../../components/argocd/apps/overlays/aws-open-environment
 
 patches:
-# set the repo and branch for applications
-- path: patch-application-repo-revision.yaml
-  target:
-    group: argoproj.io
-    kind: Application
 # Uncomment patches to disable automatic sync
 # - path: patch-applicationset-manual-sync.yaml
 #   target:
