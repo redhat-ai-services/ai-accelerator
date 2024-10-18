@@ -5,10 +5,6 @@ resources:
   - ../../base
 
 patches:
-  - path: patch-cluster-config-app-of-apps.yaml
-    target:
-      kind: Application
-      name: cluster-config-app-of-apps
   - path: patch-operators-list.yaml
     target:
       kind: ApplicationSet
