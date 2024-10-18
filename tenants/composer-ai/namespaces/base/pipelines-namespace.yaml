@@ -1,0 +1,6 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: composer-ai-pipelines
+  labels:
+    opendatahub.io/dashboard: "true"
