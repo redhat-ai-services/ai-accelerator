@@ -9,7 +9,8 @@ spec:
       serving:
         ingressGateway:
           certificate:
-            type: SelfSigned
+            secretName: knative-serving-cert
+            type: OpenshiftDefaultIngress
         managementState: Managed
         name: knative-serving
     modelmeshserving:

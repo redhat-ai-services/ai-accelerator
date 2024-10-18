@@ -10,8 +10,9 @@ spec:
       managementState: Removed
       serving:
         ingressGateway:
-          certificate:
-            type: SelfSigned
+         certificate:
+           secretName: knative-serving-cert
+           type: OpenshiftDefaultIngress
         managementState: Managed
         name: knative-serving
     trustyai:
