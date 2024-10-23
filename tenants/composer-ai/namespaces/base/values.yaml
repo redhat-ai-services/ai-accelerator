@@ -1,0 +1,26 @@
+namespaces:
+  - nameSuffix: gitops
+    role: gitops
+    adminGroupRole: admin
+  - nameSuffix: llms
+    adminGroupRole: admin
+    labels:
+      opendatahub.io/dashboard: "true"
+  - nameSuffix: vector-databases
+    adminGroupRole: admin
+  - nameSuffix: apps
+    adminGroupRole: admin
+  - nameSuffix: pipelines
+    role: pipelines
+    adminGroupRole: admin
+    labels:
+      opendatahub.io/dashboard: "true"
+    annotations:
+      operator.tekton.dev/prune.resources: "taskrun, pipelinerun"
+      operator.tekton.dev/prune.keep-since: "7200"
+
+adminGroup:
+  members:
+    - user1
+
+additionalRoles: []
