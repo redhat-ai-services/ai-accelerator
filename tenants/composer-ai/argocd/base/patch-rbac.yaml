@@ -1,0 +1,9 @@
+apiVersion: argoproj.io/v1beta1
+kind: ArgoCD
+metadata:
+  name: argocd
+spec:
+  rbac:
+    policy: |-
+      g, system:cluster-admins, role:admin
+      g, composer-ai-admins, role:admin
