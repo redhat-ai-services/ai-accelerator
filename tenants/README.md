@@ -14,6 +14,10 @@ For Example:
 ```sh
 tenants/
 └── my-team
+    ├── argocd
+    │   ├── base
+    │   └── overlays
+    │       └── common
     ├── namespaces
     │   ├── base
     │   └── overlays
@@ -30,6 +34,8 @@ The `tenant-name` should be a logical name used for grouping assets that belong 
 The `resource-category` can be any logical grouping of resources that you wish to deploy together.  How you wish to group your resources should be flexible based on your organizations needs.
 
 The `cluster` should correspond to the resources you wish to deploy to that specific cluster.  If you do not include a cluster in the overlay, those resources will not be synced to that cluster.
+
+Alternatively, you can utilize the `common` overlay name to allow the same configuration to be applied to all clusters instead of creating an individual cluster folder in the overlays folder.  You can not use both the `common` folder and a `cluster` folder name in the same overlay.
 
 ## ApplicationSet
 
@@ -52,6 +58,7 @@ The example above will generate the following applications on my-cluster-1 and m
 my-cluster-1:
 
 ```
+my-team-argocd
 my-team-namespaces
 my-team-rbac
 ```
@@ -59,5 +66,6 @@ my-team-rbac
 my-cluster-2:
 
 ```
+my-team-argocd
 my-team-namespaces
 ```

@@ -13,6 +13,7 @@ spec:
       revision: main
       directories:
       - path: tenants/*/*/overlays/patch-me-see-overlay
+      - path: tenants/*/*/overlays/common
   template:
     metadata:
       name: '{{path[1]}}-{{path[2]}}'
