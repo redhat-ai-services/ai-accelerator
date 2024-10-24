@@ -35,7 +35,7 @@ The `resource-category` can be any logical grouping of resources that you wish t
 
 The `cluster` should correspond to the resources you wish to deploy to that specific cluster.  If you do not include a cluster in the overlay, those resources will not be synced to that cluster.
 
-Alternatively, you can utilize the `common` overlay name to allow the same configuration to be applied to all clusters instead of creating an individual cluster folder in the overlays folder.  You cannont use both the `common` folder and a `cluster` folder name in the same overlay.
+Alternatively, you can utilize the `common` overlay name to allow the same configuration to be applied to all clusters instead of creating an individual cluster folder in the overlays folder.  You can not use both the `common` folder and a `cluster` folder name in the same overlay.
 
 ## ApplicationSet
 
