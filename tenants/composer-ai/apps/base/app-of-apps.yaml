@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: composer-ai-config
+  namespace: openshift-gitops
+  labels:
+    gitops.ownedBy: cluster-config
+    tenant: composer-ai
+spec:
+  destination:
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: appOfApps
+    repoURL: 'https://github.com/redhat-composer-ai/appOfApps.git'
+    targetRevision: main
+    helm:
+      parameters:
+        - name: application.defaultNamespace
+          value: composer-ai-app
+  project: default
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
