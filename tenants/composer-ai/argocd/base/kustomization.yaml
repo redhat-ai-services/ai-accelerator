@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: composer-ai-gitops
+
+resources:
+  - ../../../../components/operators/openshift-gitops/instance/base
+
+components:
+  - ../../../../components/operators/openshift-gitops/instance/components/annotation-resource-tracking
+  - ../../../../components/operators/openshift-gitops/instance/components/edge-termination
+  - ../../../../components/operators/openshift-gitops/instance/components/enable-notifications
+  - ../../../../components/operators/openshift-gitops/instance/components/health-check-openshift-ai
+  - ../../../../components/operators/openshift-gitops/instance/components/health-check-openshift-builds
+  - ../../../../components/operators/openshift-gitops/instance/components/kustomize-build-enable-helm
+
+patches:
+  - target:
+      kind: ArgoCD
+    path: patch-rbac.yaml
+  - target:
+      kind: ArgoCD
+    path: patch-name.yaml

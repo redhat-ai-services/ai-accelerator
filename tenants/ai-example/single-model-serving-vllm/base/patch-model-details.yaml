@@ -1,6 +1,0 @@
-- op: replace
-  path: /spec/template/spec/initContainers/0/env/0/value
-  value: granite-3b-code-base
-- op: replace
-  path: /spec/template/spec/initContainers/0/env/1/value
-  value: https://huggingface.co/ibm-granite/granite-3b-code-base.git
