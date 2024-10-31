@@ -12,7 +12,7 @@ spec:
   source:
     path: appOfApps
     repoURL: 'https://github.com/redhat-composer-ai/appOfApps.git'
-    targetRevision: demo-setup
+    targetRevision: main
     helm:
       parameters:
         - name: gitops.namespace
