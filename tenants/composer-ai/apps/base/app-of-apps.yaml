@@ -12,7 +12,7 @@ spec:
   source:
     path: appOfApps
     repoURL: 'https://github.com/redhat-composer-ai/appOfApps.git'
-    targetRevision: main
+    targetRevision: demo-setup
     helm:
       parameters:
         - name: application.defaultNamespace
