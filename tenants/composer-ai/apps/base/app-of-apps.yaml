@@ -18,7 +18,7 @@ spec:
         - name: gitops.namespace
           value: composer-ai-gitops
         - name: application.defaultNamespace
-          value: composer-ai-app
+          value: composer-ai-apps
   project: default
   syncPolicy:
     automated:
