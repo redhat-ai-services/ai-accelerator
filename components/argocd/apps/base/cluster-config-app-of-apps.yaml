@@ -12,8 +12,8 @@ spec:
   project: cluster-config
   source:
     path: patch-me-see-overlays
-    repoURL: https://github.com/jland-redhat/ai-accelerator.git
-    targetRevision: rest-script
+    repoURL: https://github.com/redhat-ai-services/ai-accelerator.git
+    targetRevision: main
   syncPolicy:
     automated:
       prune: false
