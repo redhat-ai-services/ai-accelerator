@@ -331,3 +331,18 @@ check_repo(){
     fi
   fi
 }
+
+patch_file () {
+  APP_PATCH_FILE=$1
+  NEW_VALUE=$2
+  YQ_PATH=$3
+
+  CURRENT_VALUE=$(yq -r ${YQ_PATH} ${APP_PATCH_FILE})
+
+  if [[ ${CURRENT_VALUE} == ${NEW_VALUE} ]]; then
+    echo "${APP_PATCH_FILE} already has value ${NEW_VALUE}"
+    return
+  fi
+
+  yq "${YQ_PATH} = \"${NEW_VALUE}\"" -i ${APP_PATCH_FILE}
+}
