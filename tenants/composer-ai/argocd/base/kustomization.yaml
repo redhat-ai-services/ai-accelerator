@@ -5,12 +5,10 @@ namespace: composer-ai-gitops
 
 resources:
   - ../../../../components/operators/openshift-gitops/instance/base
+  - clusteradmin-rolebinding.yaml
 
 components:
   - ../../../../components/operators/openshift-gitops/instance/components/annotation-resource-tracking
-  # give the instance cluster admin for now
-  # TODO: configure more fine grain control or fix issues upstream
-  - ../../../../components/operators/openshift-gitops/instance/components/application-controller-cluster-admin
   - ../../../../components/operators/openshift-gitops/instance/components/edge-termination
   - ../../../../components/operators/openshift-gitops/instance/components/enable-notifications
   - ../../../../components/operators/openshift-gitops/instance/components/health-check-openshift-ai
