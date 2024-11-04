@@ -5,6 +5,7 @@ namespace: composer-ai-gitops
 
 resources:
   - ../../../../components/operators/openshift-gitops/instance/base
+  - clusteradmin-rolebinding.yaml
 
 components:
   - ../../../../components/operators/openshift-gitops/instance/components/annotation-resource-tracking
