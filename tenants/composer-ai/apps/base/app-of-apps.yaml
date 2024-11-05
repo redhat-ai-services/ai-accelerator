@@ -24,3 +24,9 @@ spec:
     automated:
       prune: false
       selfHeal: false
+  ignoreDifferences:
+    - group: argoproj.io
+      kind: Application
+      jsonPointers:
+        - /spec/source/repoURL
+        - /spec/source/targetRevision
