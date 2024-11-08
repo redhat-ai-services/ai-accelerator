@@ -19,6 +19,8 @@ spec:
           value: composer-ai-gitops
         - name: application.defaultNamespace
           value: composer-ai-apps
+        - name: clusterDomain
+          value: ${SUB_DOMAIN}
   project: default
   syncPolicy:
     automated:

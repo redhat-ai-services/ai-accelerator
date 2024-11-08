@@ -5,6 +5,7 @@ namespace: composer-ai-gitops
 
 resources:
   - ../../../../components/operators/openshift-gitops/instance/base
+  - argocd-console-link.yaml
   - clusteradmin-rolebinding.yaml
 
 components:

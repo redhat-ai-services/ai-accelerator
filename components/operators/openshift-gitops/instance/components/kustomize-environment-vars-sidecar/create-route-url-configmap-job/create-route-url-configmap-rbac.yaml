@@ -1,0 +1,66 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: create-route-url-configmap
+  namespace: nvidia-gpu-operator
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: create-route-url-configmap
+rules:
+  - verbs:
+      - get
+      - list
+      - watch
+    apiGroups:
+      - config.openshift.io
+    resources:
+      - ingresses
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: create-route-url-configmap
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: create-route-url-configmap
+subjects:
+  - kind: ServiceAccount
+    name: create-route-url-configmap
+    namespace: openshift-gitops
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: create-route-url-configmap
+rules:
+  - verbs:
+      - get
+      - watch
+      - list
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
+    apiGroups:
+      - ''
+    resources:
+      - configmaps
+      - pods
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: create-route-url-configmap
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: create-route-url-configmap
+subjects:
+  - kind: ServiceAccount
+    name: create-route-url-configmap
+    namespace: openshift-gitops

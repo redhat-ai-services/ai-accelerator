@@ -35,6 +35,8 @@ spec:
             factor: 2
             maxDuration: 20m
       source:
+        plugin:
+          name: kustomize-envvar
         repoURL: patch-me-see-clusters-overlays
         targetRevision: patch-me-see-clusters-overlays
         path: '{{path}}'

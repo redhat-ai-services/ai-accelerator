@@ -18,6 +18,7 @@ components:
   - ../../components/health-check-openshift-ai
   - ../../components/health-check-openshift-builds
   - ../../components/kustomize-build-enable-helm
+  - ../../components/kustomize-environment-vars-sidecar
 
 patches:
 - path: gitops-admins-group.yaml

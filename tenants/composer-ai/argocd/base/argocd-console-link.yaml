@@ -1,0 +1,11 @@
+apiVersion: console.openshift.io/v1
+kind: ConsoleLink
+metadata:
+  name: composer-ai-gitops
+spec:
+  href: "https://argocd-server-composer-ai-gitops.${SUB_DOMAIN}"
+  location: ApplicationMenu
+  text: "Composer AI GitOps"
+  applicationMenu:
+    section: OpenShift GitOps
+    imageURL: "https://avatars.githubusercontent.com/u/183846251?s=200&v=4"
