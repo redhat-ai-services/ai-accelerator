@@ -16,6 +16,7 @@ metadata:
 spec:
   displayName: 'Console Plugin NVIDIA GPU Template'
   backend:
+    type: Service
     service:
       name: console-plugin-nvidia-gpu
       namespace: nvidia-gpu-operator
