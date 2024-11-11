@@ -25,32 +25,32 @@ patches:
 #     kind: Application
 #     version: v1alpha1
 
-# replacements:
-# # copy the repo from the application to the applicationsets
-# - source:
-#     kind: Application
-#     fieldPath: spec.source.repoURL
-#   targets:
-#   - select:
-#       kind: ApplicationSet
-#     fieldPaths:
-#     - spec.template.spec.source.repoURL
-#   - select:
-#       kind: ApplicationSet
-#       name: tenants
-#     fieldPaths:
-#     - spec.generators.*.git.repoURL
-# # copy the branch from the application to the applicationsets
-# - source:
-#     kind: Application
-#     fieldPath: spec.source.targetRevision
-#   targets:
-#   - select:
-#       kind: ApplicationSet
-#     fieldPaths:
-#     - spec.template.spec.source.targetRevision
-#   - select:
-#       kind: ApplicationSet
-#       name: tenants
-#     fieldPaths:
-#     - spec.generators.*.git.revision
+replacements:
+# copy the repo from the application to the applicationsets
+- source:
+    kind: Application
+    fieldPath: spec.source.repoURL
+  targets:
+  - select:
+      kind: ApplicationSet
+    fieldPaths:
+    - spec.template.spec.source.repoURL
+  - select:
+      kind: ApplicationSet
+      name: tenants
+    fieldPaths:
+    - spec.generators.*.git.repoURL
+# copy the branch from the application to the applicationsets
+- source:
+    kind: Application
+    fieldPath: spec.source.targetRevision
+  targets:
+  - select:
+      kind: ApplicationSet
+    fieldPaths:
+    - spec.template.spec.source.targetRevision
+  - select:
+      kind: ApplicationSet
+      name: tenants
+    fieldPaths:
+    - spec.generators.*.git.revision
