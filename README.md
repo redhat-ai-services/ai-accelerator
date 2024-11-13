@@ -8,7 +8,7 @@ Welcome to the Red Hat Composer AI Infrastructure GitOps project\! This project 
 
 ### Prerequisites
 
-- Openshift 16+ cluster
+- Openshift 4.16+ cluster
 
 > [!IMPORTANT]  
 > There is a known issue with using Kubernetes version 4.17 in relation to the Node Feature Discovery Operator, which causes issues allocating nodes that use GPUs. It is recommended to avoid this version for now.
