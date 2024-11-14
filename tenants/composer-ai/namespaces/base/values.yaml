@@ -22,5 +22,6 @@ namespaces:
 adminGroup:
   members:
     - user1
+    - admin
 
 additionalRoles: []
