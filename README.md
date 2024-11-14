@@ -1,12 +1,24 @@
-# Red Hat AI Accelerator
+# Red Hat Composer AI Infrastructure GitOps
 
-Welcome to the AI Accelerator project source code. This project is designed to initialize an OpenShift cluster with a recommended set of operators and components that aid with training, deploying, serving and monitoring Machine Learning models.
-
-This repo is intended to provide a core set of OpenShift features that would commonly be used for a Data Science environment, but can also be highly customized for specific scenarios. When starting out we recommend making a copy or a fork of this project on your Git based instance, since it utilizes the process of automating IT infrastructure using infrastructure as code and software development best practices such as Git, code review, and CI/CD - known as GitOps.
-
-Once the initial components are deployed, several ArgoCD Application objects are created which are then used to install and manage the install of the operators on the cluster.
+Welcome to the Red Hat Composer AI Infrastructure GitOps project\! This project is a fork of the upstream [AI Accelerator project](https://github.com/redhat-ai-services/ai-accelerator) and is designed to deploy all of the required cluster components for Composer AI to an OpenShift cluster.
 
 ![AI Accelerator Overview](documentation/diagrams/AI_Accelerator.drawio.png)
+
+## Installation
+
+### Prerequisites
+
+- Openshift 4.16+ cluster
+
+> [!IMPORTANT]  
+> There is a known issue with using Kubernetes version 4.17 in relation to the Node Feature Discovery Operator, which causes issues allocating nodes that use GPUs. It is recommended to avoid this version for now.
+
+### Quick Start
+
+Installation can be done using `./bootstrap.sh` script.
+
+> [!TIP]  
+> First time installs it is recommended to allow the script to walk through options, but future runs can be automated using cli flags, run `./bootstrap --help` for more information.
 
 ## Additional Documentation and Info
 
