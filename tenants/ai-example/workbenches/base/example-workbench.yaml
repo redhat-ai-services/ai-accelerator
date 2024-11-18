@@ -2,13 +2,14 @@ apiVersion: kubeflow.org/v1
 kind: Notebook
 metadata:
   annotations:
-    notebooks.opendatahub.io/inject-oauth: 'true'
-    opendatahub.io/image-display-name: Minimal Python
-    notebooks.opendatahub.io/oauth-logout-url: ''
-    opendatahub.io/accelerator-name: ''
-    openshift.io/description: ''
+    notebooks.opendatahub.io/inject-oauth: "true"
+    opendatahub.io/image-display-name: Standard Data Science
+    notebooks.opendatahub.io/oauth-logout-url: ""
+    opendatahub.io/accelerator-name: ""
+    openshift.io/description: ""
     openshift.io/display-name: example-workbench
-    notebooks.opendatahub.io/last-image-selection: 's2i-minimal-notebook:2024.1'
+    notebooks.opendatahub.io/last-image-selection: "s2i-generic-data-science-notebook:2024.2"
+    argocd.argoproj.io/sync-options: ServerSideApply=true
   name: example-workbench
 spec:
   template:
@@ -16,13 +17,13 @@ spec:
       affinity: {}
       containers:
         - name: example-workbench
-          image: 'image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-minimal-notebook:2024.1'
+          image: "image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-generic-data-science-notebook:2024.2"
           resources:
             limits:
-              cpu: '2'
+              cpu: "2"
               memory: 8Gi
             requests:
-              cpu: '1'
+              cpu: "1"
               memory: 8Gi
           readinessProbe:
             failureThreshold: 3
@@ -54,9 +55,7 @@ spec:
                 --ServerApp.quit_button=False
                 --ServerApp.tornado_settings={"user":"user1","hub_host":"","hub_prefix":"/projects/ai-example-training"}
             - name: JUPYTER_IMAGE
-              value: 'image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-minimal-notebook:2024.1'
-            - name: PIP_CERT
-              value: /etc/pki/tls/custom-certs/ca-bundle.crt
+              value: "image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-generic-data-science-notebook:2024.2"
             - name: REQUESTS_CA_BUNDLE
               value: /etc/pki/tls/custom-certs/ca-bundle.crt
             - name: SSL_CERT_FILE
@@ -64,6 +63,8 @@ spec:
             - name: PIPELINES_SSL_SA_CERTS
               value: /etc/pki/tls/custom-certs/ca-bundle.crt
             - name: GIT_SSL_CAINFO
+              value: /etc/pki/tls/custom-certs/ca-bundle.crt
+            - name: PIP_CERT
               value: /etc/pki/tls/custom-certs/ca-bundle.crt
           ports:
             - containerPort: 8888
@@ -79,6 +80,10 @@ spec:
               name: trusted-ca
               readOnly: true
               subPath: ca-bundle.crt
+            - mountPath: /etc/oauth/config
+              name: oauth-config
+            - mountPath: /etc/tls/private
+              name: tls-certificates
           workingDir: /opt/app-root/src
       enableServiceLinks: false
       serviceAccountName: example-workbench
@@ -96,3 +101,11 @@ spec:
             name: workbench-trusted-ca-bundle
             optional: true
           name: trusted-ca
+        - name: oauth-config
+          secret:
+            defaultMode: 420
+            secretName: test-ssl-oauth-config
+        - name: tls-certificates
+          secret:
+            defaultMode: 420
+            secretName: example-workbench-tls
