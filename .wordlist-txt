@@ -120,6 +120,7 @@ RBAC
 README
 RHACM
 RHOAI
+Rebasing
 RoleBinding
 Rollout
 Route
@@ -293,6 +294,7 @@ provisioner
 psql
 pvc
 rbac
+rebase
 redhat
 redistributions
 repo
