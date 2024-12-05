@@ -12,7 +12,7 @@ spec:
   project: cluster-config
   source:
     path: patch-me-see-overlays
-    repoURL: https://github.com/redhat-composer-ai/cluster-gitops.git # Update me on fork
+    repoURL: https://github.com/redhat-composer-ai/cluster-gitops.git  # Update me on fork
     targetRevision: main
   syncPolicy:
     automated:
