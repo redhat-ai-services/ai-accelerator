@@ -1,7 +1,8 @@
-# wait-for-servicemesh
+# components-trustyai
 
 ## Purpose
-This component is designed prevent OpenShift AI before the ServiceMesh resources have been successfully installed that are required for KServe.
+This component is designed help XAI explanations of predictive models.
+The TrustyAI Components are Generally Available as of RHOAI 2.15.
 
 ## Usage
 
@@ -15,5 +16,5 @@ resources:
   - ../../base
 
 components:
-  - ../../components/wait-for-servicemesh
+  - ../../components/components-trustyai
 ```

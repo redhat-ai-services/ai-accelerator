@@ -9,6 +9,10 @@ spec:
   identifier: nvidia.com/gpu
   tolerations:
     - effect: NoSchedule
+      key: nvidia-gpu-only
+      operator: Exists
+      value: ''
+    - effect: NoSchedule
       key: nvidia.com/gpu
       operator: Exists
       value: ''
