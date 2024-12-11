@@ -1,0 +1,28 @@
+applications:
+  # - name: vllm-model
+  #   path: data-ingestion/vllm
+  #   namespaceSuffix: apps
+  # - name: weaviate
+  #   path: data-ingestion/weaviate
+  #   namespaceSuffix: apps
+  - name: kfp-pipeline
+    path: data-ingestion/kfp
+    namespaceSuffix: apps
+  - name: quarkus-llm-router
+    path: chatbot/quarkus-llm-router
+    namespaceSuffix: apps
+  - name: chatbot-ui
+    path: chatbot/chatbot-ui
+    namespaceSuffix: apps
+    # Add ignoreDifferences to allow deployment to be updated by ImageStream
+    ignoreDifferences:
+      - group: apps
+        kind: Deployment
+        jsonPointers:
+          - /spec/template/spec/containers/0/image
+  - name: mongodb
+    path: chatbot/mongodb
+    namespaceSuffix: apps
+  - name: bootstrap
+    path: util/bootstrap
+    namespaceSuffix: apps

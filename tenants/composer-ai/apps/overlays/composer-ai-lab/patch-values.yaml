@@ -3,12 +3,7 @@ kind: Application
 metadata:
   name: composer-ai-config
   namespace: composer-ai-gitops
-  labels:
-    gitops.ownedBy: cluster-config
-    tenant: composer-ai
 spec:
-  destination:
-    server: 'https://kubernetes.default.svc'
   sources:
     - repoURL: https://github.com/redhat-composer-ai/appOfApps.git
       path: appOfApps
@@ -19,14 +14,8 @@ spec:
             value: composer-ai-
           - name: clusterDomain
             value: ${SUB_DOMAIN}
-  project: default
-  syncPolicy:
-    automated:
-      prune: false
-      selfHeal: false
-  ignoreDifferences:
-    - group: argoproj.io
-      kind: Application
-      jsonPointers:
-        - /spec/source/repoURL
-        - /spec/source/targetRevision
+        valueFiles:
+          - $values/tenants/composer-ai/helm-chart-values/app-of-apps/lab-values.yaml
+    - repoURL: 'https://github.com/redhat-composer-ai/cluster-gitops.git'
+      targetRevision: main
+      ref: values

@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    argocd.argoproj.io/compare-options: IgnoreExtraneous
+    argocd.argoproj.io/sync-options: Prune=false
+    argocd.argoproj.io/sync-wave: "-10"
+  namespace: openshift-gitops
+  name: composer-ai-namespaces
+  labels:
+    tenant: composer-ai
+spec:
+  destination:
+    server: 'https://kubernetes.default.svc'
+  project: tenants
+  sources:
+    - repoURL: https://redhat-ai-services.github.io/helm-charts/
+      chart: gitops-tenant
+      targetRevision: "0.3.12"
+      helm:
+        parameters:
+          - name: fullnameOverride
+            value: composer-ai
+        valueFiles:
+          - $values/tenants/composer-ai/helm-chart-values/namespaces/values.yaml
+    - repoURL: 'https://github.com/redhat-composer-ai/cluster-gitops.git'
+      targetRevision: main
+      ref: values
+  syncPolicy:
+    automated:
+      selfHeal: true
+    retry:
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 20m
+      limit: 5
