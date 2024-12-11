@@ -1,6 +1,6 @@
 ---
 # Source: console-plugin-nvidia-gpu/templates/consoleplugin.yaml
-apiVersion: console.openshift.io/v1alpha1
+apiVersion: console.openshift.io/v1
 kind: ConsolePlugin
 metadata:
   name: console-plugin-nvidia-gpu
