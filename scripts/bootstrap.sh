@@ -32,7 +32,8 @@ apply_firmly(){
 install_gitops(){
   echo
   echo "Checking if GitOps Operator is already installed and running"
-  if [[ $(oc get pod -n ${OPERATOR_NS} --no-headers -o custom-columns=":status.phase") == "Running" ]]; then
+  
+  if [[ $(oc get csv -n ${OPERATOR_NS} -l operators.coreos.com/openshift-gitops-operator.${OPERATOR_NS}='' -o jsonpath='{.items[0].status.phase}' 2>/dev/null) == "Succeeded" ]]; then
     echo
     echo "GitOps operator is already installed and running"
   else
@@ -47,22 +48,14 @@ install_gitops(){
     # kubectl wait docs:
     # https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#wait
 
-    echo "Waiting for deployment of the openshift-gitops-operator-controller-manager to begin..."
-    until oc get deployment openshift-gitops-operator-controller-manager -n ${OPERATOR_NS}
-    do
-      sleep 5
-    done
+    echo "Retrieving the InstallPlan name"
+    INSTALL_PLAN_NAME=$(oc get sub openshift-gitops-operator -n ${OPERATOR_NS} -o jsonpath='{.status.installPlanRef.name}')
 
-    echo "Waiting for openshift-gitops-operator-controller-manager to start..."
-    oc wait --for=condition=Available deployment/openshift-gitops-operator-controller-manager -n ${OPERATOR_NS} --timeout=${TIMEOUT_SECONDS}s
+    echo "Retrieving the CSV name"
+    CSV_NAME=$(oc get ip $INSTALL_PLAN_NAME -n ${OPERATOR_NS} -o jsonpath='{.spec.clusterServiceVersionNames[0]}')
 
-    echo "Waiting for ${ARGO_NS} namespace to be created..."
-    oc wait --for=jsonpath='{.status.phase}'=Active namespace/${ARGO_NS} --timeout=${TIMEOUT_SECONDS}s
-
-    echo "Waiting for deployments to start..."
-    oc wait --for=condition=Available deployment/cluster -n ${ARGO_NS} --timeout=${TIMEOUT_SECONDS}s
-
-    wait_for_openshift_gitops
+    echo "Wait the Operator installation to be completed"
+    oc wait --for jsonpath='{.status.phase}'=Succeeded csv/$CSV_NAME -n ${OPERATOR_NS}
 
     echo ""
     echo "OpenShift GitOps successfully installed."
