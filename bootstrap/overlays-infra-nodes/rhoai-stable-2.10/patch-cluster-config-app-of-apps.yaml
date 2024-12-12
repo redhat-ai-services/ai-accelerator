@@ -4,4 +4,4 @@ metadata:
   name: cluster-config-app-of-apps
 spec:
   source:
-    path: clusters/overlays-infra-nodes/rhoai-eus-2.8-aws-gpu
+    path: clusters/overlays-infra-nodes/rhoai-stable-2.10
