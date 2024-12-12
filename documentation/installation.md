@@ -24,15 +24,15 @@ This document contains the steps for installing and configuring Red Hat OpenShif
 
 The following are required for the bootstrap scripts. If unavailable the scripts will attempt to download required tools and store them at `.\tmp`:
 
-- [oc](https://docs.openshift.com/container-platform/latest/cli_reference/openshift_cli/getting-started-cli.html) - OpenShift command-line interface (CLI).
+- [oc](https://docs.redhat.com/en/documentation/openshift_container_platform/latest/html-single/cli_tools/index#cli-getting-started) - OpenShift command-line interface (CLI).
 
 - [kustomize](https://kubectl.docs.kubernetes.io/installation/kustomize/) - Kubernetes native configuration and transformation tool.
 
 - [kubeseal](https://github.com/bitnami-labs/sealed-secrets#overview) - Encryption tool used for creating the SealedSecret resource.
 
-- [openshift-install](https://github.com/openshift/installer/releases) (optional) - Tool used for monitoring the [cluster installation progress](https://access.redhat.com/documentation/en-us/openshift_container_platform/4.11/html/installing/installing-on-a-single-node#install-sno-monitoring-the-installation-manually_install-sno-installing-sno-with-the-assisted-installer).
+- [openshift-install](https://github.com/openshift/installer/releases) (optional) - Tool used for monitoring the [cluster installation progress](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html-single/installing_on_any_platform/index#installation-installing-bare-metal_installing-platform-agnostic).
 
-- [yq](https://github.com/mikefarah/yq?tab=readme-ov-file#install) - a lightweight and portable command-line YAML, JSON and XML processor. Used by installation scripts when working with configuration files.
+- [yq](https://github.com/mikefarah/yq?tab=readme-ov-file#install) - a lightweight and portable command-line YAML, JSON and XML processor. Used by installation scripts when working with configuration files. WARNING!! The yq python implementation does not work. Ensure to use Mike Fark implementation.
 
 ### Access to an OpenShift Cluster
 
@@ -40,27 +40,31 @@ Login to the cluster using `oc login...` using an account with appropriate permi
 
 ## Bootstrapping a Cluster
 
-Clone this git repository to a directory location on your local workstation, or to a [Bastion server](https://docs.openshift.com/container-platform/latest/networking/accessing-hosts.html) hosted within the OpenShift cluster subnet.
+Clone this git repository to a directory location on your local workstation, or to a [Bastion server](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html-single/networking/index#accessing-hosts) hosted within the OpenShift cluster subnet.
 
 ### Run the Cluster Bootstrap
 
 Execute the bootstrap script to begin the installation process:
 
 ```sh
-./scripts/bootstrap.sh
+./bootstrap.sh
 ```
 The script defaults to using the central repository at `(https://github.com/redhat-ai-services/ai-accelerator.git)` and the main branch for GitOps configuration. If your working remote repository differs, the script will prompt you to update the GitOps configuration to match. Selecting this option will:
 
 - Update the repository and branch in `cluster-config-app-of-apps`.
 - Commit the changes locally.
-- Require you to push the updated file `cluster-config-app-of-apps` to the central - repository `(https://github.com/redhat-ai-services/ai-accelerator.git)` and the main branch before submitting a pull request.
-
+- Require you to push the updated file `cluster-config-app-of-apps` in the main branch of your remote central repository before submitting a pull request.
 
 When prompted to select a bootstrap folder, choose the overlay that matches your cluster version, for example: `bootstrap/overlays/rhoai-eus-2.8/`.
 
-The `bootstrap.sh` script will now install the OpenShift GitOps Operator, create an ArgoCD instance once the operator is deployed in the `openshift-gitops` namespace, then bootstrap a set of ArgoCD applications to configure the cluster.
+The `bootstrap.sh` script will :
+- check for an existing OpenShift GitOps Operator installation
+- install the OpenShift GitOps Operator if there is not already an existing installation and create an ArgoCD instance once the operator is deployed in the `openshift-gitops` namespace
+- bootstrap a set of ArgoCD applications to configure the cluster.
 
-Once the script completes, verify that you can access the ArgoCD UI using the URL output by the last line of the script execution. This URL should present an ArgoCD login page, showing that it was successfully deployed.
+Once the script completes, verify that you can access the ArgoCD UI using the URL output by the last line of the script execution.
+
+This URL should present an ArgoCD login page, showing that it was successfully deployed.
 
 TODO: Add in details for the ArgoCD application menu tile within the OCP web console.
 
@@ -78,12 +82,12 @@ The cluster may take 10-15 minutes to finish installing and updating.
 
 Argo creates the following group in OpenShift to grant access and control inside of ArgoCD:
 
-- gitopsadmins
+- gitops-admins
 
 To add a user to the admin group run:
 
 ```sh
-oc adm groups add-users argocdadmins $(oc whoami)
+oc adm groups add-users gitops-admins $(oc whoami)
 ```
 
 To add a user to the user group run:
