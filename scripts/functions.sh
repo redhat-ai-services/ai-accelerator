@@ -148,7 +148,6 @@ wait_for_openshift_gitops(){
   echo "Checking status of all openshift-gitops pods"
   GITOPS_RESOURCES=(
     deployment/cluster:condition=Available \
-    deployment/kam:condition=Available \
     statefulset/openshift-gitops-application-controller:jsonpath='{.status.readyReplicas}'=1 \
     deployment/openshift-gitops-applicationset-controller:condition=Available \
     deployment/openshift-gitops-redis:condition=Available \
