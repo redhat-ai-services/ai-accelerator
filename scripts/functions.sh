@@ -68,16 +68,20 @@ download_ocp-install(){
 }
 
 download_oc(){
+  if [[ ! "$OCP_VERSION" ]]; then
+    echo "OCP version missing. Please provide OCP version when running this command!"
+    exit 1
+  fi
   if [[ "$OSTYPE" == "darwin"* ]]; then
     # Mac OSX  
     if [[ $(uname -p) == 'arm' ]]; then
-      DOWNLOAD_URL=https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-${OCP_VERSION}/openshift-install-mac-arm64.tar.gz
+      DOWNLOAD_URL=https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-${OCP_VERSION}/openshift-client-mac-arm64.tar.gz
     else
-      DOWNLOAD_URL=https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-${OCP_VERSION}/openshift-install-mac.tar.gz
+      DOWNLOAD_URL=https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-${OCP_VERSION}/openshift-client-mac.tar.gz
     fi
   else
-    # Linix
-    DOWNLOAD_URL=https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-${OCP_VERSION}/openshift-install-linux.tar.gz
+    # Linux
+    DOWNLOAD_URL=https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-${OCP_VERSION}/openshift-client-linux.tar.gz
   fi
   echo "Downloading OpenShift CLI: ${DOWNLOAD_URL}" 
   
@@ -144,7 +148,6 @@ wait_for_openshift_gitops(){
   echo "Checking status of all openshift-gitops pods"
   GITOPS_RESOURCES=(
     deployment/cluster:condition=Available \
-    deployment/kam:condition=Available \
     statefulset/openshift-gitops-application-controller:jsonpath='{.status.readyReplicas}'=1 \
     deployment/openshift-gitops-applicationset-controller:condition=Available \
     deployment/openshift-gitops-redis:condition=Available \
