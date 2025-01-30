@@ -48,6 +48,7 @@ DotNET
 ECK
 EOF
 Elasticsearch
+Elyra
 Eventing
 FullAccess
 GPUs
@@ -77,6 +78,7 @@ Kibana
 KieApp
 Koku
 KokuMetricsConfig
+KubeRay
 Kubernetes
 Kueue
 Kyverno
@@ -109,6 +111,7 @@ ONNX
 Observability
 OpenDataHub
 OpenShift
+OpenVino
 OperaterHub
 OperatorGroup
 PCI
@@ -151,10 +154,12 @@ TODO
 TaskRun
 Tekton
 Thanos
+TrustyAI
 UI
 Uncomment
 VolSync
 Workspaces
+XAI
 ack
 acm
 ai
@@ -263,6 +268,7 @@ machineset
 microservices
 mig
 minio
+modelregistry
 na
 namespace
 namespaces
@@ -284,6 +290,7 @@ openshift
 opentlc
 operatorGroup
 operatorGroups
+parallelize
 patchesJson
 pgvector
 postgres
@@ -331,11 +338,13 @@ subnet
 tekton
 templated
 templating
+tensorflow
 tgis
 thanos
 traefik
 triton
 truly
+trustyai
 txt
 un
 url

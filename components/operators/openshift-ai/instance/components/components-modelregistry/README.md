@@ -1,7 +1,7 @@
-# wait-for-servicemesh
+# components-modelregistry
 
 ## Purpose
-This component is designed prevent OpenShift AI before the ServiceMesh resources have been successfully installed that are required for KServe.
+This component is designed help index and manage models, versions, and artifacts metadata
 
 ## Usage
 
@@ -15,5 +15,5 @@ resources:
   - ../../base
 
 components:
-  - ../../components/wait-for-servicemesh
+  - ../../components/components-modelregistry
 ```
