@@ -10,7 +10,7 @@ spec:
       serving:
         ingressGateway:
           certificate:
-            type: OpenShiftDefaultIngress
+            type: OpenshiftDefaultIngress
         managementState: Managed
         name: knative-serving
     modelmeshserving:
