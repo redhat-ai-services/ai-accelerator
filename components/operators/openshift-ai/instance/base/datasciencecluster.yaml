@@ -1,5 +1,5 @@
-kind: DataScienceCluster
 apiVersion: datasciencecluster.opendatahub.io/v1
+kind: DataScienceCluster
 metadata:
   name: default
 spec:
@@ -14,6 +14,9 @@ spec:
             type: SelfSigned
         managementState: Managed
         name: knative-serving
+    modelregistry:
+      registriesNamespace: rhoai-model-registries
+      managementState: Removed
     trustyai:
       managementState: Removed
     ray:
@@ -27,4 +30,6 @@ spec:
     modelmeshserving:
       managementState: Removed
     datasciencepipelines:
+      managementState: Removed
+    trainingoperator:
       managementState: Removed

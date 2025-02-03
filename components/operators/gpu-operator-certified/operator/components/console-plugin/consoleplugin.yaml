@@ -14,9 +14,11 @@ metadata:
     app.kubernetes.io/instance: console-plugin-nvidia-gpu
     app.kubernetes.io/part-of: console-plugin-nvidia-gpu
 spec:
-  displayName: 'Console Plugin NVIDIA GPU Template'
-  service:
-    name: console-plugin-nvidia-gpu
-    namespace: nvidia-gpu-operator
-    port: 9443
-    basePath: '/'
+  backend:
+    service:
+      name: console-plugin-nvidia-gpu
+      namespace: nvidia-gpu-operator
+      port: 9443
+      basePath: "/"
+    type: Service
+  displayName: "Console Plugin NVIDIA GPU Template"
