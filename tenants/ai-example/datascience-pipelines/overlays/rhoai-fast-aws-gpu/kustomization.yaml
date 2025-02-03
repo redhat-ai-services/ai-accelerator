@@ -3,4 +3,4 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - ../rhoai-fast/dspa.yaml
+  - ../rhoai-fast

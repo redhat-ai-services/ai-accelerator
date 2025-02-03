@@ -3,9 +3,4 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - ../rhoai-eus-2.8/dspa.yaml
-
-patches:
-  - target:
-      kind: DataSciencePipelinesApplication
-    path: patch-dspa-for-2.8.yaml
+  - ../rhoai-eus-2.8
