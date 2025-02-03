@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - ../rhoai-eus-2.8/dspa.yaml
 
 patches:
   - target:
