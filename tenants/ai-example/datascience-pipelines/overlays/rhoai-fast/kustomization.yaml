@@ -3,3 +3,9 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - dspa.yaml
+
+patches:
+  - target:
+      kind: DataSciencePipelinesApplication
+    path: patch-dspa-for-fast.yaml
