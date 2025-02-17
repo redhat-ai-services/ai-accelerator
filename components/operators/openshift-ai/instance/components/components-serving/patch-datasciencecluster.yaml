@@ -8,9 +8,6 @@ spec:
       managementState: Managed
       defaultDeploymentMode: Serverless
       serving:
-        ingressGateway:
-          certificate:
-            type: OpenShiftDefaultIngress
         managementState: Managed
         name: knative-serving
     modelmeshserving:

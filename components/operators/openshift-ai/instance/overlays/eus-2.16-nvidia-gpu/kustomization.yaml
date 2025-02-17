@@ -18,9 +18,3 @@ components:
   - ../../components/model-server-pod-sizes
   - ../../components/rhoai-dashboard-access
   - ../../components/auth-with-authorino
-
-patches:
-  - target:
-      kind: DataScienceCluster
-      name: default
-    path: patch-cert.yaml
