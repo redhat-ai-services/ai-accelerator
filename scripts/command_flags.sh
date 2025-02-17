@@ -5,7 +5,7 @@ function show_help {
   echo "  --ocp_version=4.11    Target Openshift Version"
   echo "  --BOOTSTRAP_DIR=<bootstrap_directory>    Base folder inside of bootstrap/overlays (Optional, pick during script execution if not set)"
   echo "  --timeout=45          Timeout in seconds for waiting for each resource to be ready"
-  echo "  -f                    If set, will update the `patch-application-repo-revision` folder inside of your overlay with the current git information and push a checkin"
+  echo "  -f                    If set, will update the \`patch-application-repo-revision\` folder inside of your overlay with the current git information and push a checkin"
   echo "  --reset-git           Locally resets changes made by the bootstrap script. Please run and checkin the changes before creating a PR"
   echo "  --help                Show this help message"
 }
