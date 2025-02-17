@@ -1,3 +1,0 @@
-- op: replace
-  path: /spec/components/kserve/serving/ingressGateway/certificate/type
-  value: OpenshiftDefaultIngress
