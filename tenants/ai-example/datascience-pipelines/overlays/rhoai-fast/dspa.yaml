@@ -2,7 +2,7 @@ apiVersion: datasciencepipelinesapplications.opendatahub.io/v1
 kind: DataSciencePipelinesApplication
 metadata:
   name: dspa
-  namespace: default
+  namespace: ai-example
 spec:
   apiServer:
     artifactSignedURLExpirySeconds: 60
