@@ -1,4 +1,4 @@
-apiVersion: datasciencepipelinesapplications.opendatahub.io/v1alpha1
+apiVersion: datasciencepipelinesapplications.opendatahub.io/v1alpha
 kind: DataSciencePipelinesApplication
 metadata:
   name: dspa
