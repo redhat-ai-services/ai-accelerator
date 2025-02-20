@@ -4,4 +4,10 @@ kind: Kustomization
 namespace: ai-example-training
 
 resources:
-  - ../rhoai-stable-2.16-aws-gpu
+  - ../../base
+  - dspa.yaml
+
+patches:
+  - target:
+      kind: DataSciencePipelinesApplication
+    path: patch-dspa-for-2.16-aws-gpu.yaml
