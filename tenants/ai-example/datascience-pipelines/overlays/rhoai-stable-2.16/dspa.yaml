@@ -5,18 +5,9 @@ metadata:
   namespace: ai-example-training
 spec:
   apiServer:
-    stripEOF: true
-    dbConfigConMaxLifetimeSec: 120
-    applyTektonCustomResource: true
     deploy: true
     enableSamplePipeline: false
-    autoUpdatePipelineDefaultVersion: true
-    archiveLogs: false
-    terminateStatus: Cancelled
     enableOauth: true
-    trackArtifacts: true
-    collectMetrics: true
-    injectDefaultScript: true
   database:
     disableHealthCheck: false
     mariaDB:
