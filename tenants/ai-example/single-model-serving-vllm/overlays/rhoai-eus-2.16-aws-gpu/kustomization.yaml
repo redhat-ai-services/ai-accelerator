@@ -5,7 +5,7 @@ resources:
   - ../../base
 
 patches:
-  - target:
-      kind: Subscription
-      name: rhods-operator
-    path: patch-channel.yaml
+  - path: patch-progress-deadline.yaml
+    target:
+      kind: ServingRuntime
+      name: vllm
