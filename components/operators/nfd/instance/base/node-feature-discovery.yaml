@@ -19,7 +19,7 @@ spec:
     # New issue: using the `latest` tag causes NFD master node crashes related to incompatibility
     # For now, set this version to be the same as the cluster OCP version number
     # https://docs.openshift.com/container-platform/4.17/hardware_enablement/psap-node-feature-discovery-operator.html#creating-nfd-cr-cli_psap-node-feature-discovery-operator
-    image: registry.redhat.io/openshift4/ose-node-feature-discovery-rhel9:4.16
+    image: registry.redhat.io/openshift4/ose-node-feature-discovery-rhel9:v4.16
     servicePort: 12000
   workerConfig:
     configData: |
