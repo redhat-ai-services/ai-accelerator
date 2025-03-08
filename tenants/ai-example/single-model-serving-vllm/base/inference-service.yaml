@@ -22,12 +22,8 @@ spec:
       name: ""
       resources:
         limits:
-          # cpu: "1"
-          # memory: 1Gi
           nvidia.com/gpu: "1"
         requests:
-          # cpu: "1"
-          # memory: 1Gi
           nvidia.com/gpu: "1"
       runtime: vllm
       storage:
