@@ -3,30 +3,41 @@ kind: InferenceService
 metadata:
   annotations:
     openshift.io/display-name: granite
-    serving.knative.openshift.io/enablePassthrough: 'true'
-    sidecar.istio.io/inject: 'true'
-    sidecar.istio.io/rewriteAppHTTPProbers: 'true'
-  name: granite
+    serving.knative.openshift.io/enablePassthrough: "true"
+    sidecar.istio.io/inject: "true"
+    sidecar.istio.io/rewriteAppHTTPProbers: "true"
+  finalizers:
+  - inferenceservice.finalizers
+  generation: 1
   labels:
-    opendatahub.io/dashboard: 'true'
+    opendatahub.io/dashboard: "true"
+  name: granite
 spec:
   predictor:
     maxReplicas: 1
     minReplicas: 1
     model:
       modelFormat:
-        name: pytorch
-      name: ''
+        name: vLLM
+      name: ""
       resources:
         limits:
-          nvidia.com/gpu: '1'
+          # cpu: "1"
+          # memory: 1Gi
+          nvidia.com/gpu: "1"
         requests:
-          nvidia.com/gpu: '1'
+          # cpu: "1"
+          # memory: 1Gi
+          nvidia.com/gpu: "1"
       runtime: vllm
       storage:
         key: aws-connection-vllm
         path: models/granite-3b-code-base
     tolerations:
-      - effect: NoSchedule
-        key: nvidia.com/gpu
-        operator: Exists
+    - effect: NoSchedule
+      key: nvidia-gpu-only
+      operator: Exists
+    - effect: NoSchedule
+      key: nvidia.com/gpu
+      operator: Exists
+
