@@ -8,5 +8,11 @@ Minio will be created in the namespace, as well as the minio login secret and th
 
 NOTE: For the deployed model, the inference route is character limited. If the route does not come up, check to make sure the name/url is less than 63 characters for it to be created.
 
+## Testing
+
+When creating workbench to run tests - make sure to use 'Standard Data Science' 2024.2 image.
+
+Test notebook using REST connectivity requires infer_url value updated to use correct location from fraud-detection-model OpenShift route.
+
 ### References:
 https://github.com/red-hat-data-services/credit-fraud-detection-demo
