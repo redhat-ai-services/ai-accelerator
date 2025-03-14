@@ -1,0 +1,16 @@
+apiVersion: trustyai.opendatahub.io/v1alpha1
+kind: TrustyAIService
+metadata:
+  name: trustyai-service
+  namespace: ai-example-training
+spec:
+  data:
+    filename: data.csv
+    format: CSV
+  metrics:
+    batchSize: 5000
+    schedule: 5s
+  storage:
+    folder: /inputs
+    format: PVC
+    size: 1Gi
