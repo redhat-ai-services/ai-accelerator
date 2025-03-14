@@ -1,0 +1,22 @@
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: dashboard-permissions-model-registry-toolings
+  namespace: rhoai-model-registries
+  labels:
+    app: rhoai-model-registry
+    app.kubernetes.io/component: model-registry
+    app.kubernetes.io/created-by: model-registry-operator
+    app.kubernetes.io/instance: rhoai-model-registry-users
+    app.kubernetes.io/managed-by: model-registry-operator
+    app.kubernetes.io/name: rhoai-model-registry
+    app.kubernetes.io/part-of: model-registry
+    component: model-registry
+subjects:
+  - kind: Group
+    apiGroup: rbac.authorization.k8s.io
+    name: rhods-admins
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: registry-user-rhoai-model-registry

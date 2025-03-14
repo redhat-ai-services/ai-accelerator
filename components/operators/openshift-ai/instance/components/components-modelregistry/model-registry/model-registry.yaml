@@ -1,0 +1,58 @@
+---
+apiVersion: modelregistry.opendatahub.io/v1alpha1
+kind: ModelRegistry
+metadata:
+  annotations:
+    openshift.io/description: ''
+    openshift.io/display-name: rhoai-model-registry
+  name: rhoai-model-registry
+  namespace: rhoai-model-registries
+  finalizers:
+    - modelregistry.opendatahub.io/finalizer
+spec:
+  grpc:
+    image: 'registry.redhat.io/rhoai/odh-mlmd-grpc-server-rhel8@sha256:412b6531fa80189f484eba8f29fac58400423bfbd396c1213b98c744314484ea'
+    port: 9090
+    resources:
+      limits:
+        cpu: 100m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+  istio:
+    gateway:
+      grpc:
+        gatewayRoute: enabled
+        port: 443
+        tls:
+          credentialName: default-modelregistry-cert
+          mode: SIMPLE
+      istioIngress: ingressgateway
+      rest:
+        gatewayRoute: enabled
+        port: 443
+        tls:
+          credentialName: default-modelregistry-cert
+          mode: SIMPLE
+    tlsMode: ISTIO_MUTUAL
+  mysql:
+    database: metadb
+    host: mysql-model-registry-db.rhoai-model-registry-mysql-db.svc.cluster.local
+    passwordSecret:
+      key: database-password
+      name: mysql-model-registry-db
+    port: 3306
+    skipDBCreation: false
+    username: root
+  rest:
+    image: 'registry.redhat.io/rhoai/odh-model-registry-rhel8@sha256:cdc7fd0d50c48ec07579413dfc6ef02bb1cce29f14eb87dc5054e0dcbd21d722'
+    port: 8080
+    resources:
+      limits:
+        cpu: 100m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+    serviceRoute: disabled
