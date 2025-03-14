@@ -21,7 +21,7 @@ components:
 
 ## Enabling Model Registry to your cluster:
 If you'd like to use the model-registry, 
-add authorinio operator to `components > argocd > apps > overlays > rhoai-<version> >patch-operators-list.yaml`:
+add authorino operator to `components > argocd > apps > overlays > rhoai-<version> >patch-operators-list.yaml`:
 
 ```
       - cluster: local
