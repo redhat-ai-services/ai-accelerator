@@ -1,15 +1,15 @@
 # TrustyAI Service
 
-[TrustyAI](https://github.com/trustyai-explainability) Component is included in RedHat OpenShift AI and is enabled by default in DataScienceCluster custom resource.
+[TrustyAI](https://github.com/trustyai-explainability) Component is included in Red Hat OpenShift AI and is enabled by default in DataScienceCluster custom resource.
 
-To provide access to TrustyAI for all models deployed in data science project - TrustyAIService custom resource should be deployed.
+To provide access to TrustyAI for all models deployed in data science project - 'TrustyAIService' custom resource should be deployed.
 
-This overlay deploys TrustyAIService CR's in the following namespaces provisioned as part of tenants/ai-example:
+This overlay deploys 'TrustyAIService' custom resources in the following namespaces provisioned as part of tenants/ai-example:
 * ai-example-multi-model-serving
 * ai-example-single-model-serving
 * ai-example-training
 
-Note that only one instance of TrustyAIService CR is required per namespace.
+Note that only one instance of 'TrustyAIService' custom resource is required per namespace.
 
 # Usage
 To use TrustyAI monitoring capabilities - model bias or  drift metrics needs to be configured for a specific model.
