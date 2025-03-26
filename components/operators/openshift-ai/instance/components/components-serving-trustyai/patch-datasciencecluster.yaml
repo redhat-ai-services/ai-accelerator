@@ -1,0 +1,14 @@
+kind: DataScienceCluster
+apiVersion: datasciencecluster.opendatahub.io/v1
+metadata:
+  name: default
+spec:
+  components:
+    kserve:
+      managementState: Managed
+      defaultDeploymentMode: RawDeployment
+      serving:
+        managementState: Removed
+        name: knative-serving
+    modelmeshserving:
+      managementState: Managed

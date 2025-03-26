@@ -1,0 +1,86 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: patch-trustyai-configmap
+  namespace: redhat-ods-applications
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: patch-trustyai-configmap
+  namespace: redhat-ods-applications
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+rules:
+  - verbs:
+      - get
+      - list
+      - watch
+      - patch
+      - update
+    apiGroups:
+      - ''
+    resources:
+      - configmaps
+      - pods
+  - verbs:
+      - get
+      - list
+      - watch
+      - patch
+      - update
+    apiGroups:
+      - apps
+    resources:
+      - deployments
+      - deployments/scale
+      - deployments/status
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: patch-trustyai-configmap
+  namespace: redhat-ods-applications
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+subjects:
+  - kind: ServiceAccount
+    name: patch-trustyai-configmap
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: patch-trustyai-configmap
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: patch-trustyai-configmap
+  namespace: redhat-ods-applications
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  template:
+    spec:
+      containers:
+        - name: minion
+          image: registry.redhat.io/openshift4/ose-cli
+          command:
+            - /bin/bash
+            - -c
+            - /scripts/patch-trustyai-configmap.sh
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+      volumes:
+        - name: scripts
+          configMap:
+            name: patch-trustyai-configmap
+            defaultMode: 0755
+      restartPolicy: Never
+      serviceAccount: patch-trustyai-configmap
+      serviceAccountName: patch-trustyai-configmap
+  backoffLimit: 10

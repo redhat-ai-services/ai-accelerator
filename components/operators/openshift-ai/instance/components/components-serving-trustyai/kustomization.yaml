@@ -7,4 +7,4 @@ patches:
       kind: DataScienceCluster
 
 components:
-  - ../patch-trustyai-configmap
+  - ../wait-for-servicemesh

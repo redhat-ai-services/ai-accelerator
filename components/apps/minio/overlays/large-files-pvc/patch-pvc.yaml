@@ -1,0 +1,9 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: minio
+spec:
+  resources:
+    requests:
+      storage: 300Gi
+
