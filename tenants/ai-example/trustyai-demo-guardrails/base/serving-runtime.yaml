@@ -1,0 +1,44 @@
+apiVersion: serving.kserve.io/v1alpha1
+kind: ServingRuntime
+metadata:
+  annotations:
+    opendatahub.io/accelerator-name: ""
+    opendatahub.io/apiProtocol: REST
+    opendatahub.io/recommended-accelerators: '["nvidia.com/gpu"]'
+    opendatahub.io/template-display-name: Guardrails Detector for TrustyAI demo
+    opendatahub.io/template-name: guardrails-detector-runtime-hap
+    openshift.io/display-name: Guardrails Detector for TrustyAI demo
+  labels:
+    opendatahub.io/dashboard: "true"
+  name: guardrails-detector-runtime-hap
+spec:
+  annotations:
+    prometheus.io/path: /metrics
+    prometheus.io/port: "8080"
+  multiModel: false
+  supportedModelFormats:
+    - autoSelect: true
+      name: guardrails-detector-huggingface
+  containers:
+  - name: kserve-container
+    image: quay.io/rgeada/guardrails-detector-huggingface
+    command:
+      - uvicorn
+      - app:app
+    args:
+      - "--workers"
+      - "4"
+      - "--host"
+      - "0.0.0.0"
+      - "--port"
+      - "8000"
+      - "--log-config"
+      - "/common/log_conf.yaml"
+    env:
+      - name: MODEL_DIR
+        value: /mnt/models
+      - name: HF_HOME
+        value: /tmp/hf_home
+    ports:
+      - containerPort: 8080
+        protocol: TCP

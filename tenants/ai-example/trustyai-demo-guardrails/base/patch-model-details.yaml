@@ -1,0 +1,6 @@
+- op: replace
+  path: /spec/template/spec/initContainers/0/env/0/value
+  value: granite-guardian-hap-38m
+- op: replace
+  path: /spec/template/spec/initContainers/0/env/1/value
+  value: https://huggingface.co/ibm-granite/granite-guardian-hap-38m.git

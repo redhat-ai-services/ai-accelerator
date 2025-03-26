@@ -1,0 +1,39 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ai-example-trustyai-demo
+
+resources:
+  - ./setup-jobs
+  - data-connection.yaml
+  - inference-service.yaml
+  - serving-runtime.yaml
+  - configmap_auxiliary_images.yaml
+  - configmap_orchestrator.yaml
+  - configmap_vllm_gateway.yaml
+  - gateway_service.yaml
+  - gateway_route.yaml
+  - orchestrator.yaml
+
+patches:
+  - path: patch-model-details.yaml
+    target:
+      kind: Job
+      name: upload-model-to-s3-trustyai-guardrails
+
+replacements:
+  - source:
+      kind: Secret
+      name: aws-connection-trustyai-guardrails
+      fieldPath: metadata.name
+    targets:
+      - select:
+          kind: Job
+          name: create-buckets-trustyai-guardrails
+        fieldPaths:
+          - spec.template.spec.containers.0.envFrom.0.secretRef.name
+      - select:
+          kind: Job
+          name: upload-model-to-s3-trustyai-guardrails
+        fieldPaths:
+          - spec.template.spec.containers.0.envFrom.0.secretRef.name

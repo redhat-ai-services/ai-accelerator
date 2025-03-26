@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: guardrails-orchestrator-config
+data:
+  regexDetectorImage: 'quay.io/csantiago/regex-detector@sha256:2dbfa4680938a97d0e0cac75049c43687ad163666cf2c6ddc37643c4f516d144'
+  vllmGatewayImage: 'quay.io/rgeada/vllm-orchestrator-gateway:latest'

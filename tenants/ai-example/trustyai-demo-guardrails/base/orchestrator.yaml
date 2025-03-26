@@ -1,0 +1,8 @@
+apiVersion: trustyai.opendatahub.io/v1alpha1
+kind: GuardrailsOrchestrator
+metadata:
+  name: guardrails-orchestrator
+spec:
+  orchestratorConfig: "fms-orchestr8-config-nlp"
+  vllmGatewayConfig: "fms-orchestr8-config-gateway"
+  replicas: 1

@@ -1,0 +1,15 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: guardrails-gateway
+spec:
+  to:
+    kind: Service
+    name: guardrails-gateway
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: ''
+    destinationCACertificate: ''
+  port:
+    targetPort: 8090
+  alternateBackends: []

@@ -1,0 +1,36 @@
+#file: noinspection YAMLSchemaValidation
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: fms-orchestr8-config-gateway
+  labels:
+    app: fmstack-nlp
+data:
+  config.yaml: |
+    orchestrator:
+      host: "localhost"
+      port: 8032
+    detectors:
+      - name: regex_language
+        detector_params:
+          regex:
+            - email
+            - ssn
+      - name: regex_competitor
+        detector_params:
+          regex:    
+            - \b(?i:nvidia|amd|intel)\b
+      - name: hap
+        detector_params: {}
+    routes:
+      - name: all
+        detectors:
+          - regex_language
+          - regex_competitor
+          - hap
+      - name: language_quality
+        detectors:
+          - regex_language
+          - hap
+      - name: passthrough
+        detectors:
