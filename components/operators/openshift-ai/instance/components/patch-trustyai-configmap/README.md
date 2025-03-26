@@ -1,7 +1,7 @@
 # patch-trustyai-configmap
 
 ## Purpose
-This component is designed to patch trustyai-service-operator-config ConfigMap to allow online connections for LM-Eval model evaluation to be able to connect to huggingface.co
+This component is designed to patch trustyai-service-operator-config ConfigMap to allow online connections for `LM-Eval` model evaluation to be able to connect to huggingface.co
 
 ## Usage
 
@@ -20,4 +20,4 @@ components:
 
 
 ## Reference
-- https://docs.redhat.com/en/documentation/red_hat_openshift_ai_cloud_service/1/html/monitoring_data_science_models/evaluating-large-language-models_monitor#setting-up-lmeval_monitor - "Enabling allowOnline mode" sub-section
+- `https://docs.redhat.com/en/documentation/red_hat_openshift_ai_cloud_service/1/html/monitoring_data_science_models/evaluating-large-language-models_monitor#setting-up-lmeval_monitor` - "Enabling `allowOnline` mode" sub-section
