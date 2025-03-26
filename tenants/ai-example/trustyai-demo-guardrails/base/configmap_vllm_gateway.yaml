@@ -1,4 +1,3 @@
-#file: noinspection YAMLSchemaValidation
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -18,7 +17,7 @@ data:
             - ssn
       - name: regex_competitor
         detector_params:
-          regex:    
+          regex:
             - \b(?i:nvidia|amd|intel)\b
       - name: hap
         detector_params: {}

@@ -13,4 +13,3 @@ patches:
       kind: PersistentVolumeClaim
       name: minio
     path: patch-pvc.yaml
-

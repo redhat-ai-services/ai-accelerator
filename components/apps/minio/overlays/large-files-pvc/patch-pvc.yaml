@@ -6,4 +6,3 @@ spec:
   resources:
     requests:
       storage: 300Gi
-
