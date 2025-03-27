@@ -1,10 +1,9 @@
-# components-serving
+# components-serving-trustyai
 
 ## Purpose
-This component is designed help configure the serving specific components including the following items:
+This component is designed help configure the serving specific components for TrustyAI demo
 
-KServe
-ModelMesh
+KServe - set RawDeployment
 
 ## Usage
 
@@ -18,7 +17,6 @@ resources:
   - ../../base
 
 components:
-  - ../../components/components-serving
+  - ../../components/components-serving-trustyai
 ```
 
-You can customize the PVC size by updating the [patch-rhoai-dashboard.yaml](./patch-rhoai-dashboard.yaml) file.
