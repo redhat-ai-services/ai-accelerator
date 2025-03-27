@@ -1,4 +1,4 @@
-# components-kserve-raw
+# `components-kserve-raw`
 
 ## Purpose
 This component is designed help configure the serving specific components for TrustyAI demo
