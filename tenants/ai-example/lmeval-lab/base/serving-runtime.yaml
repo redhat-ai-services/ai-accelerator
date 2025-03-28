@@ -20,7 +20,7 @@ spec:
     opendatahub.io/dashboard: "true"
   containers:
   - name: kserve-container
-    image: quay.io/opendatahub/vllm:stable-849f0f5
+    image: quay.io/modh/vllm@sha256:4f1f6b5738b311332b2bc786ea71259872e570081807592d97b4bd4cb65c4be1
     command:
       - python
       - "-m"
