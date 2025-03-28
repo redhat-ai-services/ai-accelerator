@@ -3,9 +3,3 @@ kind: Kustomization
 
 resources:
   - ../../base
-
-patches:
-  - path: patch-progress-deadline.yaml
-    target:
-      kind: ServingRuntime
-      name: vllm
