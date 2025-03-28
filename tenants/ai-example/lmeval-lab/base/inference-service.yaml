@@ -28,6 +28,9 @@ spec:
           memory: 8Gi
           nvidia.com/gpu: '1'
       runtime: qwen-instruct
+      args:
+        - "--dtype=float16"
+        - "--enforce-eager"
       storage:
         key: aws-connection-trustyai
         path: models/qwen-instruct
