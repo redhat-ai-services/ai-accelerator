@@ -32,7 +32,7 @@ spec:
         - "--dtype=float16"
         - "--enforce-eager"
       storage:
-        key: aws-connection-trustyai
+        key: aws-connection-lmeval-lab
         path: models/qwen-instruct
     tolerations:
       - effect: NoSchedule
