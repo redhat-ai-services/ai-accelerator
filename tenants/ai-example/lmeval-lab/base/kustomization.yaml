@@ -13,7 +13,7 @@ patches:
   - path: patch-model-details.yaml
     target:
       kind: Job
-      name: upload-model-to-lmeval-lab
+      name: upload-model-to-s3-lmeval-lab
 
 replacements:
   - source:
