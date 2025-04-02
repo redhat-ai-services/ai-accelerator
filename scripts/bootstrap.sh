@@ -66,7 +66,23 @@ install_gitops(){
 
 bootstrap_cluster(){
 
-  base_dir="bootstrap/overlays"
+  while true; do
+    read -p "Do you want to configure the platform workloads into the infrastucture nodes[Y/N]: " infra_nodes_answer
+    if [[ "$infra_nodes_answer" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+      infra_nodes_configuration=1
+      break
+    elif [[ "$infra_nodes_answer" =~ ^([nN][oO]|[nN])$ ]]; then
+      infra_nodes_configuration=0
+      break
+    else
+      echo -e "\nYou must type Y, N, Yes, or No."
+    fi
+  done
+  if [[ $infra_nodes_configuration -eq 1 ]]; then
+    base_dir="bootstrap/overlays-infra-nodes"
+  else
+    base_dir="bootstrap/overlays"
+  fi
 
   # Check if bootstrap_dir is already set
   if [ -n "$BOOTSTRAP_DIR" ]; then
