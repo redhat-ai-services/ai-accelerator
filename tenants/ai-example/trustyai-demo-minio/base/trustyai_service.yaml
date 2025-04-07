@@ -6,8 +6,6 @@ metadata:
 spec:
   # Optional values for replicas, image and tag. Below are the default values.
   replicas: 1
-  #image: quay.io/trustyaiservice/trustyai-service
-  #tag: latest
   storage:
     format: "PVC"
     folder: "/inputs"

@@ -33,18 +33,18 @@ spec:
         value: "/mnt/models/"
     resources:
       requests:
-        cpu: "1" 
-        memory: 2Gi 
+        cpu: "1"
+        memory: 2Gi
       limits:
-        cpu: "1" 
-        memory: 2Gi 
+        cpu: "1"
+        memory: 2Gi
   supportedModelFormats:
     - name: sklearn
-      version: "0" 
+      version: "0"
       autoSelect: true
       priority: 2
     - name: sklearn
-      version: "1" 
+      version: "1"
       autoSelect: true
       priority: 2
     - name: xgboost

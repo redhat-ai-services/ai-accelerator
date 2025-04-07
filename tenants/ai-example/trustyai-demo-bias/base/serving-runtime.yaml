@@ -48,21 +48,21 @@ spec:
       name: openvino_ir
       version: opset13
     - name: onnx
-      version: "1" 
+      version: "1"
     - autoSelect: true
       name: tensorflow
-      version: "1" 
+      version: "1"
     - autoSelect: true
       name: tensorflow
-      version: "2" 
+      version: "2"
     - autoSelect: true
       name: paddle
-      version: "2" 
+      version: "2"
     - autoSelect: true
       name: pytorch
-      version: "2" 
+      version: "2"
   volumes:
     - emptyDir:
         medium: Memory
-        sizeLimit: 2Gi 
-      name: shm 
+        sizeLimit: 2Gi
+      name: shm
