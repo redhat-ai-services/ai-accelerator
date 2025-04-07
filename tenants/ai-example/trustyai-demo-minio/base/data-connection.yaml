@@ -1,0 +1,17 @@
+kind: Secret
+apiVersion: v1
+metadata:
+  name: aws-connection-trustyai-demo
+  labels:
+    opendatahub.io/dashboard: 'true'
+    opendatahub.io/managed: 'true'
+  annotations:
+    opendatahub.io/connection-type: s3
+    openshift.io/display-name: Data Connection for trustyai demos
+    argocd.argoproj.io/sync-wave: "-100"
+stringData:
+  AWS_ACCESS_KEY_ID: minio
+  AWS_S3_BUCKET: modelmesh-example-models
+  AWS_S3_ENDPOINT: http://minio.ai-example-trustyai-demo.svc.cluster.local:9000
+  AWS_SECRET_ACCESS_KEY: minio123
+type: Opaque
