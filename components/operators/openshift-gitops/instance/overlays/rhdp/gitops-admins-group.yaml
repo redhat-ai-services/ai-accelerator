@@ -5,3 +5,4 @@ metadata:
 users:
   - admin
   - opentlc-mgr
+  - kubeadmin
