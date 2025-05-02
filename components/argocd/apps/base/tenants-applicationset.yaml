@@ -9,7 +9,7 @@ metadata:
 spec:
   generators:
   - git:
-      repoURL: 'https://github.com/redhat-ai-services/ai-accelerator.git'  # Update me on fork
+      repoURL: 'https://github.com/redhat-mal/ai-accelerator.git'  # Update me on fork
       revision: main
       directories:
       - path: tenants/*/*/overlays/patch-me-see-overlay
