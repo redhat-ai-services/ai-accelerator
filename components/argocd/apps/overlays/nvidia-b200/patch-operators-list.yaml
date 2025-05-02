@@ -57,3 +57,5 @@ spec:
       #   values:
       #     name: web-terminal-operator
       #     path: components/operators/web-terminal-operator/operator/overlays/fast
+
+  template: -

@@ -16,3 +16,4 @@ spec:
         values:
           name: cluster-autoscaling
           path: components/cluster-configs/autoscaling/overlays/default
+  template: -
