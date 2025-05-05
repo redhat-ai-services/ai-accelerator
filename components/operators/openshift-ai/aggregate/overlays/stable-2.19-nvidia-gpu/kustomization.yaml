@@ -6,4 +6,4 @@ commonAnnotations:
 
 resources:
   - ../../../operator/overlays/stable-2.19
-  - ../../../instance/overlays/stable-2.19
+  - ../../../instance/overlays/stable-2.19-nvidia-gpu
