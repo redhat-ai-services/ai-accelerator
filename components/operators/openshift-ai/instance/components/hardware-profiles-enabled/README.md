@@ -1,10 +1,7 @@
-# hardware-profiles
+# hardware-profiles-enabled
 
 ## Purpose
 This component is designed help admins configure the default PVC size that users are presented with when creating new Workbenches.
-
-
-
 
 ## Usage
 
@@ -18,5 +15,5 @@ resources:
   - ../../base
 
 components:
-  - ../../components/hardware-profiles
+  - ../../components/hardware-profiles-enabled
 ```
