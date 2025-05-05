@@ -17,4 +17,4 @@ components:
   - ../../components/notebook-pod-sizes
   - ../../components/make-kubeadmin-cluster-admin
   - ../../components/model-server-pod-sizes
-  - ../../components/rhoai-dashboard-access
+  - ../../components/rhoai-auth
