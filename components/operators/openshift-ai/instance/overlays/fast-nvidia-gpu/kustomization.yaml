@@ -16,4 +16,4 @@ components:
   - ../../components/nvidia-gpu-accelerator-profile
   - ../../components/make-kubeadmin-cluster-admin
   - ../../components/model-server-pod-sizes
-  - ../../components/rhoai-dashboard-access
+  - ../../components/rhoai-auth
