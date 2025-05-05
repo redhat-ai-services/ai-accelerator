@@ -14,7 +14,7 @@
           degraded = false
           for i, condition in pairs(obj.status.conditions) do
             if condition.reason ~= "Removed" then
-              if condition.type == "Available" and condition.status == "True" then
+              if (condition.type == "Available" or condition.type == "Ready") and condition.status == "True" then
                 available = true
               elseif condition.type == "Progressing" then
                 if condition.status == "True" then
