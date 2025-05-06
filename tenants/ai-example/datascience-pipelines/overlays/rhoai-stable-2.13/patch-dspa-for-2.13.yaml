@@ -1,8 +1,0 @@
-- op: remove
-  path: /spec/dspVersion
-- op: remove
-  path: /spec/objectStorage/enableExternalRoute
-- op: remove
-  path: /spec/objectStorage/externalStorage/basePath
-- op: remove
-  path: /spec/objectStorage/externalStorage/region
