@@ -7,4 +7,3 @@ spec:
     - rhods-admins
   allowedGroups:
     - 'system:authenticated'
-    
