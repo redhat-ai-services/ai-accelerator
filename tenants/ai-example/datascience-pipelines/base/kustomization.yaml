@@ -5,3 +5,4 @@ namespace: ai-example-training
 
 resources:
   - ../../../../components/apps/minio/overlays/default
+  - dspa.yaml
