@@ -1,13 +1,16 @@
-apiVersion: datasciencepipelinesapplications.opendatahub.io/v1alpha1
+apiVersion: datasciencepipelinesapplications.opendatahub.io/v1
 kind: DataSciencePipelinesApplication
 metadata:
   name: dspa
   namespace: ai-example-training
 spec:
   apiServer:
+    artifactSignedURLExpirySeconds: 60
+    caBundleFileMountPath: ""
+    caBundleFileName: ""
     deploy: true
-    enableSamplePipeline: false
     enableOauth: true
+    enableSamplePipeline: false
   database:
     disableHealthCheck: false
     mariaDB:
@@ -20,10 +23,10 @@ spec:
     disableHealthCheck: false
     enableExternalRoute: false
     externalStorage:
-      basePath: ''
+      basePath: ""
       bucket: pipelines
-      host: 'minio.ai-example-training.svc.cluster.local:9000'
-      port: ''
+      host: "minio.ai-example-training.svc.cluster.local:9000"
+      port: ""
       region: us-east-1
       s3CredentialsSecret:
         accessKey: minio_root_user
@@ -33,6 +36,7 @@ spec:
   persistenceAgent:
     deploy: true
     numWorkers: 2
+  podToPodTLS: true
   scheduledWorkflow:
     cronScheduleTimezone: UTC
     deploy: true

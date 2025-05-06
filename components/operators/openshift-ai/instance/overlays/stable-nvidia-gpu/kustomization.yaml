@@ -9,10 +9,11 @@ components:
   - ../../components/components-distributed-compute
   - ../../components/components-serving
   - ../../components/components-training
+  - ../../components/components-trustyai
   - ../../components/default-notebook-pvc-size
-  - ../../components/hardware-profiles-enabled
   - ../../components/idle-notebook-culling
   - ../../components/notebook-pod-sizes
+  - ../../components/nvidia-gpu-accelerator-profile
   - ../../components/make-kubeadmin-cluster-admin
   - ../../components/model-server-pod-sizes
-  - ../../components/rhoai-auth
+  - ../../components/rhoai-dashboard-access

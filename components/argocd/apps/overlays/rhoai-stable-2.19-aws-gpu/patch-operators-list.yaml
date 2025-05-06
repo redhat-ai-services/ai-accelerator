@@ -14,8 +14,18 @@ spec:
       - cluster: local
         url: https://kubernetes.default.svc
         values:
+          name: nvidia-gpu-operator
+          path: components/operators/gpu-operator-certified/aggregate/overlays/aws
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
+          name: nfd-operator
+          path: components/operators/nfd/aggregate/overlays/default
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
           name: openshift-ai-operator
-          path: components/operators/openshift-ai/aggregate/overlays/stable-2.19
+          path: components/operators/openshift-ai/aggregate/overlays/stable-2.19-nvidia-gpu
       - cluster: local
         url: https://kubernetes.default.svc
         values:
