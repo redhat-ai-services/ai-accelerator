@@ -6,7 +6,7 @@ resources:
 
 images:
   - name: image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-minimal-notebook
-    newTag: "2024.1"
+    newTag: "2025.1"
 
 replacements:
   - source:
