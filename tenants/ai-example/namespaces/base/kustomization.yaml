@@ -11,3 +11,4 @@ resources:
   - ai-example-single-model-serving-namespace.yaml
   - ai-example-training-namespace.yaml
   - ai-example-lmeval-lab-namespace.yaml
+  - ai-example-trustyai-demo-namespace.yaml
