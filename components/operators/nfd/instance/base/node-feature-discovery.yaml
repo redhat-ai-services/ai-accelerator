@@ -1,26 +1,15 @@
-kind: NodeFeatureDiscovery
 apiVersion: nfd.openshift.io/v1
+kind: NodeFeatureDiscovery
 metadata:
   name: nfd-instance
 spec:
-  # customConfig:
-  #   configData: |
-      #    - name: "more.kernel.features"
-      #      matchOn:
-      #      - loadedKMod: ["example_kmod3"]
-      #    - name: "more.features.by.nodename"
-      #      value: customValue
-      #      matchOn:
-      #      - nodename: ["special-.*-node-.*"]
+  enableTaints: false
+  instance: ''
   operand:
-    # bug: an image has to be defined otherwise the deployment fails
-    # bug: this behavior recently changed
-    #
-    # New issue: using the `latest` tag causes NFD master node crashes related to incompatibility
-    # For now, set this version to be the same as the cluster OCP version number
-    # https://docs.openshift.com/container-platform/4.17/hardware_enablement/psap-node-feature-discovery-operator.html#creating-nfd-cr-cli_psap-node-feature-discovery-operator
-    image: registry.redhat.io/openshift4/ose-node-feature-discovery-rhel9:v4.16
+    imagePullPolicy: IfNotPresent
     servicePort: 12000
+  prunerOnDelete: false
+  topologyUpdater: false
   workerConfig:
     configData: |
       core:
