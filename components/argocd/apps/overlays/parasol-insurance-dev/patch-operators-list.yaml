@@ -10,7 +10,7 @@ spec:
         url: https://kubernetes.default.svc
         values:
           name: openshift-ai-operator
-          path: components/operators/openshift-ai/aggregate/overlays/eus-2.16
+          path: components/operators/openshift-ai/aggregate/overlays/stable-2.19
       - cluster: local
         url: https://kubernetes.default.svc
         values:
