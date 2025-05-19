@@ -13,7 +13,7 @@ spec:
   source:
     path: patch-me-see-overlays
     repoURL: https://github.com/redhat-ai-services/ai-accelerator.git
-    targetRevision: main
+    targetRevision: update-authorino-operator-channel-to-stable-for-rhoai-2.20-or-fast
   syncPolicy:
     automated:
       prune: false
