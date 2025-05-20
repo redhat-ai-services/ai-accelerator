@@ -45,9 +45,8 @@ body:
         A clear and concise description of what the bug is.
 
         ```
-        
+        Description of the results you observe instead of the expected results.
         ```
-        Description of the results
     validations:
       required: true
 
