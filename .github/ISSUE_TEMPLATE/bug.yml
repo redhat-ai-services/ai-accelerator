@@ -1,0 +1,79 @@
+name: 🐛 Bug Report
+description: Create a report to help us reproduce and fix the bug
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: >
+        #### Before submitting a bug, please make sure the issue hasn't been already addressed by searching through [the
+        existing and past issues](https://github.com/redhat-ai-services/ai-accelerator/issues).
+
+  - type: textarea
+    id: system-info
+    attributes:
+      label: System Info
+      description: |
+        Please include as much information about the cluster you are using as possible. This includes:
+        - Openshift Cluster version
+        - Cluster type (ROSA, ARO, OCP on-prem, etc.)
+        - Any Modifications made to the script or code base
+        - GPU type
+
+      placeholder: |
+        Running on ROSA cluster. OCP Version 4.18.13 with 4x NVIDIA A10 GPUs
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: information-scripts-examples
+    attributes:
+      label: Information
+      description: 'The problem arises when using:'
+      options:
+        - label: "The official example scripts"
+        - label: "My own modified scripts"
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: 🐛 Describe the bug
+      description: |
+        Please provide a clear and concise description of what the bug is.
+
+        Please also paste or describe the results you observe instead of the expected results.
+      placeholder: |
+        A clear and concise description of what the bug is.
+
+        ```
+        Description of the results you observe instead of the expected results.
+        ```
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Error logs
+      description: |
+       If you observe an error, please paste the error message including the **full** traceback of the exception. It may be relevant to wrap error messages in ```` ```triple quotes blocks``` ````.
+
+      placeholder: |
+        ```
+        The error message you got, with the full traceback.
+        ```
+
+    validations:
+      required: true
+
+
+  - type: textarea
+    id: expected-behavior
+    validations:
+      required: true
+    attributes:
+      label: Expected behavior
+      description: "A clear and concise description of what you would expect to happen."
+
+  - type: markdown
+    attributes:
+      value: >
+        Thanks for contributing 🎉!
