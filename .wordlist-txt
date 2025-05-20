@@ -25,7 +25,6 @@ CloudEvents
 ClusterRole
 ClusterRoleBinding
 ClusterRoleBindings
-ClusterTask
 CodeFlare
 CodeReady
 ConfigMap
