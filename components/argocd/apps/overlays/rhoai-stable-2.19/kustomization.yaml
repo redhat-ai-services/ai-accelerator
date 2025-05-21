@@ -25,3 +25,7 @@ patches:
     target:
       kind: ApplicationSet
       name: tenants
+  - path: patch-tenants-applicationset-2.yaml
+    target:
+      kind: ApplicationSet
+      name: tenants
