@@ -1,0 +1,3 @@
+- op: add
+  path: /spec/generators/0/git/directories/-
+  value: {"path": "tenants/*/*/overlays/parasol-insurance-dev"}
