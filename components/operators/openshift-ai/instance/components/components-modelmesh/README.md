@@ -3,8 +3,9 @@
 ## Purpose
 This component is designed help configure the serving specific components including the following items:
 
-KServe
 ModelMesh
+
+Warning: ModelMesh is depreciated as of 2.19.
 
 ## Usage
 
@@ -18,7 +19,5 @@ resources:
   - ../../base
 
 components:
-  - ../../components/components-serving
+  - ../../components/components-modelmesh
 ```
-
-You can customize the PVC size by updating the [patch-rhoai-dashboard.yaml](./patch-rhoai-dashboard.yaml) file.

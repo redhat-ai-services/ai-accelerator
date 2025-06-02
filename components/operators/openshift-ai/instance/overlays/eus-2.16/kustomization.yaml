@@ -7,7 +7,8 @@ resources:
   - ../../base
 
 components:
-  - ../../components/components-serving
+  - ../../components/components-kserve
+  - ../../components/components-modelmesh
   - ../../components/components-training
   - ../../components/components-trustyai
   - ../../components/default-notebook-pvc-size

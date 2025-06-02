@@ -1,7 +1,9 @@
-# hardware-profiles-enabled
+# components-serving
 
 ## Purpose
-This component is designed help admins configure the default PVC size that users are presented with when creating new Workbenches.
+This component is designed help configure the serving specific components including the following items:
+
+KServe
 
 ## Usage
 
@@ -15,5 +17,5 @@ resources:
   - ../../base
 
 components:
-  - ../../components/hardware-profiles-enabled
+  - ../../components/components-serving
 ```

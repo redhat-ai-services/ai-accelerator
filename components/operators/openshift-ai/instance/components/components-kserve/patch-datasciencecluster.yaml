@@ -10,5 +10,3 @@ spec:
       serving:
         managementState: Managed
         name: knative-serving
-    modelmeshserving:
-      managementState: Managed
