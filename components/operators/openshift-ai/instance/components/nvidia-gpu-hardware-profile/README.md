@@ -1,4 +1,4 @@
-# hardware-profiles-nvidia-gpu
+# nvidia-gpu-hardware-profile
 
 ## Purpose
 This component is designed help admins configure a hardware profile with NVIDIA GPUs.
@@ -17,5 +17,5 @@ resources:
   - ../../base
 
 components:
-  - ../../components/hardware-profiles-nvidia-gpu
+  - ../../components/nvidia-gpu-hardware-profile
 ```

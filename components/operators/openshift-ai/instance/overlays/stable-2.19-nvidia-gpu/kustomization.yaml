@@ -13,7 +13,7 @@ components:
   - ../../components/components-trustyai
   - ../../components/default-notebook-pvc-size
   - ../../components/dashboard-feature-hardware-profiles
-  - ../../components/hardware-profiles-nvidia-gpu
+  - ../../components/nvidia-gpu-hardware-profile
   - ../../components/idle-notebook-culling
   - ../../components/notebook-pod-sizes
   - ../../components/make-kubeadmin-cluster-admin
