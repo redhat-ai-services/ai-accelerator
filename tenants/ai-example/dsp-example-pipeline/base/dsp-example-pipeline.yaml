@@ -27,15 +27,19 @@ spec:
   tasks:
     - name: git-clone
       params:
-        - name: url
+        - name: URL
           value: $(params.GIT_URL)
-        - name: revision
+        - name: REVISION
           value: $(params.GIT_REVISION)
-        - name: gitInitImage
-          value: 'registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:868966ef9d4b54952d8a74eb83bba40eb1f52c0148994fa704efd0e3797c61c5'
       taskRef:
-        kind: ClusterTask
-        name: git-clone
+        params:
+          - name: kind
+            value: task
+          - name: name
+            value: git-clone
+          - name: namespace
+            value: openshift-pipelines
+        resolver: cluster
       workspaces:
         - name: output
           workspace: source
@@ -43,15 +47,21 @@ spec:
       params:
         - name: VERSION
           value: $(params.PYTHON_IMAGE)
-        - name: PATH_CONTEXT
+        - name: CONTEXT
           value: .
         - name: IMAGE
           value: $(params.TARGET_IMAGE)
       runAfter:
         - git-clone
       taskRef:
-        kind: ClusterTask
-        name: s2i-python
+        params:
+          - name: kind
+            value: task
+          - name: name
+            value: s2i-python
+          - name: namespace
+            value: openshift-pipelines
+        resolver: cluster
       workspaces:
         - name: source
           workspace: source

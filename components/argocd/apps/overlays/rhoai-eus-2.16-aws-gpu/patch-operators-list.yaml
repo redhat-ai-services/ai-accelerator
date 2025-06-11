@@ -10,7 +10,7 @@ spec:
         url: https://kubernetes.default.svc
         values:
           name: authorino-operator
-          path: components/operators/authorino-operator/operator/overlays/managed-services
+          path: components/operators/authorino-operator/operator/overlays/tech-preview-v1
       - cluster: local
         url: https://kubernetes.default.svc
         values:
