@@ -1,14 +1,11 @@
-# components-serving-self-signed
+# components-serving
 
 ## Purpose
 This component is designed help configure the serving specific components including the following items:
 
-KServe
 ModelMesh
 
-This component enables KServe with a Self Signed certification that is compatible with versions prior to 2.13.
-
-For OpenShift AI 2.13 and new, it is recommended that you use the `components-serving` instead.
+Warning: ModelMesh is depreciated as of 2.19.
 
 ## Usage
 
@@ -22,5 +19,5 @@ resources:
   - ../../base
 
 components:
-  - ../../components/components-serving-self-signed
+  - ../../components/components-modelmesh
 ```

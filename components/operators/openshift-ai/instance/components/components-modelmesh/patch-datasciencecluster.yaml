@@ -4,11 +4,5 @@ metadata:
   name: default
 spec:
   components:
-    kserve:
-      managementState: Managed
-      defaultDeploymentMode: Serverless
-      serving:
-        managementState: Managed
-        name: knative-serving
     modelmeshserving:
       managementState: Managed
