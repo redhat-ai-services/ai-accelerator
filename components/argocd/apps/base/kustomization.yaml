@@ -5,4 +5,3 @@ resources:
   - cluster-config-app-of-apps.yaml
   - cluster-configs-applicationset.yaml
   - cluster-operators-applicationset.yaml
-  - tenants-applicationset.yaml
