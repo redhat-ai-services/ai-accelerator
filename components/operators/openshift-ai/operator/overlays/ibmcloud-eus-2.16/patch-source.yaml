@@ -1,0 +1,3 @@
+- op: replace
+  path: /spec/source
+  value: custom-redhat-operators-openshiftai
