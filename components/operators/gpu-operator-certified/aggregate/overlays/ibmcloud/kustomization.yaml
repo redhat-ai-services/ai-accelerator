@@ -11,7 +11,7 @@ resources:
 patches:
   - target:
       kind: OperatorGroup
-      name: gpu-operator-certified 
+      name: gpu-operator-certified
     patch: |-
       - op: replace
         path: "/metadata/name"

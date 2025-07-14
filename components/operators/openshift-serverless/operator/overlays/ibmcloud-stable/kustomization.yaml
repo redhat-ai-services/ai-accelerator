@@ -8,7 +8,7 @@ patches:
   - target:
       kind: Subscription
       name: serverless-operator
-    path: patch-channel.yaml  
+    path: patch-channel.yaml
   - target:
       kind: OperatorGroup
       name: serverless-operator-group
