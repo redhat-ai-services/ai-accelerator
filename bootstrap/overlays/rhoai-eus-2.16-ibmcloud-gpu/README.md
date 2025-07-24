@@ -26,12 +26,25 @@ See https://cloud.ibm.com/docs/openshift?topic=openshift-managed-addons for more
 The reason for this is that ROKS has a particular way of installing RHOAI. You can read more on installing rhoai through ibm clouds cli [here](https://cloud.ibm.com/docs/openshift?topic=openshift-ai-addon-install&interface=cli) and how to manage it thereafter [here](https://cloud.ibm.com/docs/openshift?topic=openshift-ai-addon-manage&interface=ui).
 
 The workaround to getting ai-accelerator to play nice with ibmcloud ROKS is two fold:
-1. Make sure that ibm's catalog source exists on the ROKS cluster by running the following commands:
+1. Make sure that all default catalog sources are turned on the ROKS cluster and all catalog sources can communicate with the internet by running the following commands:
 ```
+$ ibmcloud oc vpc outbound-traffic-protection disable --cluster <replace cluster name here>
 $ oc patch operatorhub cluster --type json -p '[{"op": "add", "path": "/spec/disableAllDefaultSources", "value": false}]'
-$ ibmcloud oc cluster addon options --addon openshift-ai
 ```
-2. Point the Red Hat Openshift AI operator Subscription to ibm catalog source like so:
+2. All of the subscriptions can be installed cleanly with Openshift gitops except redhat openshift ai operator (Also odf operator but that isn't included in the ai-accelerator by default anyways). Which means we are forced to use this cli command to install redhat openshift ai operator. Afterwards we can use Openshift Gitops to do further tweaks. 
+*Note: Your usecase may be different so pay attention to the parameters being configured in this command. For example, you might not want the codeflare component set to managed or turned on as we did, etc*.
+```
+$ ibmcloud oc cluster addon enable openshift-ai \
+    --cluster <replace cluster name here> \
+    --param oaiInstallPlanApproval=Automatic \
+    --param oaiCodeflare=Managed \
+    --param oaiKserve=Managed \
+    --parameter nvidiaCudaTest=true \
+    --parameter pipelineEnabled=true \
+    --parameter nvidiaEnabled=true \
+    --parameter nfdEnabled=true
+```
+3. In the [yaml](components/operators/openshift-ai/operator/overlays/ibmcloud-eus-2.16/kustomization.yaml) point the Red Hat Openshift AI operator Subscription to ibm catalog source like so:
 ```
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
@@ -45,10 +58,26 @@ spec:
   source: custom-redhat-operators-openshiftai
   sourceNamespace: redhat-ods-operator
 ```
+4. Once this is completed, you can then run the bootstrap installation instructions as normally done.
+```
+$ ./bootstrap.sh 
+...
+OpenShift GitOps successfully installed.
+
+1) rhoai-eus-2.16-aws-gpu       4) rhoai-fast-aws-gpu           7) rhoai-stable-2.19
+2) rhoai-eus-2.16-ibmcloud-gpu  5) rhoai-fast
+3) rhoai-eus-2.16               6) rhoai-stable-2.19-aws-gpu
+Please enter a number to select a bootstrap folder: 2
+
+Selected: rhoai-eus-2.16-ibmcloud-gpu
+...
+GitOps has successfully deployed!  Check the status of the sync here:
+https://openshift-gitops-server-openshift-gitops.rhpds-3872c56b2446849d280d8a51c6fc1a62-0000.us-east.containers.appdomain.cloud
+```
 
 ### Getting over Red Hat OpenShift AI add-on naming.
 
-The ROKS Red Hat OpenShift AI add-on has a number of resources (Subscriptions, OperatorGroups, etc) that are named differently compared to conventionally what comes with RHOAI and it's supporting operators (NVIDIA GPU Operator, Openshift Pipelines Operator, Node Feature Discovery Operator, etc).
+After installation, you will see quite a number of errors and/or out of sync messages in Openshift Gitops. The ROKS Red Hat OpenShift AI add-on has a number of resources (Subscriptions, OperatorGroups, etc) that are named differently compared to conventionally what comes with RHOAI and it's supporting operators (NVIDIA GPU Operator, Openshift Pipelines Operator, Node Feature Discovery Operator, etc).
 
 Below is a table summarizing the different names that we had to change in the kustomize configurations.
 
@@ -62,6 +91,10 @@ Below is a table summarizing the different names that we had to change in the ku
 |openshift-serverless|OperatorGroup|serverless-operator-group|openshift-serverless-bh62z|
 
 To get the change in names we used kustomizes patching feature. To see an example in action checkout this kustomize file for openshift-ai operator where OperatorGroup and DataScienceCluster are patched [here](../../../components/operators/openshift-ai/aggregate/overlays/rhoai-ibmcloud-lab/kustomization.yaml).
+
+After you have patched the names properly, push your changes and resync the out of sync Applications. 
+
+At this point all your Openshift Gitops Applications should be green/synced and your gitops setup should be in harmony with IBM's redhat openshift ai add-on installation.
 
 Note: Keep in mind certain acronyms below:
 * ROKS is short for Red Hat Openshift Kubernetes Service. You can read more [here](https://cloud.ibm.com/docs/openshift?topic=openshift-getting-started&utm_source=chatgpt.com).
