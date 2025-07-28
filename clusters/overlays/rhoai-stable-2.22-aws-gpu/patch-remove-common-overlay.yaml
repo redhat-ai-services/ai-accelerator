@@ -1,4 +1,0 @@
-# Removing the common examples, these will be moving to a separate GitOps repo at https://github.com/redhat-ai-services/ai-accelerator-examples
-- op: replace
-  path: /spec/generators/0/git/directories/1/path
-  value: ""
