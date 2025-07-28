@@ -48,13 +48,15 @@ install_gitops(){
     # kubectl wait docs:
     # https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#wait
 
-    echo "Retrieving the InstallPlan name"
+    echo -n "Retrieving the InstallPlan name: "
     INSTALL_PLAN_NAME=$(oc get sub openshift-gitops-operator -n ${OPERATOR_NS} -o jsonpath='{.status.installPlanRef.name}')
+    echo "$INSTALL_PLAN_NAME was found in the namespace $OPERATOR_NS"
 
-    echo "Retrieving the CSV name"
+    echo -n "Retrieving the CSV name: "
     CSV_NAME=$(oc get ip $INSTALL_PLAN_NAME -n ${OPERATOR_NS} -o jsonpath='{.spec.clusterServiceVersionNames[0]}')
+    echo "$CSV_NAME"
 
-    echo "Wait the Operator installation to be completed"
+    echo "Waiting for the GitOps Operator installation to complete..."
     oc wait --for jsonpath='{.status.phase}'=Succeeded csv/$CSV_NAME -n ${OPERATOR_NS}
 
     echo ""
