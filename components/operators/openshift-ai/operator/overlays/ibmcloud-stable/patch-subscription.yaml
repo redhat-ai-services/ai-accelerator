@@ -1,8 +1,0 @@
-apiVersion: operators.coreos.com/v1alpha1
-kind: Subscription
-metadata:
-  name: rhods-operator
-spec:
-  channel: stable
-  sourceNamespace: redhat-ods-operator
-  source: custom-redhat-operators-openshiftai

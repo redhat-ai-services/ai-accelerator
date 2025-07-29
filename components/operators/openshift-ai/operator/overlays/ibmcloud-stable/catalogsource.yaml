@@ -1,6 +1,0 @@
-apiVersion: operators.coreos.com/v1alpha1
-kind: CatalogSource
-metadata:
-  name: custom-redhat-operators-openshiftai
-  namespace: redhat-ods-operator
-spec:
