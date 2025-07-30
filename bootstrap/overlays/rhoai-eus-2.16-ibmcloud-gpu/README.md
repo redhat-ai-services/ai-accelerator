@@ -31,7 +31,7 @@ subscriptions.operators.coreos.com "rhods-operator" is forbidden: ValidatingAdmi
 See https://cloud.ibm.com/docs/openshift?topic=openshift-managed-addons for more information.
 ```
 
-The reason for this is that ROKS has a particular way of installing RHOAI and prevents alternative installatioin methods. You can read more on installing rhoai through ibm clouds cli [here](https://cloud.ibm.com/docs/openshift?topic=openshift-ai-addon-install&interface=cli) and how to manage it thereafter [here](https://cloud.ibm.com/docs/openshift?topic=openshift-ai-addon-manage&interface=ui).
+The reason for this is that ROKS has a particular way of installing RHOAI and prevents alternative installation methods. You can read more on installing rhoai through ibm clouds cli [here](https://cloud.ibm.com/docs/openshift?topic=openshift-ai-addon-install&interface=cli) and how to manage it thereafter [here](https://cloud.ibm.com/docs/openshift?topic=openshift-ai-addon-manage&interface=ui).
 
 We can run the following modified steps for the initial bootstrapping:
 
@@ -130,7 +130,7 @@ After installation, you will see quite a number of errors and/or out of sync mes
 
 Below is a table summarizing the different names that we had to change in the kustomize configurations.
 
-|Namespace (if applicable) | Kubenetes Custom Resource| Conventional Name | Patched Name |
+|Namespace (if applicable) | Kubernetes Custom Resource| Conventional Name | Patched Name |
 |----------|----------|----------|----------|
 |n/a|DataScienceCluster|default|default-dsc|
 |nvidia-gpu-operator|OperatorGroup|gpu-operator-certified|nvidia-gpu-operator-group|
