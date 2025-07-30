@@ -2,9 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - ../../base/cluster-config-app-of-apps.yaml
-  - ../../base/cluster-configs-applicationset.yaml
-  - ../../base/cluster-operators-applicationset.yaml
+  - ../../base-no-tenants
 
 patches:
   - path: patch-cluster-config-app-of-apps.yaml
