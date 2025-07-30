@@ -6,6 +6,6 @@ namespace: ai-example-single-model-serving
 helmCharts:
 - name: vllm-kserve
   releaseName: granite
-  version: 0.4.1
+  version: 0.3.7
   repo: https://redhat-ai-services.github.io/helm-charts/
   valuesFile: values.yaml
