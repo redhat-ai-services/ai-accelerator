@@ -17,9 +17,7 @@ patches:
     target:
       kind: ApplicationSet
       name: cluster-configs
-  # Removing the tenants, since these will be moving to a separate GitOps repo at
-  # https://github.com/redhat-ai-services/ai-accelerator-examples
-  # - path: patch-tenants-applicationset.yaml
-  #   target:
-  #     kind: ApplicationSet
-  #     name: tenants
+  - path: patch-tenants-applicationset.yaml
+    target:
+      kind: ApplicationSet
+      name: tenants
