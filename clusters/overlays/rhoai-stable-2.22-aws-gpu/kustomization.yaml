@@ -7,7 +7,11 @@ resources:
   - ../../base
   - ../../../components/argocd/apps/overlays/rhoai-stable-2.22-aws-gpu
 
-#patches:
+patches:
+- path: patch-remove-common-overlay.yaml
+  target:
+    kind: ApplicationSet
+    name: tenants
 #   Uncomment patches to disable automatic sync
 #   - path: patch-applicationset-manual-sync.yaml
 #     target:
