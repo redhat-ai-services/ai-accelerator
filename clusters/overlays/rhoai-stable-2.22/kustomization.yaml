@@ -5,7 +5,7 @@ namespace: openshift-gitops
 
 resources:
   - ../../base
-  - ../../../components/argocd/apps/overlays/rhoai-stable-2.22-aws-gpu
+  - ../../../components/argocd/apps/overlays/rhoai-stable-2.22
 
 #patches:
 #   Uncomment patches to disable automatic sync
