@@ -30,11 +30,6 @@ replacements:
           kind: ApplicationSet
         fieldPaths:
           - spec.template.spec.source.repoURL
-      - select:
-          kind: ApplicationSet
-          name: tenants
-        fieldPaths:
-          - spec.generators.*.git.repoURL
   # copy the branch from the application to the applicationsets
   - source:
       kind: Application
@@ -44,8 +39,3 @@ replacements:
           kind: ApplicationSet
         fieldPaths:
           - spec.template.spec.source.targetRevision
-      - select:
-          kind: ApplicationSet
-          name: tenants
-        fieldPaths:
-          - spec.generators.*.git.revision

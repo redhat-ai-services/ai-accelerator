@@ -13,7 +13,7 @@ spec:
   source:
     path: patch-me-see-overlays
     repoURL: https://github.com/redhat-ai-services/ai-accelerator.git
-    targetRevision: main
+    targetRevision: remove-examples
   syncPolicy:
     automated:
       prune: false
