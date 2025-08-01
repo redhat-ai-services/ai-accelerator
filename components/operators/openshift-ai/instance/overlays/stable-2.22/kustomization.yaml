@@ -9,7 +9,6 @@ components:
   - ../../components/components-distributed-compute
   - ../../components/components-kserve
   - ../../components/components-llamastack
-  - ../../components/components-modelmesh
   - ../../components/components-training
   - ../../components/default-notebook-pvc-size
   - ../../components/dashboard-feature-hardware-profiles
