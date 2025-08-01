@@ -262,6 +262,7 @@ libvirt
 lifecycle
 linter
 linux
+llamastack
 llm
 machineset
 microservices

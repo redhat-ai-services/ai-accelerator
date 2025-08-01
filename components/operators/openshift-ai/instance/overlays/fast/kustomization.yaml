@@ -8,6 +8,7 @@ components:
   - ../../components/auth-with-authorino
   - ../../components/components-distributed-compute
   - ../../components/components-kserve
+  - ../../components/components-llamastack
   - ../../components/components-training
   - ../../components/dashboard-feature-hardware-profiles
   - ../../components/dashboard-feature-model-catalog
