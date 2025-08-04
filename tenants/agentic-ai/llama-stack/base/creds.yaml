@@ -1,0 +1,30 @@
+kind: Secret
+apiVersion: v1
+metadata:
+  name: llama-3-2-3b
+  namespace: llama-stack
+data:
+  apiKey: CHANGE_ME
+type: Opaque
+
+
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: tavily-search-key
+  namespace: llama-stack
+data:
+  tavily-search-api-key: CHANGE_ME
+type: Opaque
+
+
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: llama-4-scout-17b-16e-w4a16
+  namespace: llama-stack
+data:
+  apiKey: CHANGE_ME
+type: Opaque

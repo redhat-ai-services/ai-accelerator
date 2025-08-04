@@ -1,0 +1,39 @@
+apiVersion: llamastack.io/v1alpha1
+kind: LlamaStackDistribution
+metadata:
+  name: llamastack-with-config
+  namespace: llama-stack
+spec:
+  replicas: 1
+  server:
+    containerSpec:
+      env:
+      - name: TELEMETRY_SINKS
+        value: console, sqlite, otel_trace
+      - name: OTEL_TRACE_ENDPOINT
+        value: http://otel-collector-collector.observability-hub.svc.cluster.local:4318/v1/traces
+      - name: OTEL_METRIC_ENDPOINT
+        value: http://otel-collector-collector.observability-hub.svc.cluster.local:4318/v1/metrics
+      - name: OTEL_SERVICE_NAME
+        value: llamastack
+      - name: LLAMA_3_2_3B_API_TOKEN
+        valueFrom:
+          secretKeyRef:
+            key: apiKey
+            name: llama-3-2-3b
+      - name: LLAMA_4_SCOUT_17B_16E_W4A16_API_TOKEN
+        valueFrom:
+          secretKeyRef:
+            key: apiKey
+            name: llama-4-scout-17b-16e-w4a16
+      - name: TAVILY_API_KEY
+        valueFrom:
+          secretKeyRef:
+            key: tavily-search-api-key
+            name: tavily-search-key
+      name: llama-stack
+      port: 8321
+    distribution:
+      name: remote-vllm
+    userConfig:
+      configMapName: llama-stack-config
