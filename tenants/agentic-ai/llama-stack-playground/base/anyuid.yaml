@@ -22,4 +22,4 @@ roleRef:
   name: use-scc-anyuid
 subjects:
 - kind: ServiceAccount
-  name: llama-stack
+  name: llama-stack-playground
