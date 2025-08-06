@@ -94,7 +94,32 @@ download_kustomize(){
   cd ../..
 }
 
+download_yq(){
+  set +e
+  cli_path=${TMP_DIR}/bin/yq
+  DOWNLOAD_URL=https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+  echo "Downloading Yq CLI: ${DOWNLOAD_URL}" 
+  wget ${DOWNLOAD_URL} -O $cli_path
+  return_code=$?
 
+  # Check exit code of the last command
+  if [ $return_code -eq 0 ]; then
+    chmod +x $cli_path
+    return 0;
+  fi
+
+  while true; do
+    read -p "The download failed. Do you want to continue with the script? (y/n): " choice
+    case "$choice" in
+        [Yy]* ) echo "Continuing ..."; break;;          # continue script
+        [Nn]* ) echo "Exiting ..."; exit $return_code;;
+        * ) echo "Please answer y or n.";;
+    esac
+  done
+
+  set -e
+  return $return_code;
+}
 # check login
 check_oc_login(){
   oc cluster-info | head -n1
