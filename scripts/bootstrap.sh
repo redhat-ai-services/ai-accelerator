@@ -115,6 +115,7 @@ bootstrap_cluster(){
 setup_bin
 check_bin oc
 check_bin kustomize
+check_bin yq
 # check_bin kubeseal
 check_oc_login
 
