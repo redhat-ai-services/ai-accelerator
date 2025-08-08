@@ -69,7 +69,7 @@ download_ocp-install(){
 
 download_oc(){
   if [[ ! "$OCP_VERSION" ]]; then
-    echo "OCP version missing. Please provide OCP version when running this command!"
+    echo "OCP version missing (e.g. export OCP_VERSION=4.18). Please provide OCP version when running this command!"
     exit 1
   fi
   if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -98,8 +98,16 @@ download_yq(){
   set +e
   cli_path=${TMP_DIR}/bin/yq
   DOWNLOAD_URL=https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    if [[ $(uname -p) == 'arm' ]]; then
+      DOWNLOAD_URL=https://github.com/mikefarah/yq/releases/latest/download/yq_darwin_arm64
+    else
+      DOWNLOAD_URL=https://github.com/mikefarah/yq/releases/latest/download/yq_darwin_amd64
+    fi
+  fi
+  
   echo "Downloading Yq CLI: ${DOWNLOAD_URL}" 
-  wget ${DOWNLOAD_URL} -O $cli_path
+  curl -fL ${DOWNLOAD_URL} -o $cli_path
   return_code=$?
 
   # Check exit code of the last command
