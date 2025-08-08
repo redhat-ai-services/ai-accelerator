@@ -19,6 +19,12 @@ patches:
   #     group: argoproj.io
   #     kind: Application
   #     version: v1alpha1
+  - path: patch-remove-common-overlay.yaml
+    target:
+      group: argoproj.io
+      kind: ApplicationSet
+      version: v1alpha1
+      name: tenants
 
 replacements:
   # copy the repo from the application to the applicationsets
