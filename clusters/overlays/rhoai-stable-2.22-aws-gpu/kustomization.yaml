@@ -9,11 +9,12 @@ resources:
 
 patches:
   # Uncomment patches to disable automatic sync
-  # - path: patch-applicationset-manual-sync.yaml
-  #   target:
-  #     group: argoproj.io
-  #     version: v1alpha1
-  #     kind: ApplicationSet
+  - path: patch-applicationset-manual-sync.yaml
+    target:
+      group: argoproj.io
+      version: v1alpha1
+      kind: ApplicationSet
+      name: tenants
   # - path: patch-application-manual-sync.yaml
   #   target:
   #     group: argoproj.io
