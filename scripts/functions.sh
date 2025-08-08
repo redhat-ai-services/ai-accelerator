@@ -109,6 +109,7 @@ download_yq(){
   echo "Downloading Yq CLI: ${DOWNLOAD_URL}" 
   curl -fL ${DOWNLOAD_URL} -o $cli_path
   return_code=$?
+  set -e
 
   # Check exit code of the last command
   if [ $return_code -eq 0 ]; then
@@ -125,7 +126,6 @@ download_yq(){
     esac
   done
 
-  set -e
   return $return_code;
 }
 # check login
