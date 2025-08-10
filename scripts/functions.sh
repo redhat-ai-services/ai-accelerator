@@ -9,7 +9,7 @@ TIMEOUT_SECONDS=60
 
 setup_bin(){
   mkdir -p ${TMP_DIR}/bin
-  rm ${TMP_DIR}/bin/*
+  rm ${TMP_DIR}/bin/* || true
   echo "${PATH}" | grep -q "${TMP_DIR}/bin" || \
     PATH=$(pwd)/${TMP_DIR}/bin:${PATH}
     export PATH
@@ -52,21 +52,18 @@ check_bin_version(){
     set -e
     return $return_code
   fi
-
-  bin_key="${cli_name^^}_CLI_VERSION"
+  cli_name_upper=$(echo "$cli_name" | tr '[:lower:]' '[:upper:]')
+  bin_key="${cli_name}_CLI_VERSION"
   ideal_bin_version="${!bin_key}"
   actual_bin_version=""
   case ${cli_name} in
     yq) 
-      echo "yq case"
       actual_bin_version=$($cli_name --version)
       ;;
     oc)
-      echo "oc case" 
       actual_bin_version=$($cli_name version --client=true)
       ;;
     *)
-      echo "other case" 
       actual_bin_version=$($cli_name version)
       ;;
   esac
