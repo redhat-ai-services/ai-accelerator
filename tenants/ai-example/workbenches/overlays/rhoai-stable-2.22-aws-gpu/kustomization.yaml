@@ -5,7 +5,7 @@ resources:
   - ../../base
 
 images:
-  - name: image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-minimal-notebook
+  - name: image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/s2i-generic-data-science-notebook
     newTag: "2025.1"
 
 replacements:
@@ -21,9 +21,3 @@ replacements:
           name: example-workbench
         fieldPaths:
           - spec.template.spec.containers.[name=example-workbench].env.[name=JUPYTER_IMAGE].value
-
-patches:
-  - path: patch-notebook-container.yaml
-    target:
-      kind: Notebook
-      name: example-workbench
