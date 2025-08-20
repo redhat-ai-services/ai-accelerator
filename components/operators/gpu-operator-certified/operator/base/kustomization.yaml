@@ -7,4 +7,5 @@ resources:
   - subscription.yaml
 
 components:
-  - ../components/console-plugin
+  - ../components/console-plugin-25
+#  Console Plugin Deprecated using helm: see: https://docs.nvidia.com/datacenter/cloud-native/openshift/25.3.2/enable-gpu-monitoring-dashboard.html
