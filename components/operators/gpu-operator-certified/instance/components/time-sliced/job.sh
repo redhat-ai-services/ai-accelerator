@@ -64,7 +64,7 @@ ocp_aws_clone_machineset(){
         sed '/machine/ s/-worker/-'"${INSTANCE_TYPE}"'/g
           /name/ s/-worker/-'"${INSTANCE_TYPE%.*}"'/g
           s/instanceType.*/instanceType: '"${INSTANCE_TYPE}"'/
-          s/replicas.*/replicas: 0/' | \
+          s/replicas.*/replicas: 2/' | \
       oc apply -f -
   fi
 }
