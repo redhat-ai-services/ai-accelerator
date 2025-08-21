@@ -32,7 +32,3 @@ Once the initial components are deployed, several ArgoCD Application objects are
 
 * [Bootstrap Overlays](bootstrap/overlays/)
 * [Cluster Configuration Sets](clusters/overlays/)
-
-### Tenants
-
-* [Tenant Examples](tenants/)
