@@ -7,6 +7,6 @@ spec:
     codeflare:
       managementState: Managed
     kueue:
-      managementState: Managed
+      managementState: Removed
     ray:
       managementState: Managed
