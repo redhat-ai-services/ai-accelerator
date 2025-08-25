@@ -6,7 +6,7 @@ resources:
 
 components:
   - ../../components/auth-with-authorino
-  - ../../components/components-distributed-compute
+  - ../../components/kueue-operator
   - ../../components/components-kserve
   - ../../components/components-modelmesh
   - ../../components/components-training

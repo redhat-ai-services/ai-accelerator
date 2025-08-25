@@ -10,6 +10,7 @@ spec:
         labels:
           node-role.kubernetes.io/gpu: ""
           cluster-api/accelerator: "nvidia-gpu"
+          nvidia.com/device-plugin.config: "time-sliced"
       taints:
         - key: nvidia.com/gpu
           effect: NoSchedule
