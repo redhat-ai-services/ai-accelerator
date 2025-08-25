@@ -6,4 +6,4 @@ commonAnnotations:
 
 resources:
   - ../../../operator/overlays/stable-2.22
-  - ../../../instance/overlays/stable-2.22-nvidia-gpu-time-sliced
+  - ../../../instance/overlays/stable-2.22-nvidia-gpu

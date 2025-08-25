@@ -25,7 +25,7 @@ spec:
         url: https://kubernetes.default.svc
         values:
           name: openshift-ai-operator
-          path: components/operators/openshift-ai/aggregate/overlays/stable-2.22-nvidia-gpu
+          path: components/operators/openshift-ai/aggregate/overlays/stable-2.22-nvidia-gpu-time-sliced
       - cluster: local
         url: https://kubernetes.default.svc
         values:
