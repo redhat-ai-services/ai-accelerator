@@ -12,8 +12,8 @@ spec:
   project: cluster-config
   source:
     path: patch-me-see-overlays
-    repoURL: https://github.com/shebistar/ai-accelerator.git
-    targetRevision: feature/include-rhoai-stable-2.22-ovleray-dev
+    repoURL: https://github.com/redhat-ai-services/ai-accelerator.git
+    targetRevision: main
   syncPolicy:
     automated:
       prune: false

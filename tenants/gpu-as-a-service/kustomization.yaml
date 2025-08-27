@@ -17,5 +17,6 @@ resources:
   - shared-cq.yaml
   - team-a-local-queue.yaml
   - team-b-local-queue.yaml
+  - workloadpriority.yaml
   - team-b-ray-cluster-dev.yaml
   - team-a-ray-cluster-prod.yaml
