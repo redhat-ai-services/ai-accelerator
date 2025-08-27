@@ -1,0 +1,12 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  annotations:
+    olm.providedAPIs: Kueue.v1.kueue.openshift.io
+  name: openshift-kueue-operator
+  namespace: openshift-kueue-operator
+spec:
+  upgradeStrategy: Default
+status:
+  namespaces:
+  - ""
