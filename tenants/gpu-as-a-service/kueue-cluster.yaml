@@ -4,13 +4,13 @@ metadata:
   labels:
     app.kubernetes.io/name: kueue-operator
     app.kubernetes.io/managed-by: kustomize
-  name: cluster 
+  name: cluster
   namespace: openshift-kueue-operator
 spec:
   managementState: Managed
   config:
     integrations:
-      frameworks: 
+      frameworks:
       - BatchJob
     preemption:
       preemptionPolicy: FairSharing
