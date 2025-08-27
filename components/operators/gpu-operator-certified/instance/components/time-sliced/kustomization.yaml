@@ -3,8 +3,8 @@ kind: Component
 
 resources:
   # - ../../../../../../scripts/library
-  #  - job.yaml
-  # - rbac.yaml
+  - job.yaml
+  - rbac.yaml
   - patch-device-plugin-config.yaml
 
 generatorOptions:
