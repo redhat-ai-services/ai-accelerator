@@ -9,8 +9,8 @@ metadata:
 spec:
   generators:
   - git:
-      repoURL: 'https://github.com/redhat-ai-services/ai-accelerator.git'  # Update me on fork
-      revision: main
+      repoURL: 'https://github.com/shebistar/ai-accelerator.git'  # Update me on fork
+      revision: feature/include-rhoai-stable-2.22-ovleray-dev
       directories:
       - path: tenants/*/*/overlays/patch-me-see-overlay
       - path: tenants/*/*/overlays/common
