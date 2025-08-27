@@ -3,7 +3,7 @@ kind: Component
 
 resources:
   # - ../../../../../../scripts/library
-  - job.yaml
+  #  - job.yaml
   - rbac.yaml
   - patch-device-plugin-config.yaml
 
@@ -20,3 +20,6 @@ patches:
   - path: patch-gpu-cluster-policy.yaml
     target:
       kind: ClusterPolicy
+  - path: job.yaml
+    target:
+      kind: Job
