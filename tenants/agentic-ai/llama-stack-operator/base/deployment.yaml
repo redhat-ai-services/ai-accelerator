@@ -30,7 +30,7 @@ spec:
           value: latest
         - name: LLAMA_STACK_VERSION
           value: latest
-        image: quay.io/eformat/llama-stack-k8s-operator:v0.3.0 # quay.io/llamastack/llama-stack-k8s-operator:latest
+        image: quay.io/eformat/llama-stack-k8s-operator:v0.3.0  # quay.io/llamastack/llama-stack-k8s-operator:latest
         livenessProbe:
           httpGet:
             path: /healthz
