@@ -107,4 +107,3 @@ spec:
       - name: proxy-tls
         secret:
           secretName: proxy-tls
-
