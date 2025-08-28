@@ -13,7 +13,7 @@ spec:
   source:
     path: patch-me-see-overlays
     repoURL: https://github.com/shebistar/ai-accelerator.git
-    targetRevision: feature/include-rhoai-stable-2.22-ovleray-dev
+    targetRevision: feature/gpu-as-a-service
   syncPolicy:
     automated:
       prune: false
