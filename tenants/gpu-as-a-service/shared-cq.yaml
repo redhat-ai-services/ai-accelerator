@@ -9,10 +9,10 @@ spec:
       policy: LowerPriority
       maxPriorityThreshold: 100
     withinClusterQueue: Never
-  namespaceSelector: {} # match all.
+  namespaceSelector: {}  #  match all.
   cohort: "team-ab"
   resourceGroups:
-  - coveredResources: 
+  - coveredResources:
     - cpu
     - memory
     flavors:

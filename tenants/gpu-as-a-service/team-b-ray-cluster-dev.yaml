@@ -1,10 +1,10 @@
 # Team B is using dev-priority
-# Total CPU: 6      
-# Total Mem: 16G 
+# Total CPU: 6
+# Total Mem: 16G
 apiVersion: ray.io/v1
 kind: RayCluster
 metadata:
-  labels:  
+  labels:
     kueue.x-k8s.io/queue-name: local-queue
     kueue.x-k8s.io/priority-class: dev-priority
   name: raycluster-dev
@@ -16,7 +16,7 @@ spec:
     rayStartParams:
       block: "true"
       dashboard-host: 0.0.0.0
-      num-gpus: "0"    
+      num-gpus: "0"
     template:
       metadata: {}
       spec:
@@ -37,7 +37,7 @@ spec:
           resources:
             limits:
               cpu: "2"
-              memory: 3G              
+              memory: 3G
             requests:
               cpu: "2"
               memory: 3G

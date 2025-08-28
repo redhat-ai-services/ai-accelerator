@@ -1,9 +1,9 @@
-# Team A is using prod-priority and will prempt team A because shared-cq quota 
-# is CPU: 10 and mem: 64G which has no spare quota for team A (GPU:10, MEM:24G). 
+# Team A is using prod-priority and will prempt team A because shared-cq quota
+# is CPU: 10 and mem: 64G which has no spare quota for team A (GPU:10, MEM:24G).
 apiVersion: ray.io/v1
 kind: RayCluster
 metadata:
-  labels:  
+  labels:
     kueue.x-k8s.io/queue-name: local-queue
     kueue.x-k8s.io/priority-class: prod-priority
   name: raycluster-prod
@@ -15,7 +15,7 @@ spec:
     rayStartParams:
       block: "true"
       dashboard-host: 0.0.0.0
-      num-gpus: "0"    
+      num-gpus: "0"
     template:
       metadata: {}
       spec:
@@ -36,7 +36,7 @@ spec:
           resources:
             limits:
               cpu: "2"
-              memory: 3G              
+              memory: 3G
             requests:
               cpu: "2"
               memory: 3G
@@ -65,7 +65,7 @@ spec:
             requests:
               cpu: "2"
               memory: 3G
-              nvidia.com/gpu: "1" 
+              nvidia.com/gpu: "1"
         tolerations:
         - effect: NoSchedule
           key: nvidia.com/gpu

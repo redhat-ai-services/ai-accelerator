@@ -3,7 +3,7 @@ kind: ClusterQueue
 metadata:
   name: team-b-cq
 spec:
-  namespaceSelector:  
+  namespaceSelector:
     matchLabels:
       kubernetes.io/metadata.name: team-b
   queueingStrategy: BestEffortFIFO

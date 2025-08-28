@@ -9,7 +9,7 @@ spec:
       policy: LowerPriority
       maxPriorityThreshold: 100
     withinClusterQueue: Never
-  namespaceSelector:  
+  namespaceSelector:
     matchLabels:
       kubernetes.io/metadata.name: team-a
   queueingStrategy: BestEffortFIFO
@@ -32,4 +32,3 @@ spec:
       resources:
       - name: nvidia.com/gpu
         nominalQuota: "1"
-  
