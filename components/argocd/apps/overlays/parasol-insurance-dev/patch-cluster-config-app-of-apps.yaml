@@ -1,0 +1,7 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-config-app-of-apps
+spec:
+  source:
+    path: clusters/overlays/parasol-insurance-dev

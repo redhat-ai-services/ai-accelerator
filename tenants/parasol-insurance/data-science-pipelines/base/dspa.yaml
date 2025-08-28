@@ -1,0 +1,38 @@
+apiVersion: datasciencepipelinesapplications.opendatahub.io/v1
+kind: DataSciencePipelinesApplication
+metadata:
+  name: dspa
+  namespace: parasol-insurance
+spec:
+  apiServer:
+    deploy: true
+    enableSamplePipeline: false
+    enableOauth: true
+  database:
+    disableHealthCheck: false
+    mariaDB:
+      deploy: true
+      pipelineDBName: mlpipeline
+      pvcSize: 10Gi
+      username: mlpipeline
+  dspVersion: v2
+  objectStorage:
+    disableHealthCheck: false
+    enableExternalRoute: false
+    externalStorage:
+      basePath: ''
+      bucket: pipelines
+      host: 'minio.object-datastore.svc.cluster.local:9000'
+      port: ''
+      region: us-east-1
+      s3CredentialsSecret:
+        accessKey: AWS_ACCESS_KEY_ID # Update with minio access key
+        secretKey: AWS_SECRET_ACCESS_KEY # Update with minio secret key
+        secretName: minio-data-connection # Update with the secret name
+      scheme: http
+  persistenceAgent:
+    deploy: true
+    numWorkers: 2
+  scheduledWorkflow:
+    cronScheduleTimezone: UTC
+    deploy: true
