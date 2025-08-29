@@ -1,0 +1,40 @@
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+
+patches:
+  - path: patch-activedoc-health-check.yaml
+    target:
+      kind: ArgoCD
+  - path: patch-apimanager-health-check.yaml
+    target:
+      kind: ArgoCD
+  - path: patch-application-auth-health-check.yaml
+    target:
+      kind: ArgoCD
+  - path: patch-application-health-check.yaml
+    target:
+      kind: ArgoCD
+  - path: patch-backend-health-check.yaml
+    target:
+      kind: ArgoCD
+  - path: patch-custom-policy-definition-health-check.yaml
+    target:
+      kind: ArgoCD
+  - path: patch-developeraccount-health-check.yaml
+    target:
+      kind: ArgoCD
+  - path: patch-developeruser-health-check.yaml
+    target:
+      kind: ArgoCD
+  - path: patch-openapi-health-check.yaml
+    target:
+      kind: ArgoCD
+  - path: patch-product-health-check.yaml
+    target:
+      kind: ArgoCD
+  - path: patch-proxy-config-promote-check.yaml
+    target:
+      kind: ArgoCD
+  - path: patch-tenant-check.yaml
+    target:
+      kind: ArgoCD
