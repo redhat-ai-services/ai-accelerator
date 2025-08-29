@@ -13,6 +13,7 @@ components:
   - ../../components/edge-termination
   - ../../components/enable-notifications
   - ../../components/gitops-admins
+  - ../../components/health-check-3scale
   - ../../components/health-check-odf
   - ../../components/health-check-olm
   - ../../components/health-check-openshift-ai
