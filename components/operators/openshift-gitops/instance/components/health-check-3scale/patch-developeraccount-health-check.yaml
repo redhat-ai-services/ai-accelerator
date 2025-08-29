@@ -1,0 +1,31 @@
+- op: add
+  path: /spec/resourceHealthChecks/-
+  value:
+    group: capabilities.3scale.net
+    kind: DeveloperAccount
+    check: |
+      local health_status = {}
+
+      if obj.status ~= nil then
+
+        if obj.status.conditions ~= nil then
+
+          for _, condition in ipairs(obj.status.conditions) do
+            if condition.type == "Failed" and condition.status == "True" then
+              health_status.status = "Degraded"
+              health_status.message = condition.message
+              return health_status
+            elseif condition.type == "Ready" and condition.status == "True" then
+              health_status.status = "Healthy"
+              health_status.message = "DeveloperAccount is ready to be used."
+              return health_status
+            end
+
+          end
+
+        end
+      end
+
+      health_status.status = "Progressing"
+      health_status.message = "DeveloperAccount is being prepared for use."
+      return health_status
