@@ -26,9 +26,9 @@ spec:
       port: ''
       region: us-east-1
       s3CredentialsSecret:
-        accessKey: AWS_ACCESS_KEY_ID # Update with minio access key
-        secretKey: AWS_SECRET_ACCESS_KEY # Update with minio secret key
-        secretName: minio-data-connection # Update with the secret name
+        accessKey: AWS_ACCESS_KEY_ID  # Update with minio access key
+        secretKey: AWS_SECRET_ACCESS_KEY  # Update with minio secret key
+        secretName: minio-data-connection  # Update with the secret name
       scheme: http
   persistenceAgent:
     deploy: true
