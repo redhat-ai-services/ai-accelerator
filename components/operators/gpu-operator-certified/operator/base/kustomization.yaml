@@ -6,6 +6,6 @@ resources:
   - operator-group.yaml
   - subscription.yaml
 
-components:
-  - ../components/console-plugin-25
+#  components:
+#  - ../components/console-plugin
 #  Console Plugin Deprecated using helm: see: https://docs.nvidia.com/datacenter/cloud-native/openshift/25.3.2/enable-gpu-monitoring-dashboard.html
