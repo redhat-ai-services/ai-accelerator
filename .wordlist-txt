@@ -2,6 +2,8 @@
 ACK
 ACM
 ACS
+AnythingLLM
+anythingllm
 APIs
 APM
 ARN
@@ -30,6 +32,7 @@ CodeReady
 ConfigMap
 Configs
 Contrib
+cpu
 DCGM
 DNS
 DS
@@ -67,6 +70,7 @@ IgnoreExtraneous
 ImageSetConfiguration
 ImageStreams
 Infiniband
+infras
 Jaeger
 Jenkins
 Jupyter
