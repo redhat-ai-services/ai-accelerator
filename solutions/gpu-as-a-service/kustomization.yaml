@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+
+resources:
+  - kueue-namespace.yaml
+  - kueue-operator.yaml
+  - kueue-operator-group.yaml
+  - kueue-cluster.yaml
+  - team-a-ns.yaml
+  - team-b-ns.yaml
+  - team-a-rb.yaml
+  - team-b-rb.yaml
+  - default-flavor.yaml
+  - gpu-flavor.yaml
+  - team-a-cq.yaml
+  - team-b-cq.yaml
+  - shared-cq.yaml
+  - team-a-local-queue.yaml
+  - team-b-local-queue.yaml
+  - team-b-ray-cluster-dev.yaml
+  - team-a-ray-cluster-prod.yaml

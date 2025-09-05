@@ -20,6 +20,14 @@ spec:
         requests:
           cpu: '3'
           memory: 24Gi
+    - name: Small-Medium
+      resources:
+        limits:
+          cpu: '4'
+          memory: 10Gi
+        requests:
+          cpu: '2'
+          memory: 8Gi
     - name: Large
       resources:
         limits:

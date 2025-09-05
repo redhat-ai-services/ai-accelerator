@@ -1,0 +1,72 @@
+# Team A is using prod-priority and will prempt team A because shared-cq quota
+# is CPU: 10 and mem: 64G which has no spare quota for team A (GPU:10, MEM:24G).
+apiVersion: ray.io/v1
+kind: RayCluster
+metadata:
+  labels:
+    kueue.x-k8s.io/queue-name: local-queue
+    kueue.x-k8s.io/priority-class: prod-priority
+  name: raycluster-prod
+  namespace: team-a
+spec:
+  rayVersion: 2.7.0
+  headGroupSpec:
+    enableIngress: false
+    rayStartParams:
+      block: "true"
+      dashboard-host: 0.0.0.0
+      num-gpus: "0"
+    template:
+      metadata: {}
+      spec:
+        containers:
+        - env:
+          - name: NVIDIA_VISIBLE_DEVICES
+            value: "void"
+          image: quay.io/project-codeflare/ray:2.20.0-py39-cu118
+          imagePullPolicy: Always
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                - /bin/sh
+                - -c
+                - ray stop
+          name: ray-head
+          resources:
+            limits:
+              cpu: "2"
+              memory: 3G
+            requests:
+              cpu: "2"
+              memory: 3G
+  suspend: false
+  workerGroupSpecs:
+  - groupName: small-group-test
+    maxReplicas: 1
+    minReplicas: 1
+    numOfHosts: 1
+    rayStartParams:
+      block: "true"
+      num-gpus: "1"
+    replicas: 1
+    scaleStrategy: {}
+    template:
+      spec:
+        containers:
+        - name: machine-learning
+          image: quay.io/project-codeflare/ray:2.20.0-py39-cu118
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: "2"
+              memory: 3G
+              nvidia.com/gpu: "1"
+            requests:
+              cpu: "2"
+              memory: 3G
+              nvidia.com/gpu: "1"
+        tolerations:
+        - effect: NoSchedule
+          key: nvidia.com/gpu
+          operator: Exists

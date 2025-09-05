@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    kubernetes.io/metadata.name: team-b
+    opendatahub.io/dashboard: "true"
+    kueue.openshift.io/managed: "true"
+  name: team-b
