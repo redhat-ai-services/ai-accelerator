@@ -1,0 +1,99 @@
+#! /bin/bash
+
+LOOP_IDX=0
+NFILES=$(cat $1 | jq 'length')
+THRESHOLD="${2:-$NFILES}"
+BATCH_SIZE=500
+PAUSE_TIME=0.01
+
+MODEL_ALPHA=demo-loan-nn-onnx-alpha
+MODEL_VERSION_ALPHA=1
+MODEL_BETA=demo-loan-nn-onnx-beta
+MODEL_VERSION_BETA=1
+
+ODHPROJECT=opendatahub
+MM_NAMESPACE=ai-example-trustyai-demo
+
+oc project $MM_NAMESPACE 2>&1 1>/dev/null
+TRUSTY_POD=$(oc get pods -o name | grep trustyai-service)
+TRUSTY_ROUTE=https://$(oc get route/trustyai-service --template={{.spec.host}})
+
+BASE_ROUTE_ALPHA=$(oc get inferenceservice demo-loan-nn-onnx-alpha -o jsonpath='{.status.url}')
+INFER_ROUTE_ALPHA="${BASE_ROUTE_ALPHA}/v2/models/${MODEL_ALPHA}/versions/${MODEL_VERSION_ALPHA}/infer"
+
+BASE_ROUTE_BETA=$(oc get inferenceservice demo-loan-nn-onnx-beta -o jsonpath='{.status.url}')
+INFER_ROUTE_BETA="${BASE_ROUTE_BETA}/v2/models/${MODEL_BETA}/versions/${MODEL_VERSION_BETA}/infer"
+
+
+TOKEN=$(oc create token user-one)
+
+function curl_token() {
+    curl -sk -H "Authorization: Bearer ${TOKEN}"  "$@"
+}
+
+function check_for_reception () {
+  CHECKS=0
+  THRESHOLD=${3:-950}
+  MAX_RETRIES=${4:-5}
+  while true
+  do
+    THRESH=$(( $1 * $THRESHOLD / 1000 ))
+    N_OBS=$(get_counter "$2")
+    echo -ne "\r - Making sure TrustyAI $2 dataset contains at least $THRESH points, has $N_OBS (tried $CHECKS times)";
+    if [ $CHECKS -ge $MAX_RETRIES ]; then
+      echo -e "\033[0;31m [timeout]\033[0m"
+      exit 1
+    elif [ $N_OBS -gt $THRESH ]; then
+      break
+    else
+      ((CHECKS=CHECKS+1))
+      sleep 1
+    fi
+  done
+  echo -e "\033[0;32m [done]\033[0m"
+}
+
+function get_counter () {
+  RESPONSE=$(curl_token $TRUSTY_ROUTE/info)
+  OBSERVATIONS=$(echo $RESPONSE | jq -r ".\"$1\".data.observations")
+  if [[ -z $OBSERVATIONS ]]; then
+    echo 0
+  else
+    echo $OBSERVATIONS
+  fi
+}
+
+# Init dataset counters
+START_OBS_ALPHA=$(get_counter $MODEL_ALPHA)
+echo "$START_OBS_ALPHA datapoints already in ALPHA dataset"
+
+START_OBS_BETA=$(get_counter $MODEL_BETA)
+# START_OBS_BETA=$(echo "$START_OBS_BETA_JSON" | grep "Observations for $MODEL_BETA:" | awk '{print $NF}')
+echo "$START_OBS_BETA datapoints already in BETA dataset"
+
+# batched version of the script
+TRIES=0
+SUCCESS_ALPHA=false
+SUCCESS_BETA=false
+
+while [ "$SUCCESS_ALPHA" != true ] || [ "$SUCCESS_BETA" != true ]; do
+  if [ $TRIES -gt 4 ]; then
+    echo -e "\n\033[0;31mERROR: Send data batch timeout\033[0m"
+    exit 1
+  else
+    echo "Data batch transmission (ATTEMPT $TRIES)"
+  fi
+
+  if [ "$SUCCESS_ALPHA" != true ]; then
+    curl_token $INFER_ROUTE_ALPHA -d @$1 > /dev/null 2>&1
+    check_for_reception $(( $(jq '.inputs[0].data | length' $1) + START_OBS_ALPHA )) $MODEL_ALPHA && SUCCESS_ALPHA=true
+  fi;
+
+  if [ "$SUCCESS_BETA" != true ]; then
+    curl_token $INFER_ROUTE_BETA -d @$1 > /dev/null 2>&1
+    check_for_reception $(( $(jq '.inputs[0].data | length' $1) + START_OBS_BETA )) $MODEL_BETA && 
+    SUCCESS_BETA=true
+  fi;
+
+  ((TRIES=TRIES+1))
+done
