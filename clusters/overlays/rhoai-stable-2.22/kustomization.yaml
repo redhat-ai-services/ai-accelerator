@@ -7,7 +7,7 @@ resources:
   - ../../base
   - ../../../components/argocd/apps/overlays/rhoai-stable-2.22
 
-#patches:
+# patches:
 #   Uncomment patches to disable automatic sync
 #   - path: patch-applicationset-manual-sync.yaml
 #     target:

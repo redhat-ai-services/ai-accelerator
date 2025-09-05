@@ -11,10 +11,9 @@ This repo currently contains the following components:
 * [gitops-admins](gitops-admins)
 * [health-check-odf](health-check-odf)
 * [health-check-olm](health-check-olm)
+* [health-check-3scale](health-check-3scale)
 * [health-check-openshift-builds](health-check-openshift-builds)
 * [kustomize-build-enable-helm](kustomize-build-enable-helm)
-
-## Usage
 
 ## Usage
 
