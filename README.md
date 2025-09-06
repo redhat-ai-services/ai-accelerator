@@ -33,6 +33,10 @@ Once the initial components are deployed, several ArgoCD Application objects are
 * [Bootstrap Overlays](bootstrap/overlays/)
 * [Cluster Configuration Sets](clusters/overlays/)
 
-### Tenants
+### Example Applications
 
-* [Tenant Examples](tenants/)
+Looking for example applications to deploy on top of OpenShift AI?
+
+You can find example workloads here:
+
+[AI Accelerator Examples](http://github.com/redhat-ai-services/ai-accelerator-examples)

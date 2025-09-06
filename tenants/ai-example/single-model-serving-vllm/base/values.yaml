@@ -1,6 +1,0 @@
-fullnameOverride: granite
-
-inferenceService:
-  storage:
-    mode: uri
-    storageUri: oci://quay.io/redhat-ai-services/modelcar-catalog:granite-3.2-2b-instruct
