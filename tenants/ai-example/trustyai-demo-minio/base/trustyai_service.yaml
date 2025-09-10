@@ -1,0 +1,17 @@
+apiVersion: trustyai.opendatahub.io/v1alpha1
+kind: TrustyAIService
+metadata:
+  name: trustyai-service
+  namespace: ai-example-trustyai-demo
+spec:
+  # Optional values for replicas, image and tag. Below are the default values.
+  replicas: 1
+  storage:
+    format: "PVC"
+    folder: "/inputs"
+    size: "1Gi"
+  data:
+    filename: "data.csv"
+    format: "CSV"
+  metrics:
+    schedule: "5s"
