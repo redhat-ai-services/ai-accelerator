@@ -13,6 +13,7 @@ components:
   - ../../components/components-trustyai
   - ../../components/default-notebook-pvc-size
   - ../../components/dashboard-feature-hardware-profiles
+  - ../../components/hardware-profiles-cpu
   - ../../components/hardware-profiles-nvidia-gpu
   - ../../components/idle-notebook-culling
   - ../../components/notebook-pod-sizes

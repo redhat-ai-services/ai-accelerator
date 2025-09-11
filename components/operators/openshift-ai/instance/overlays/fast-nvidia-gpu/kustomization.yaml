@@ -14,6 +14,7 @@ components:
   - ../../components/dashboard-feature-hardware-profiles
   - ../../components/dashboard-feature-model-catalog
   - ../../components/default-notebook-pvc-size
+  - ../../components/hardware-profiles-cpu
   - ../../components/hardware-profiles-nvidia-gpu
   - ../../components/idle-notebook-culling
   - ../../components/notebook-pod-sizes
