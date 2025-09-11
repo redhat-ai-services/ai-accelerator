@@ -6,7 +6,7 @@ metadata:
     opendatahub.io/description: ""
     opendatahub.io/disabled: "false"
     opendatahub.io/display-name: nvidia-gpu
-  name: nvidia-gpu-ld22a-serving
+  name: nvidia-gpu-serving
 spec:
   identifiers:
   - identifier: cpu
