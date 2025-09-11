@@ -12,8 +12,8 @@ spec:
   project: cluster-config
   source:
     path: patch-me-see-overlays
-    repoURL: https://github.com/redhat-ai-services/ai-accelerator.git
-    targetRevision: main
+    repoURL: https://github.com/shebistar/ai-accelerator.git
+    targetRevision: feature/gpu-as-a-service
   syncPolicy:
     automated:
       prune: false

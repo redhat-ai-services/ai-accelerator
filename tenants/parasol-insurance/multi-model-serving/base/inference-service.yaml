@@ -1,0 +1,21 @@
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  annotations:
+    openshift.io/display-name: accident-detect-model
+    serving.kserve.io/deploymentMode: ModelMesh
+  name: accident-detect-model
+  labels:
+    opendatahub.io/dashboard: 'true'
+spec:
+  predictor:
+    model:
+      modelFormat:
+        name: onnx
+        version: '1'
+      name: ''
+      resources: {}
+      runtime: multi-model-server
+      storage:
+        key: accident-model-data-conn
+        path: accident_model/accident_detect.onnx

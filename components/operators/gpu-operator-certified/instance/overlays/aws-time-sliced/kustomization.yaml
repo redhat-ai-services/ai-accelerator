@@ -1,0 +1,8 @@
+kind: Kustomization
+
+resources:
+  - ../../base
+
+components:
+  - ../../components/schedule-on-tainted-nodes
+  - ../../components/time-sliced

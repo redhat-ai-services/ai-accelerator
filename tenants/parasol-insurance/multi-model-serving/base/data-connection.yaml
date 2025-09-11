@@ -1,0 +1,18 @@
+kind: Secret
+apiVersion: v1
+metadata:
+  name: accident-model-data-conn
+  labels:
+    opendatahub.io/dashboard: 'true'
+    opendatahub.io/managed: 'true'
+  annotations:
+    opendatahub.io/connection-type: s3
+    openshift.io/display-name: multi-model
+    # argocd.argoproj.io/sync-wave: "-100"
+stringData:
+  AWS_ACCESS_KEY_ID: minio
+  AWS_S3_BUCKET: models
+  AWS_S3_ENDPOINT: http://minio.object-datastore.svc.cluster.local:9000
+  AWS_SECRET_ACCESS_KEY: minio123
+  AWS_DEFAULT_REGION: east-1
+type: Opaque

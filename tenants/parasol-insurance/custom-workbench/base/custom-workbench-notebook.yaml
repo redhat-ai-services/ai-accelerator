@@ -1,0 +1,100 @@
+apiVersion: kubeflow.org/v1
+kind: Notebook
+metadata:
+  annotations:
+    notebooks.opendatahub.io/inject-oauth: 'true'
+    opendatahub.io/image-display-name: Datascience notebook
+    notebooks.opendatahub.io/oauth-logout-url: ''
+    opendatahub.io/accelerator-name: ''
+    openshift.io/description: ''
+    openshift.io/display-name: custom-workbench
+    notebooks.opendatahub.io/last-image-selection: 'custom-notebook:latest'
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+  name: custom-workbench
+  namespace: parasol-insurance
+spec:
+  template:
+    spec:
+      affinity: {}
+      containers:
+        - name: custom-workbench
+          image: 'image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/custom-notebook:latest'
+          resources:
+            limits:
+              cpu: '2'
+              memory: 8Gi
+            requests:
+              cpu: '1'
+              memory: 8Gi
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /notebook/parasol-insurance/custom-workbench/api
+              port: notebook-port
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /notebook/parasol-insurance/custom-workbench/api
+              port: notebook-port
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          env:
+            - name: NOTEBOOK_ARGS
+              value: |-
+                --ServerApp.port=8888
+                --ServerApp.token=''
+                --ServerApp.password=''
+                --ServerApp.base_url=/notebook/parasol-insurance/custom-workbench
+                --ServerApp.quit_button=False
+                --ServerApp.tornado_settings={"user":"user1","hub_host":"","hub_prefix":"/projects/parasol-insurance"}
+            - name: JUPYTER_IMAGE
+              value: 'image-registry.openshift-image-registry.svc:5000/redhat-ods-applications/custom-notebook:latest'
+            - name: PIP_CERT
+              value: /etc/pki/tls/custom-certs/ca-bundle.crt
+            - name: REQUESTS_CA_BUNDLE
+              value: /etc/pki/tls/custom-certs/ca-bundle.crt
+            - name: SSL_CERT_FILE
+              value: /etc/pki/tls/custom-certs/ca-bundle.crt
+            - name: PIPELINES_SSL_SA_CERTS
+              value: /etc/pki/tls/custom-certs/ca-bundle.crt
+            - name: GIT_SSL_CAINFO
+              value: /etc/pki/tls/custom-certs/ca-bundle.crt
+          ports:
+            - containerPort: 8888
+              name: notebook-port
+              protocol: TCP
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /opt/app-root/src
+              name: custom-workbench
+            - mountPath: /dev/shm
+              name: shm
+            - mountPath: /etc/pki/tls/custom-certs/ca-bundle.crt
+              name: trusted-ca
+              readOnly: true
+              subPath: ca-bundle.crt
+          workingDir: /opt/app-root/src
+      enableServiceLinks: false
+      serviceAccountName: custom-workbench
+      volumes:
+        - name: custom-workbench
+          persistentVolumeClaim:
+            claimName: custom-workbench
+        - emptyDir:
+            medium: Memory
+          name: shm
+        - configMap:
+            items:
+              - key: ca-bundle.crt
+                path: ca-bundle.crt
+            name: workbench-trusted-ca-bundle
+            optional: true
+          name: trusted-ca

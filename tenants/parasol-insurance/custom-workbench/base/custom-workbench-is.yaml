@@ -1,0 +1,31 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  annotations:
+    opendatahub.io/notebook-image-creator: admin
+    opendatahub.io/notebook-image-desc: This is a custom notebook for running the parasol insurance code
+    opendatahub.io/notebook-image-name: Custom Notebook
+    opendatahub.io/notebook-image-url: 'quay.io/asheet/workbench-images:jupyter-datascience-ubi9-python-3.11-2024b_20250304'
+    opendatahub.io/recommended-accelerators: '[]'
+  name: custom-notebook
+  namespace: redhat-ods-applications
+  labels:
+    app.kubernetes.io/created-by: byon
+    opendatahub.io/dashboard: 'true'
+    opendatahub.io/notebook-image: 'true'
+spec:
+  lookupPolicy:
+    local: true
+  tags:
+    - name: latest
+      annotations:
+        opendatahub.io/notebook-python-dependencies: '[]'
+        opendatahub.io/notebook-software: '[]'
+        openshift.io/imported-from: 'quay.io/asheet/workbench-images:jupyter-datascience-ubi9-python-3.11-2024b_20250304'
+      from:
+        kind: DockerImage
+        name: 'quay.io/asheet/workbench-images:jupyter-datascience-ubi9-python-3.11-2024b_20250304'
+      importPolicy:
+        importMode: Legacy
+      referencePolicy:
+        type: Source

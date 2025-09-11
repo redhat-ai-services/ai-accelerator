@@ -5,6 +5,5 @@ resources:
   - ../../base
 
 components:
-  - ../../components/aws-gpu-machineset
   - ../../components/schedule-on-tainted-nodes
   - ../../components/time-sliced-2

@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openshift-kueue-operator
+  annotations:
+    openshift.io/description: "openshift-kueue-operator"
+    openshift.io/display-name: "openshift-kueue-operator"
+    openshift.io/requester: ""
+  labels:
+    openshift.io/cluster-monitoring: "true"
+spec:
+  finalizers:
+    - kubernetes
+...
