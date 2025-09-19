@@ -12,7 +12,7 @@ spec:
   project: cluster-config
   source:
     path: patch-me-see-overlays
-    repoURL: https://github.com/redhat-ai-services/ai-accelerator.git
+    repoURL: https://github.com/shebistar/ai-accelerator.git
     targetRevision: rhoai-2.22-gpu-as-a-service-overlay
   syncPolicy:
     automated:
