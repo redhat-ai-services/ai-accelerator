@@ -12,7 +12,7 @@ spec:
     - identifier: cpu
       displayName: CPU
       resourceType: CPU
-      defaultCount: "1"
+      defaultCount: "2"
       minCount: "1"
       maxCount: "8"
     - identifier: memory
