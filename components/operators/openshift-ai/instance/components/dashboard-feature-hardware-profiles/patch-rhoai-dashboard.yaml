@@ -6,3 +6,5 @@ spec:
   dashboardConfig:
     disableHardwareProfiles: false
     disableAcceleratorProfiles: true
+  notebookSizes: []
+  modelServerSizes: []
