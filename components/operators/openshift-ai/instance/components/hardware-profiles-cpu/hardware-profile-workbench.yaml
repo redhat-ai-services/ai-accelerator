@@ -9,15 +9,15 @@ metadata:
   name: default-notebooks
 spec:
   identifiers:
-  - identifier: cpu
-    displayName: CPU
-    resourceType: CPU
-    defaultCount: "1"
-    minCount: "1"
-    maxCount: "8"
-  - identifier: memory
-    displayName: Memory
-    resourceType: Memory
-    defaultCount: 8Gi
-    minCount: 2Gi
-    maxCount: 32Gi
+    - identifier: cpu
+      displayName: CPU
+      resourceType: CPU
+      defaultCount: "1"
+      minCount: "1"
+      maxCount: "8"
+    - identifier: memory
+      displayName: Memory
+      resourceType: Memory
+      defaultCount: 8Gi
+      minCount: 2Gi
+      maxCount: 32Gi

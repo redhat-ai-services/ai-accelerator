@@ -9,15 +9,15 @@ metadata:
   name: default-serving
 spec:
   identifiers:
-  - identifier: cpu
-    displayName: CPU
-    resourceType: CPU
-    defaultCount: "4"
-    minCount: "1"
-    maxCount: "32"
-  - identifier: memory
-    displayName: Memory
-    resourceType: Memory
-    defaultCount: 8Gi
-    minCount: 2Gi
-    maxCount: 64Gi
+    - identifier: cpu
+      displayName: CPU
+      resourceType: CPU
+      defaultCount: "4"
+      minCount: "1"
+      maxCount: "32"
+    - identifier: memory
+      displayName: Memory
+      resourceType: Memory
+      defaultCount: 8Gi
+      minCount: 2Gi
+      maxCount: 64Gi
