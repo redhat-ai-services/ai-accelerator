@@ -12,32 +12,29 @@ spec:
   displayName: nvidia-gpu
   enabled: true
   identifiers:
-  - identifier: cpu
-    displayName: CPU
-    resourceType: CPU
-    defaultCount: "1"
-    minCount: "1"
-    maxCount: "8"
-  - identifier: memory
-    displayName: Memory
-    resourceType: Memory
-    defaultCount: 8Gi
-    minCount: 2Gi
-    maxCount: 32Gi
-  - identifier: nvidia.com/gpu
-    displayName: nvidia.com/gpu
-    defaultCount: 1
-    minCount: 1
-    maxCount: 1
-  scheduling:
-    node:
-      tolerations:
-      - effect: NoSchedule
-        key: nvidia-gpu-only
-        operator: Exists
-        value: ""
-      - effect: NoSchedule
-        key: nvidia.com/gpu
-        operator: Exists
-        value: ""
-    type: Node
+    - identifier: cpu
+      displayName: CPU
+      resourceType: CPU
+      defaultCount: "1"
+      minCount: "1"
+      maxCount: "8"
+    - identifier: memory
+      displayName: Memory
+      resourceType: Memory
+      defaultCount: 8Gi
+      minCount: 2Gi
+      maxCount: 32Gi
+    - identifier: nvidia.com/gpu
+      displayName: nvidia.com/gpu
+      defaultCount: 1
+      minCount: 1
+      maxCount: 1
+  tolerations:
+    - effect: NoSchedule
+      key: nvidia-gpu-only
+      operator: Exists
+      value: ""
+    - effect: NoSchedule
+      key: nvidia.com/gpu
+      operator: Exists
+      value: ""
