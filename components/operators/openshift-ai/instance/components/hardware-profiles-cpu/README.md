@@ -1,5 +1,8 @@
 # hardware-profiles-cpu
 
+> [!WARNING]  
+> Hardware profiles in 2.22 utilize the `dashboard.opendatahub.io/v1alpha1` API version and 2.23+ migrated to `infrastructure.opendatahub.io/v1alpha1`.
+
 ## Purpose
 This component is designed help admins configure a hardware profile with cpu.
 
