@@ -8,6 +8,9 @@ metadata:
     opendatahub.io/display-name: default
   name: default-serving
 spec:
+  description: ''
+  displayName: default
+  enabled: true
   identifiers:
   - identifier: cpu
     displayName: CPU

@@ -8,6 +8,9 @@ metadata:
     opendatahub.io/display-name: nvidia-gpu
   name: nvidia-gpu-notebooks
 spec:
+  description: ''
+  displayName: nvidia-gpu
+  enabled: true
   identifiers:
   - identifier: cpu
     displayName: CPU
