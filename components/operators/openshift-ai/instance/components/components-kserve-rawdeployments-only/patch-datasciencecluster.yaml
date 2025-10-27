@@ -1,0 +1,17 @@
+kind: DataScienceCluster
+apiVersion: datasciencecluster.opendatahub.io/v1
+metadata:
+  name: default
+spec:
+  components:
+    kserve:
+      managementState: Managed
+      defaultDeploymentMode: RawDeployment
+      rawDeploymentServiceConfig: Headed
+      serving:
+        managementState: Removed
+        name: knative-serving
+        ingressGateway:
+          certificate:
+            secretName: knative-serving-cert
+            type: OpenshiftDefaultIngress
