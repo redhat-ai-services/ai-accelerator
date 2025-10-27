@@ -26,7 +26,11 @@ spec:
         values:
           name: openshift-pipelines-operator
           path: components/operators/openshift-pipelines/operator/overlays/latest
-
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
+          name: redhat-build-of-kueue-operator
+          path: components/operators/redhat-build-of-kueue/aggregate/overlays/stable-v1.1
 
       # - cluster: local
       #   url: https://kubernetes.default.svc
