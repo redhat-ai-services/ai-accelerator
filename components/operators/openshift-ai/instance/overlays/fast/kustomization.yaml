@@ -6,9 +6,9 @@ resources:
 
 components:
   - ../../components/auth-with-authorino
-  - ../../components/components-distributed-compute
   - ../../components/components-kserve-rawdeployments-only
   - ../../components/components-llamastack
+  - ../../components/components-ray
   - ../../components/components-training
   - ../../components/dashboard-feature-hardware-profiles
   - ../../components/dashboard-feature-model-catalog
