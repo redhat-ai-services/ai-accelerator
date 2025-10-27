@@ -1,0 +1,365 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+  name: redhat-ods-applications
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+  name: wait-for-servicemesh
+  namespace: redhat-ods-operator
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+  name: wait-for-servicemesh
+rules:
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+  - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+  name: add-kubeadmin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: User
+  name: kube:admin
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+  name: wait-for-servicemesh
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: wait-for-servicemesh
+subjects:
+- kind: ServiceAccount
+  name: wait-for-servicemesh
+  namespace: redhat-ods-operator
+---
+apiVersion: v1
+data:
+  CULL_IDLE_TIME: "240"
+  ENABLE_CULLING: "true"
+  IDLENESS_CHECK_PERIOD: "1"
+kind: ConfigMap
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+  labels:
+    opendatahub.io/dashboard: "true"
+  name: notebook-controller-culler-config
+  namespace: redhat-ods-applications
+---
+apiVersion: v1
+data:
+  wait-for-servicemesh.sh: |
+    #!/usr/bin/env bash
+    set -e
+
+    TIMEOUT_SECONDS=60
+
+    wait_for_service_mesh(){
+      echo "Checking status of all service_mesh and serverless and serverless pre-reqs"
+      SERVICEMESH_RESOURCES=(
+        crd/knativeservings.operator.knative.dev:condition=established
+        crd/servicemeshcontrolplanes.maistra.io:condition=established \
+      )
+
+      for field in "${SERVICEMESH_RESOURCES[@]}"
+      do
+        RESOURCE=$(echo "$field" | cut -d ":" -f 1)
+        CONDITION=$(echo "$field" | cut -d ":" -f 2)
+
+        echo "Waiting for ${RESOURCE} state to be ${CONDITION}..."
+        oc wait --for="${CONDITION}" "${RESOURCE}" --timeout="${TIMEOUT_SECONDS}s"
+
+      done
+    }
+
+    wait_for_service_mesh
+kind: ConfigMap
+metadata:
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+  name: wait-for-servicemesh
+  namespace: redhat-ods-operator
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+    argocd.argoproj.io/sync-wave: "10"
+  name: wait-for-servicemesh
+  namespace: redhat-ods-operator
+spec:
+  backoffLimit: 4
+  template:
+    metadata:
+      annotations:
+        argocd.argoproj.io/sync-options: ServerSideApply=true
+    spec:
+      containers:
+      - command:
+        - /bin/bash
+        - -c
+        - /scripts/wait-for-servicemesh.sh
+        image: registry.redhat.io/openshift4/ose-cli
+        name: minion
+        volumeMounts:
+        - mountPath: /scripts
+          name: scripts
+      restartPolicy: Never
+      serviceAccount: wait-for-servicemesh
+      serviceAccountName: wait-for-servicemesh
+      volumes:
+      - configMap:
+          defaultMode: 493
+          name: wait-for-servicemesh
+        name: scripts
+---
+apiVersion: dashboard.opendatahub.io/v1
+kind: AcceleratorProfile
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+  name: nvidia-gpu
+  namespace: redhat-ods-applications
+spec:
+  displayName: nvidia-gpu
+  enabled: true
+  identifier: nvidia.com/gpu
+  tolerations:
+  - effect: NoSchedule
+    key: nvidia-gpu-only
+    operator: Exists
+    value: ""
+  - effect: NoSchedule
+    key: nvidia.com/gpu
+    operator: Exists
+    value: ""
+---
+apiVersion: datasciencecluster.opendatahub.io/v1
+kind: DataScienceCluster
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+  name: default
+  namespace: redhat-ods-applications
+spec:
+  components:
+    codeflare:
+      managementState: Managed
+    dashboard:
+      managementState: Managed
+    datasciencepipelines:
+      managementState: Managed
+    kserve:
+      defaultDeploymentMode: RawDeployment
+      managementState: Managed
+      rawDeploymentServiceConfig: Headed
+      serving:
+        ingressGateway:
+          certificate:
+            secretName: knative-serving-cert
+            type: OpenshiftDefaultIngress
+        managementState: Removed
+        name: knative-serving
+    kueue:
+      managementState: Managed
+    llamastackoperator:
+      managementState: Managed
+    modelmeshserving:
+      managementState: Removed
+    modelregistry:
+      managementState: Removed
+      registriesNamespace: rhoai-model-registries
+    ray:
+      managementState: Managed
+    trainingoperator:
+      managementState: Removed
+    trustyai:
+      managementState: Managed
+    workbenches:
+      managementState: Managed
+---
+apiVersion: dscinitialization.opendatahub.io/v1
+kind: DSCInitialization
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+  name: default-dsci
+  namespace: redhat-ods-applications
+spec:
+  applicationsNamespace: redhat-ods-applications
+  monitoring:
+    managementState: Managed
+    namespace: redhat-ods-monitoring
+  serviceMesh:
+    auth:
+      audiences:
+      - https://kubernetes.default.svc
+    controlPlane:
+      metricsCollection: Istio
+      name: data-science-smcp
+      namespace: istio-system
+    managementState: Removed
+  trustedCABundle:
+    customCABundle: ""
+    managementState: Managed
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  annotations:
+    opendatahub.io/notebook-image-desc: AnythingLLM Workbench, providing out of the
+      box chatbot, RAG, agents,...
+    opendatahub.io/notebook-image-name: CUSTOM-AnythingLLM
+    opendatahub.io/notebook-image-url: https://github.com/rh-aiservices-bu/llm-on-openshift/tree/main/llm-clients/anythingllm
+    opendatahub.io/recommended-accelerators: '[]'
+  labels:
+    app.kubernetes.io/part-of: workbenches
+    app.opendatahub.io/workbenches: "true"
+    component.opendatahub.io/name: notebooks
+    opendatahub.io/component: "true"
+    opendatahub.io/notebook-image: "true"
+  name: custom-anythingllm
+  namespace: redhat-ods-applications
+spec:
+  lookupPolicy:
+    local: true
+  tags:
+  - annotations:
+      opendatahub.io/notebook-build-commit: 1d0c10
+      opendatahub.io/notebook-python-dependencies: ""
+      opendatahub.io/notebook-software: '[{"name":"AnythingLLM","version":"1.2.2"}]'
+      openshift.io/imported-from: quay.io/rh-aiservices-bu/anythingllm-workbench
+    from:
+      kind: DockerImage
+      name: quay.io/rh-aiservices-bu/anythingllm-workbench:1.2.2-1
+    importPolicy:
+      importMode: Legacy
+    name: 1.2.2
+    referencePolicy:
+      type: Source
+  - annotations:
+      opendatahub.io/notebook-build-commit: 154c873
+      opendatahub.io/notebook-python-dependencies: ""
+      opendatahub.io/notebook-software: '[{"name":"AnythingLLM","version":"1.3.0"}]'
+      openshift.io/imported-from: quay.io/rh-aiservices-bu/anythingllm-workbench
+    from:
+      kind: DockerImage
+      name: quay.io/rh-aiservices-bu/anythingllm-workbench:1.3
+    importPolicy:
+      importMode: Legacy
+    name: 1.3.0
+    referencePolicy:
+      type: Source
+---
+apiVersion: opendatahub.io/v1alpha
+kind: OdhDashboardConfig
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+  name: odh-dashboard-config
+  namespace: redhat-ods-applications
+spec:
+  dashboardConfig:
+    disableHardwareProfiles: false
+  modelServerSizes:
+  - name: Small
+    resources:
+      limits:
+        cpu: "2"
+        memory: 8Gi
+      requests:
+        cpu: "1"
+        memory: 4Gi
+  - name: Medium
+    resources:
+      limits:
+        cpu: "8"
+        memory: 10Gi
+      requests:
+        cpu: "4"
+        memory: 8Gi
+  - name: Large
+    resources:
+      limits:
+        cpu: "10"
+        memory: 20Gi
+      requests:
+        cpu: "6"
+        memory: 16Gi
+  notebookController:
+    pvcSize: 20Gi
+  notebookSizes:
+  - name: Small
+    resources:
+      limits:
+        cpu: "2"
+        memory: 8Gi
+      requests:
+        cpu: "1"
+        memory: 8Gi
+  - name: Medium
+    resources:
+      limits:
+        cpu: "6"
+        memory: 24Gi
+      requests:
+        cpu: "3"
+        memory: 24Gi
+  - name: Large
+    resources:
+      limits:
+        cpu: "14"
+        memory: 56Gi
+      requests:
+        cpu: "7"
+        memory: 56Gi
+  - name: X Large
+    resources:
+      limits:
+        cpu: "30"
+        memory: 120Gi
+      requests:
+        cpu: "15"
+        memory: 120Gi
+---
+apiVersion: services.platform.opendatahub.io/v1alpha1
+kind: Auth
+metadata:
+  name: auth
+spec:
+  adminGroups:
+  - rhods-admins
+  allowedGroups:
+  - system:authenticated
