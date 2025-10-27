@@ -8,6 +8,3 @@ patches:
   - path: patch-dsc-init.yaml
     target:
       kind: DSCInitialization
-
-components:
-  - ../wait-for-servicemesh
