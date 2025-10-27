@@ -24,6 +24,11 @@ spec:
       - cluster: local
         url: https://kubernetes.default.svc
         values:
+          name: openshift-cert-manager-operator
+          path: components/operators/openshift-cert-manager-operator/operator/overlays/stable-v1
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
           name: openshift-pipelines-operator
           path: components/operators/openshift-pipelines/operator/overlays/latest
       - cluster: local
