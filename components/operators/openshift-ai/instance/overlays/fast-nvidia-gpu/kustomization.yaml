@@ -17,6 +17,7 @@ components:
   - ../../components/hardware-profiles-cpu
   - ../../components/hardware-profiles-nvidia-gpu
   - ../../components/idle-notebook-culling
+  - ../../components/inference-gateway
   - ../../components/make-kubeadmin-cluster-admin
   - ../../components/rhoai-auth
   - ../../components/anythingllm-image
