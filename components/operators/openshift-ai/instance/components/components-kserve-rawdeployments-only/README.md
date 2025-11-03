@@ -1,4 +1,4 @@
-# components-kserve-rawdeployements-only
+# components-kserve-rawdeployments-only
 
 ## Purpose
 This component is designed help configure the serving specific components including the following items:
@@ -19,5 +19,5 @@ resources:
   - ../../base
 
 components:
-  - ../../components/components-kserve-rawdeployements-only
+  - ../../components/components-kserve-rawdeployments-only
 ```
