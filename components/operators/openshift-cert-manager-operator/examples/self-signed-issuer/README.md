@@ -1,1 +1,0 @@
-This is an example of a cert-manager namespaced issuer (not ClusterIssuer) for generating self-signed certificates.
