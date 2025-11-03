@@ -1,0 +1,26 @@
+apiVersion: dashboard.opendatahub.io/v1alpha1
+kind: HardwareProfile
+metadata:
+  annotations:
+    opendatahub.io/dashboard-feature-visibility: '["workbench"]'
+    opendatahub.io/description: ""
+    opendatahub.io/disabled: "false"
+    opendatahub.io/display-name: default
+  name: default-notebooks
+spec:
+  description: ''
+  displayName: default
+  enabled: true
+  identifiers:
+  - identifier: cpu
+    displayName: CPU
+    resourceType: CPU
+    defaultCount: "2"
+    minCount: "1"
+    maxCount: "8"
+  - identifier: memory
+    displayName: Memory
+    resourceType: Memory
+    defaultCount: 8Gi
+    minCount: 2Gi
+    maxCount: 32Gi

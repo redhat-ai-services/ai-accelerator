@@ -13,7 +13,6 @@ components:
   - ../../components/dashboard-feature-hardware-profiles
   - ../../components/default-notebook-pvc-size
   - ../../components/idle-notebook-culling
-  - ../../components/notebook-pod-sizes
+  - ../../components/hardware-profiles-2.22-cpu
   - ../../components/make-kubeadmin-cluster-admin
-  - ../../components/model-server-pod-sizes
   - ../../components/rhoai-auth

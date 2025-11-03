@@ -1,5 +1,8 @@
 # notebook-pod-sizes
 
+> [!WARNING]  
+> This option has been depreciated in favor of Hardware Profiles.
+
 ## Purpose
 This component is designed help admins configure the default sizes users can select from when creating a new Workbenches.
 

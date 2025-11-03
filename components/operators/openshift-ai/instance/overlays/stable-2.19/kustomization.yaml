@@ -11,7 +11,6 @@ components:
   - ../../components/components-modelmesh
   - ../../components/components-training
   - ../../components/default-notebook-pvc-size
-  - ../../components/dashboard-feature-hardware-profiles
   - ../../components/idle-notebook-culling
   - ../../components/notebook-pod-sizes
   - ../../components/make-kubeadmin-cluster-admin

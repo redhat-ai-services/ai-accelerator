@@ -1,5 +1,8 @@
 # nvidia-gpu-accelerator-profile
 
+> [!WARNING]  
+> This option has been depreciated in favor of Hardware Profiles.
+
 ## Purpose
 This component is designed help admins configure an accelerator profile with NVIDIA GPUs.
 

@@ -1,0 +1,26 @@
+apiVersion: dashboard.opendatahub.io/v1alpha1
+kind: HardwareProfile
+metadata:
+  annotations:
+    opendatahub.io/dashboard-feature-visibility: '["model-serving","pipelines"]'
+    opendatahub.io/description: ""
+    opendatahub.io/disabled: "false"
+    opendatahub.io/display-name: default
+  name: default-serving
+spec:
+  description: ''
+  displayName: default
+  enabled: true
+  identifiers:
+  - identifier: cpu
+    displayName: CPU
+    resourceType: CPU
+    defaultCount: "4"
+    minCount: "1"
+    maxCount: "32"
+  - identifier: memory
+    displayName: Memory
+    resourceType: Memory
+    defaultCount: 8Gi
+    minCount: 2Gi
+    maxCount: 64Gi

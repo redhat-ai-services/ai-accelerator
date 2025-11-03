@@ -1,0 +1,40 @@
+apiVersion: dashboard.opendatahub.io/v1alpha1
+kind: HardwareProfile
+metadata:
+  annotations:
+    opendatahub.io/dashboard-feature-visibility: '["workbench"]'
+    opendatahub.io/description: ""
+    opendatahub.io/disabled: "false"
+    opendatahub.io/display-name: nvidia-gpu
+  name: nvidia-gpu-notebooks
+spec:
+  description: ''
+  displayName: nvidia-gpu
+  enabled: true
+  identifiers:
+    - identifier: cpu
+      displayName: CPU
+      resourceType: CPU
+      defaultCount: "1"
+      minCount: "1"
+      maxCount: "8"
+    - identifier: memory
+      displayName: Memory
+      resourceType: Memory
+      defaultCount: 8Gi
+      minCount: 2Gi
+      maxCount: 32Gi
+    - identifier: nvidia.com/gpu
+      displayName: nvidia.com/gpu
+      defaultCount: 1
+      minCount: 1
+      maxCount: 1
+  tolerations:
+    - effect: NoSchedule
+      key: nvidia-gpu-only
+      operator: Exists
+      value: ""
+    - effect: NoSchedule
+      key: nvidia.com/gpu
+      operator: Exists
+      value: ""

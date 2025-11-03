@@ -1,4 +1,7 @@
-# nvidia-gpu-hardware-profile
+# hardware-profiles-nvidia-gpu
+
+> [!WARNING]  
+> Hardware profiles in 2.22 utilize the `dashboard.opendatahub.io/v1alpha1` API version and 2.23+ migrated to `infrastructure.opendatahub.io/v1alpha1`.
 
 ## Purpose
 This component is designed help admins configure a hardware profile with NVIDIA GPUs.
@@ -17,5 +20,5 @@ resources:
   - ../../base
 
 components:
-  - ../../components/nvidia-gpu-hardware-profile
+  - ../../components/hardware-profiles-nvidia-gpu
 ```
