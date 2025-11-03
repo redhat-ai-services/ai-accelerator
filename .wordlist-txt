@@ -256,6 +256,7 @@ kafka
 kataconfig
 kiali
 knative
+kserve
 kubeadmin
 kubectl
 kubeseal
