@@ -310,6 +310,7 @@ prometheus
 provisioner
 psql
 pvc
+rawdeployments
 rbac
 rebase
 redhat
