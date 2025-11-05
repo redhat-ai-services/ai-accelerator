@@ -9,6 +9,11 @@ spec:
       - cluster: local
         url: https://kubernetes.default.svc
         values:
+          name: leader-worker-set-operator
+          path: components/operators/leader-worker-set/operator/overlays/stable-v1.0
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
           name: openshift-custom-metrics-autoscaler-operator
           path: components/operators/openshift-custom-metrics-autoscaler/operator/overlays/stable
       - cluster: local
