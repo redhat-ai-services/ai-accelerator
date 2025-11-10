@@ -192,7 +192,7 @@ depending on your architecture.
 
 ### Set up OCP for the mirrored operator index
 
-Disable the default OperaterHub locations - these won't work since the cluster can't reach out to them.
+Disable the default OperatorHub locations - these won't work since the cluster can't reach out to them.
 
 ```
 oc patch OperatorHub cluster --type json     -p '[{"op": "add", "path": "/spec/disableAllDefaultSources", "value": true}]'

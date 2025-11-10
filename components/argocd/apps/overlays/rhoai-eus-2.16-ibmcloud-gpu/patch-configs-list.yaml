@@ -1,0 +1,8 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: cluster-configs
+spec:
+  generators:
+  - list:
+      elements: []

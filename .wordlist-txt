@@ -115,7 +115,7 @@ Observability
 OpenDataHub
 OpenShift
 OpenVino
-OperaterHub
+OperatorHub
 OperatorGroup
 PCI
 PV
@@ -126,6 +126,8 @@ RBAC
 README
 RHACM
 RHOAI
+ROKS
+RedHat
 Rebasing
 RoleBinding
 Rollout
@@ -160,6 +162,7 @@ Thanos
 TrustyAI
 UI
 Uncomment
+ValidatingAdmissionsPolicy
 VolSync
 Workspaces
 XAI
@@ -184,6 +187,7 @@ authorino
 autocompletion
 aws
 backticks
+bh
 buildah
 canada
 ceph
@@ -194,6 +198,7 @@ cli
 cloner
 clusterissuer
 clusterrolebinding
+codeflare
 composable
 config
 configmap
@@ -215,6 +220,7 @@ dns
 dockerfile
 dotnet
 drawio
+dsc
 ec
 elasticsearch
 embeddings
@@ -238,6 +244,7 @@ https
 huggingface
 iam
 ibm
+ibmcloud
 idp
 init
 installplan
@@ -257,7 +264,9 @@ kubectl
 kubeseal
 kueue
 kustomization
+kustomizations
 kustomize
+kustomizes
 labeler
 langchain
 ldap
@@ -287,6 +296,7 @@ oc
 ocp
 ocs
 odf
+ods
 olm
 openAPI
 opendatahub
@@ -308,12 +318,15 @@ rbac
 rebase
 redhat
 redistributions
+reproducibility
 repo
 repo's
 resourceNames
+resync
 rh
 rhel
 rhoai
+rhods
 rhpds
 roleRef
 rollout
@@ -352,6 +365,7 @@ trustyai
 txt
 un
 url
+usecase
 vLLM
 vSphere
 vllm
