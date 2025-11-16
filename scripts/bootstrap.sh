@@ -9,6 +9,7 @@ ARGO_NS="openshift-gitops"
 GITOPS_OVERLAY=components/operators/openshift-gitops/operator/overlays/latest/
 
 # shellcheck source=/dev/null
+source "cli_versions.env"
 source "$(dirname "$0")/functions.sh"
 source "$(dirname "$0")/util.sh"
 source "$(dirname "$0")/command_flags.sh" "$@"
@@ -115,6 +116,7 @@ bootstrap_cluster(){
 setup_bin
 check_bin oc
 check_bin kustomize
+check_bin yq
 # check_bin kubeseal
 check_oc_login
 

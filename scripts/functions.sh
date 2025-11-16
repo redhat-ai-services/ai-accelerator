@@ -6,18 +6,104 @@ SEALED_SECRETS_FOLDER=components/operators/sealed-secrets-operator/overlays/defa
 SEALED_SECRETS_SECRET=bootstrap/base/sealed-secrets-secret.yaml
 TIMEOUT_SECONDS=60
 
+
 setup_bin(){
   mkdir -p ${TMP_DIR}/bin
+  rm ${TMP_DIR}/bin/* || true
   echo "${PATH}" | grep -q "${TMP_DIR}/bin" || \
     PATH=$(pwd)/${TMP_DIR}/bin:${PATH}
     export PATH
+}
+
+lessthan (){
+  version1="${1}"
+  version2="${2}"
+
+  IFS='.' read -r -a version1parts <<< "$version1"
+  IFS='.' read -r -a version2parts <<< "$version2"
+
+  # Compare MAJOR, MINOR, PATCH in order
+  for i in 0 1 2; do
+    # Default to 0 if part missing (e.g. "1.2" treated as "1.2.0")
+    p1=${version1parts[$i]:-0}
+    p2=${version2parts[$i]:-0}
+
+    # Compare numerically
+    # 3.15.6 < 4.16.1
+    # 4.15.6 < 4.16.1
+    # 4.15.6 < 4.15.81
+    if (( p1 < p2 )); then
+      return 0
+    elif (( p1 > p2 )); then
+      return 1
+    fi
+  done
+
+  return 1
+}
+
+check_bin_version(){
+  set +e
+  cli_name=$1
+  which "${cli_name}"
+  return_code=$?
+
+  if [ "${return_code}" -ne 0 ]; then
+    set -e
+    return $return_code
+  fi
+  cli_name_upper=$(echo "$cli_name" | tr '[:lower:]' '[:upper:]')
+  bin_key="${cli_name}_CLI_VERSION"
+  ideal_bin_version="${!bin_key}"
+  actual_bin_version=""
+  case ${cli_name} in
+    yq) 
+      actual_bin_version=$($cli_name --version)
+      ;;
+    oc)
+      actual_bin_version=$($cli_name version --client=true)
+      ;;
+    *)
+      actual_bin_version=$($cli_name version)
+      ;;
+  esac
+  actual_bin_version=$(echo $actual_bin_version | grep -oE 'v?[0-9]+\.[0-9]+\.[0-9]+' | head -n1)
+  
+  # Sanitize the versions to make asserting easier.
+  ideal_bin_version="${ideal_bin_version#v}"
+  actual_bin_version="${actual_bin_version#v}" 
+
+  lessthan "$actual_bin_version" "$ideal_bin_version"
+  return_code=$?
+  if [ "${return_code}" -eq 0 ]; then
+    echo "${cli_name} version ${actual_bin_version} is less than expected ${ideal_bin_version}."
+    while true; do
+      read -p "Do you want to download newer cli version before continuing with the script? (y/n): " choice
+      case "$choice" in
+          [Yy]* ) 
+            echo "Continuing with download ..."; 
+            return_code=1;
+            break;
+            ;;          # continue script
+          [Nn]* ) 
+            echo "Continuing with same ${cli_name} cli version ${actual_bin_version} ..."; 
+            return_code=0;
+            break;
+            ;;
+          * ) echo "Please answer y or n.";;
+      esac
+    done
+  fi
+
+  set -e
+  return ${return_code}
 }
 
 check_bin(){
   name=$1
   echo "Validating CLI tool: ${name}"
   
-  which "${name}" || download_${name}
+  check_bin_version "${name}" || download_${name}
  
   case ${name} in
     oc|openshift-install|kustomize)
@@ -69,7 +155,7 @@ download_ocp-install(){
 
 download_oc(){
   if [[ ! "$OCP_VERSION" ]]; then
-    echo "OCP version missing. Please provide OCP version when running this command!"
+    echo "OCP version missing (e.g. export OCP_VERSION=4.18). Please provide OCP version when running this command!"
     exit 1
   fi
   if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -94,7 +180,40 @@ download_kustomize(){
   cd ../..
 }
 
+download_yq(){
+  set +e
+  cli_path=${TMP_DIR}/bin/yq
+  DOWNLOAD_URL=https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    if [[ $(uname -p) == 'arm' ]]; then
+      DOWNLOAD_URL=https://github.com/mikefarah/yq/releases/latest/download/yq_darwin_arm64
+    else
+      DOWNLOAD_URL=https://github.com/mikefarah/yq/releases/latest/download/yq_darwin_amd64
+    fi
+  fi
+  
+  echo "Downloading Yq CLI: ${DOWNLOAD_URL}" 
+  curl -fL ${DOWNLOAD_URL} -o $cli_path
+  return_code=$?
+  set -e
 
+  # Check exit code of the last command
+  if [ $return_code -eq 0 ]; then
+    chmod +x $cli_path
+    return 0;
+  fi
+
+  while true; do
+    read -p "The download failed. Do you want to continue with the script? (y/n): " choice
+    case "$choice" in
+        [Yy]* ) echo "Continuing ..."; break;;          # continue script
+        [Nn]* ) echo "Exiting ..."; exit $return_code;;
+        * ) echo "Please answer y or n.";;
+    esac
+  done
+
+  return $return_code;
+}
 # check login
 check_oc_login(){
   oc cluster-info | head -n1
