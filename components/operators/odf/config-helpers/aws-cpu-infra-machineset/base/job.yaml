@@ -1,0 +1,40 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: job-aws-cpu-infra-machineset-
+  name: job-aws-cpu-infra-machineset
+  namespace: openshift-machine-api
+  # annotations:
+  #   argocd.argoproj.io/hook: Sync
+    # argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  template:
+    spec:
+      containers:
+        - name: job-aws-cpu-infra-machineset
+          # image: image-registry.openshift-image-registry.svc:5000/openshift/tools:latest
+          image: registry.redhat.io/openshift4/ose-cli
+          env:
+            - name: INSTANCE_TYPE
+              value: "m6a.4xlarge	"
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          command:
+            - /bin/bash
+            - -c
+            - /scripts/job.sh
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+      volumes:
+        - name: scripts
+          configMap:
+            name: job-aws-cpu-infra-machineset
+            defaultMode: 0755
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 30
+      serviceAccount: job-aws-cpu-infra-machineset
+      serviceAccountName: job-aws-cpu-infra-machineset
