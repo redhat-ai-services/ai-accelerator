@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+components:
+  - ../../components/components-kserve-rawdeployments-only
+  - ../../components/components-llamastack
+  - ../../components/components-modelregistry
+  - ../../components/components-ray
+  - ../../components/components-training
+  - ../../components/dashboard-feature-hardware-profiles
+  - ../../components/dashboard-feature-model-catalog
+  - ../../components/default-notebook-pvc-size
+  - ../../components/hardware-profiles-cpu
+  - ../../components/idle-notebook-culling
+  - ../../components/inference-gateway
+  - ../../components/make-kubeadmin-cluster-admin
+  - ../../components/rhoai-auth
