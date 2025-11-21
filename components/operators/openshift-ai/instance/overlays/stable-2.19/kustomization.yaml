@@ -6,9 +6,11 @@ resources:
 
 components:
   - ../../components/auth-with-authorino
-  - ../../components/components-distributed-compute
+  - ../../components/components-codeflare
   - ../../components/components-kserve
+  - ../../components/components-kueue
   - ../../components/components-modelmesh
+  - ../../components/components-ray
   - ../../components/components-training
   - ../../components/default-notebook-pvc-size
   - ../../components/idle-notebook-culling

@@ -2,8 +2,6 @@
 ACK
 ACM
 ACS
-AnythingLLM
-anythingllm
 APIs
 APM
 ARN
@@ -11,11 +9,13 @@ AdoptedResource
 AmazonS
 AmazonSageMakerFullAccess
 Ansible
+AnythingLLM
 ApplicationSet
 ApplicationSets
 ArgoCD
 ArgoCD's
 Authorino
+Autoscaler
 Bitnami
 Buildpacks
 CICD
@@ -24,6 +24,7 @@ CRDs
 CUDA
 CheCluster
 CloudEvents
+ClusterIssuer
 ClusterRole
 ClusterRoleBinding
 ClusterRoleBindings
@@ -32,7 +33,6 @@ CodeReady
 ConfigMap
 Configs
 Contrib
-cpu
 DCGM
 DNS
 DS
@@ -70,7 +70,6 @@ IgnoreExtraneous
 ImageSetConfiguration
 ImageStreams
 Infiniband
-infras
 Jaeger
 Jenkins
 Jupyter
@@ -117,6 +116,7 @@ OpenShift
 OpenVino
 OperaterHub
 OperatorGroup
+OperatorHub
 PCI
 PV
 PolicyReport
@@ -126,6 +126,7 @@ RBAC
 README
 RHACM
 RHOAI
+RawDeployments
 Rebasing
 RoleBinding
 Rollout
@@ -168,6 +169,7 @@ acm
 ai
 aiservices
 amq
+anythingllm
 api
 apiGroup
 apiGroups
@@ -198,6 +200,7 @@ composable
 config
 configmap
 configs
+cpu
 crypto
 culler
 datasource
@@ -239,6 +242,7 @@ huggingface
 iam
 ibm
 idp
+infras
 init
 installplan
 installplans
@@ -252,6 +256,7 @@ kafka
 kataconfig
 kiali
 knative
+kserve
 kubeadmin
 kubectl
 kubeseal
@@ -275,6 +280,7 @@ minio
 modelregistry
 na
 namespace
+namespaced
 namespaces
 newman
 nfd
@@ -304,6 +310,7 @@ prometheus
 provisioner
 psql
 pvc
+rawdeployments
 rbac
 rebase
 redhat
