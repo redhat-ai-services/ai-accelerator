@@ -3,10 +3,10 @@ kind: ConfigMap
 metadata:
   name: device-plugin-config
 data:
-  no-time-sliced: |-
+  time-sliced: |-
     version: v1
     sharing:
       timeSlicing:
         resources:
           - name: nvidia.com/gpu
-            replicas: 0
+            replicas: 8
