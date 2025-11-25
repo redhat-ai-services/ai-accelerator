@@ -70,6 +70,8 @@ spec:
         enabled: false
       route:
         enabled: false
+    extraCommandArgs:
+      - --enable-progressive-syncs
   rbac:
     policy: |
       g, system:cluster-admins, role:admin
