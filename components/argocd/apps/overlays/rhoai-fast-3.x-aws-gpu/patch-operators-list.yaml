@@ -50,7 +50,7 @@ spec:
         url: https://kubernetes.default.svc
         values:
           name: connectivity-link-operator
-          path: components/operators/connectivity-link/aggregate/overlays/auth
+          path: components/operators/redhat-connectivity-link/aggregate/overlays/auth
       - cluster: local
         url: https://kubernetes.default.svc
         values:
