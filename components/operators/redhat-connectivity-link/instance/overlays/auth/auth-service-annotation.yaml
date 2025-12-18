@@ -1,0 +1,7 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: authorino-authorino-authorization
+  annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+    service.beta.openshift.io/serving-cert-secret-name: authorino-server-cert
