@@ -1,0 +1,40 @@
+apiVersion: infrastructure.opendatahub.io/v1alpha1
+kind: HardwareProfile
+metadata:
+  annotations:
+    opendatahub.io/dashboard-feature-visibility: '["model-serving","pipelines"]'
+    opendatahub.io/description: ""
+    opendatahub.io/disabled: "false"
+    opendatahub.io/display-name: nvidia-gpu
+  name: nvidia-gpu-serving
+spec:
+  identifiers:
+    - identifier: cpu
+      displayName: CPU
+      resourceType: CPU
+      defaultCount: "4"
+      minCount: "1"
+      maxCount: "32"
+    - identifier: memory
+      displayName: Memory
+      resourceType: Memory
+      defaultCount: 8Gi
+      minCount: 2Gi
+      maxCount: 120Gi
+    - identifier: nvidia.com/gpu
+      displayName: nvidia.com/gpu
+      defaultCount: 1
+      minCount: 1
+      maxCount: 8
+  scheduling:
+    node:
+      tolerations:
+        - effect: NoSchedule
+          key: nvidia-gpu-only
+          operator: Exists
+          value: ""
+        - effect: NoSchedule
+          key: nvidia.com/gpu
+          operator: Exists
+          value: ""
+    type: Node

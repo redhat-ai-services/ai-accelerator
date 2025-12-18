@@ -1,0 +1,8 @@
+apiVersion: datasciencecluster.opendatahub.io/v2
+kind: DataScienceCluster
+metadata:
+  name: default
+spec:
+  components:
+    llamastackoperator:
+      managementState: Managed
