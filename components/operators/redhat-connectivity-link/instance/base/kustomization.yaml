@@ -5,6 +5,8 @@ kind: Kustomization
 namespace: kuadrant-system
 
 resources:
-  - ../../components/wait-for-servicemesh
   - kuadrant-system-namespace.yaml
   - kuadrant.yaml
+
+components:
+  - ../components/wait-for-servicemesh
