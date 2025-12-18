@@ -4,6 +4,9 @@ kind: Kustomization
 resources:
   - ../../base
 
+components:
+  - ../../wait-for-servicemesh
+
 patches:
   - target:
       kind: Subscription
