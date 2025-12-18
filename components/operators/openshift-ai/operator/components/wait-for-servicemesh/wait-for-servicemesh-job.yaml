@@ -31,7 +31,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: wait-for-servicemesh
-    namespace: openshift-operators
+    namespace: redhat-ods-operator
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
