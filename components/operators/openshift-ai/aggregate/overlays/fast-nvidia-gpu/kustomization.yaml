@@ -6,4 +6,4 @@ commonAnnotations:
 
 resources:
   - ../../../operator/overlays/fast
-  - ../../../instance/overlays/fast-nvidia-gpu
+  - ../../../instance-2.x/overlays/fast-nvidia-gpu

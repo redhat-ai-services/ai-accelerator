@@ -6,4 +6,4 @@ commonAnnotations:
 
 resources:
   - ../../../operator/overlays/eus-2.16
-  - ../../../instance/overlays/eus-2.16
+  - ../../../instance-2.x/overlays/eus-2.16
