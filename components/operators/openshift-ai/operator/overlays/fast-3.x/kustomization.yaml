@@ -5,7 +5,7 @@ resources:
   - ../../base
 
 components:
-  - ../../wait-for-servicemesh
+  - ../../components/wait-for-servicemesh
 
 patches:
   - target:
