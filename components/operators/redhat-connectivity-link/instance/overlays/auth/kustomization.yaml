@@ -6,3 +6,5 @@ namespace: kuadrant-system
 
 resources:
   - ../../base
+  - authorino.yaml
+  - auth-service-annotation.yaml
