@@ -6,7 +6,7 @@ TIMEOUT_SECONDS=60
 wait_for_service_mesh(){
   echo "Checking status of all service_mesh pre-reqs"
   SERVICEMESH_RESOURCES=(
-    crd/istio.sailoperator.io:condition=established
+    crd/istios.sailoperator.io:condition=established
   )
 
   for field in "${SERVICEMESH_RESOURCES[@]}"
