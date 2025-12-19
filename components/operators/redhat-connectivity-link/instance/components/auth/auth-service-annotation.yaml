@@ -4,4 +4,5 @@ metadata:
   name: authorino-authorino-authorization
   annotations:
     argocd.argoproj.io/sync-options: ServerSideApply=true
+    argocd.argoproj.io/sync-wave: "10"
     service.beta.openshift.io/serving-cert-secret-name: authorino-server-cert

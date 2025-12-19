@@ -2,6 +2,8 @@ apiVersion: operator.authorino.kuadrant.io/v1beta1
 kind: Authorino
 metadata:
   name: authorino
+  annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true
 spec:
   replicas: 1
   clusterWide: true
