@@ -1,0 +1,162 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: node-prep-automation
+  namespace: default
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: node-prep-automation
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+rules:
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["get", "list", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: node-prep-automation
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: node-prep-automation
+subjects:
+- kind: ServiceAccount
+  name: node-prep-automation
+  namespace: default
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: prepare-nodes-for-fab-rig
+  namespace: default
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      serviceAccountName: node-prep-automation
+      restartPolicy: OnFailure
+      containers:
+      - name: node-labeler-tainter
+        image: registry.redhat.io/openshift4/ose-cli:latest
+        command:
+        - /bin/bash
+        - -c
+        - |
+          set -e
+
+          echo "=== InfraBrig Deployer Node Preparation ==="
+          echo "This job automatically prepares nodes for InfraBrig Deployer deployment"
+          echo ""
+
+          # Label worker-only nodes (exclude nodes that are also masters/control-plane)
+          echo "Labeling worker-only nodes with fab-rig-deployer=true..."
+          # Get all nodes with worker role
+          ALL_WORKERS=$(oc get nodes -l node-role.kubernetes.io/worker -o jsonpath='{.items[*].metadata.name}')
+          # Get all nodes with master or control-plane role
+          MASTERS=$(oc get nodes -l node-role.kubernetes.io/master -o jsonpath='{.items[*].metadata.name}' 2>/dev/null || echo "")
+          CONTROL_PLANES=$(oc get nodes -l node-role.kubernetes.io/control-plane -o jsonpath='{.items[*].metadata.name}' 2>/dev/null || echo "")
+
+          # Filter out master/control-plane nodes from workers list
+          WORKERS=""
+          for node in $ALL_WORKERS; do
+            is_master=false
+            for master in $MASTERS $CONTROL_PLANES; do
+              if [ "$node" = "$master" ]; then
+                echo "  - Skipping $node (has master/control-plane role)"
+                is_master=true
+                break
+              fi
+            done
+            if [ "$is_master" = false ]; then
+              WORKERS="$WORKERS $node"
+            fi
+          done
+
+          if [ -z "$WORKERS" ]; then
+            echo "WARNING: No worker-only nodes found!"
+          else
+            for node in $WORKERS; do
+              # Check if label already exists
+              if oc get node $node -o jsonpath='{.metadata.labels.fab-rig-deployer}' | grep -q "true"; then
+                echo "  - $node already labeled (skipping)"
+              else
+                echo "  - Labeling $node"
+                oc label node $node fab-rig-deployer=true --overwrite
+                # Verify label was applied
+                if ! oc get node $node -o jsonpath='{.metadata.labels.fab-rig-deployer}' | grep -q "true"; then
+                  echo "ERROR: Failed to label $node"
+                  exit 1
+                fi
+              fi
+            done
+            echo "✓ Worker nodes labeled"
+          fi
+
+          echo ""
+
+          # Configure master/control-plane nodes
+          echo "Configuring master/control-plane nodes..."
+          MASTERS=$(oc get nodes -l node-role.kubernetes.io/master -o jsonpath='{.items[*].metadata.name}' 2>/dev/null || \
+                    oc get nodes -l node-role.kubernetes.io/control-plane -o jsonpath='{.items[*].metadata.name}' 2>/dev/null)
+
+          if [ -z "$MASTERS" ]; then
+            echo "WARNING: No master/control-plane nodes found!"
+          else
+            for node in $MASTERS; do
+              # Disable ALL GPU operator components on master nodes
+              # Uses nvidia.com/gpu.deploy.operands=false to disable ALL GPU operands
+              # (driver, toolkit, device-plugin, dcgm, etc.) with a single label.
+              # See: https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html
+
+              # Check if GPU operands label already set
+              if oc get node $node -o jsonpath='{.metadata.labels.nvidia\.com/gpu\.deploy\.operands}' | grep -q "false"; then
+                echo "  - $node: GPU operands already disabled (skipping)"
+              else
+                echo "  - $node: Disabling ALL GPU operator components"
+                oc label node $node nvidia.com/gpu.deploy.operands=false --overwrite
+                # Verify label was set
+                if ! oc get node $node -o jsonpath='{.metadata.labels.nvidia\.com/gpu\.deploy\.operands}' | grep -q "false"; then
+                  echo "ERROR: Failed to set nvidia.com/gpu.deploy.operands=false on $node"
+                  exit 1
+                fi
+              fi
+
+              # Check if MOFED labels already set
+              mofed_wait=$(oc get node $node -o jsonpath='{.metadata.labels.network\.nvidia\.com/operator\.mofed\.wait}' 2>/dev/null || echo "")
+              nic_config_wait=$(oc get node $node -o jsonpath='{.metadata.labels.network\.nvidia\.com/operator\.nic-configuration\.wait}' 2>/dev/null || echo "")
+
+              if [ "$mofed_wait" = "false" ] && [ "$nic_config_wait" = "false" ]; then
+                echo "  - $node: MOFED driver already disabled (skipping)"
+              else
+                echo "  - $node: Disabling MOFED driver"
+                oc label node $node network.nvidia.com/operator.mofed.wait=false --overwrite
+                oc label node $node network.nvidia.com/operator.nic-configuration.wait=false --overwrite
+              fi
+            done
+            echo "✓ Master/control-plane nodes configured (ALL GPU operands + MOFED driver disabled)"
+          fi
+
+          echo ""
+          echo "=== Node Preparation Complete ==="
+          echo ""
+          echo "Summary:"
+          echo "Workers (labeled with fab-rig-deployer=true):"
+          oc get nodes -l fab-rig-deployer=true -o custom-columns=NAME:.metadata.name,ROLES:.metadata.labels.node-role\\.kubernetes\\.io/worker
+          echo ""
+          echo "Masters/Control-Plane (GPU operands and MOFED drivers disabled):"
+          oc get nodes -l nvidia.com/gpu.deploy.operands=false -o custom-columns=NAME:.metadata.name,GPU_OPERANDS:.metadata.labels.nvidia\\.com/gpu\\.deploy\\.operands,MOFED_WAIT:.metadata.labels.network\\.nvidia\\.com/operator\\.mofed\\.wait

@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Use this overlay if you want the health monitor to run continuously
+# without auto-cleanup (for ongoing monitoring)
+
+resources:
+  - ../../base
+
+patches:
+  - path: disable-auto-cleanup-patch.yaml
+    target:
+      kind: CronJob
+      name: argocd-health-monitor

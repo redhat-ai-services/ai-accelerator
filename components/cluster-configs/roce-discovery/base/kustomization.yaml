@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: openshift-sriov-network-operator
+resources:
+  - rbac.yaml
+  - configmap-discovery-script.yaml
+  - daemonset-discovery.yaml
+  - configmap-monitor-script.yaml
+  - configmap-generator-script.yaml
+  - job-monitor.yaml
+  - job-generator.yaml

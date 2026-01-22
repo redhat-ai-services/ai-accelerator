@@ -1,0 +1,167 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: gpu-mofed-waiter
+  namespace: nvidia-gpu-operator
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: gpu-mofed-waiter
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["batch"]
+  resources: ["jobs"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["daemonsets"]
+  verbs: ["get", "list"]
+- apiGroups: ["mellanox.com"]
+  resources: ["nicclusterpolicies"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: gpu-mofed-waiter
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: gpu-mofed-waiter
+subjects:
+- kind: ServiceAccount
+  name: gpu-mofed-waiter
+  namespace: nvidia-gpu-operator
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: wait-for-mofed-before-gpu
+  namespace: nvidia-gpu-operator
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  backoffLimit: 30
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      serviceAccountName: gpu-mofed-waiter
+      restartPolicy: OnFailure
+      containers:
+      - name: wait-for-mofed
+        image: registry.redhat.io/openshift4/ose-cli:latest
+        command:
+        - /bin/bash
+        - -c
+        - |
+          set -e
+
+          echo "========================================"
+          echo "GPU Operator PreSync Hook"
+          echo "Waiting for MOFED drivers to be ready..."
+          echo "========================================"
+          echo ""
+
+          # Wait for NicClusterPolicy to exist
+          echo "[1/4] Checking for NicClusterPolicy..."
+          timeout=300
+          while [ $timeout -gt 0 ]; do
+            if oc get nicclusterpolicy nic-cluster-policy -n nvidia-network-operator-resources &>/dev/null; then
+              echo "✓ NicClusterPolicy exists"
+              break
+            fi
+            echo "  Waiting for NicClusterPolicy... ($timeout seconds left)"
+            sleep 5
+            timeout=$((timeout - 5))
+          done
+
+          if [ $timeout -le 0 ]; then
+            echo "✗ ERROR: NicClusterPolicy not found after 5 minutes"
+            exit 1
+          fi
+
+          # Wait for MOFED DaemonSet to be created
+          echo ""
+          echo "[2/4] Checking for MOFED DaemonSet..."
+          timeout=300
+          while [ $timeout -gt 0 ]; do
+            if oc get daemonset -n nvidia-network-operator-resources -l nvidia.com/ofed-driver &>/dev/null 2>&1; then
+              MOFED_DS=$(oc get daemonset -n nvidia-network-operator-resources -l nvidia.com/ofed-driver -o name 2>/dev/null | head -n1)
+              if [ -n "$MOFED_DS" ]; then
+                echo "✓ MOFED DaemonSet found: $MOFED_DS"
+                break
+              fi
+            fi
+            echo "  Waiting for MOFED DaemonSet... ($timeout seconds left)"
+            sleep 5
+            timeout=$((timeout - 5))
+          done
+
+          if [ $timeout -le 0 ]; then
+            echo "✗ ERROR: MOFED DaemonSet not found after 5 minutes"
+            exit 1
+          fi
+
+          # Wait for MOFED pods to exist
+          echo ""
+          echo "[3/4] Checking for MOFED pods..."
+          timeout=300
+          while [ $timeout -gt 0 ]; do
+            POD_COUNT=$(oc get pods -n nvidia-network-operator-resources -l nvidia.com/ofed-driver --no-headers 2>/dev/null | wc -l | tr -d ' ')
+            if [ "$POD_COUNT" -gt 0 ]; then
+              echo "✓ Found $POD_COUNT MOFED pod(s)"
+              break
+            fi
+            echo "  Waiting for MOFED pods... ($timeout seconds left)"
+            sleep 5
+            timeout=$((timeout - 5))
+          done
+
+          if [ $timeout -le 0 ]; then
+            echo "✗ ERROR: No MOFED pods found after 5 minutes"
+            exit 1
+          fi
+
+          # Wait for all MOFED pods to be Running and Ready (2/2 containers)
+          echo ""
+          echo "[4/4] Waiting for all MOFED pods to be Ready (2/2 containers)..."
+          echo "This may take several minutes while drivers compile and load..."
+          echo ""
+
+          oc wait --for=condition=Ready \
+            pods -n nvidia-network-operator-resources \
+            -l nvidia.com/ofed-driver \
+            --timeout=1200s
+
+          # Verify all pods are actually 2/2
+          echo ""
+          echo "Verifying MOFED pod readiness..."
+          NOT_READY=$(oc get pods -n nvidia-network-operator-resources -l nvidia.com/ofed-driver --no-headers | grep -v "2/2" | wc -l | tr -d ' ')
+
+          if [ "$NOT_READY" -gt 0 ]; then
+            echo "✗ ERROR: Some MOFED pods are not fully ready (2/2)"
+            oc get pods -n nvidia-network-operator-resources -l nvidia.com/ofed-driver
+            exit 1
+          fi
+
+          echo ""
+          echo "========================================"
+          echo "✓ All MOFED drivers are fully ready!"
+          echo "========================================"
+          echo ""
+          echo "MOFED pod status:"
+          oc get pods -n nvidia-network-operator-resources -l nvidia.com/ofed-driver
+          echo ""
+          echo "Proceeding with GPU Operator deployment..."

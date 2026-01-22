@@ -1,0 +1,50 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: baremetal-operators
+  namespace: openshift-gitops
+  annotations:
+    source_repo_url: ""
+    source_target_revision: ""
+spec:
+  generators:
+    - list:
+        elements:
+          - name: nvidia-network-operator
+            path: components/operators/nvidia-network-operator/operator
+            wave: "2"
+          - name: nvidia-network-operator-instance
+            path: components/operators/nvidia-network-operator/instance
+            wave: "3"
+          - name: sriov-network-operator
+            path: components/operators/sriov-network-operator/operator
+            wave: "1"
+          - name: sriov-network-operator-instance
+            path: components/operators/sriov-network-operator/instance
+            wave: "2"
+  template:
+    metadata:
+      name: 'baremetal-{{name}}'
+      annotations:
+        argocd.argoproj.io/sync-wave: '{{wave}}'
+    spec:
+      project: operators-config
+      source:
+        repoURL: '{{metadata.annotations.source_repo_url}}'
+        targetRevision: '{{metadata.annotations.source_target_revision}}'
+        path: '{{path}}/overlays/baremetal'
+      destination:
+        server: 'https://kubernetes.default.svc'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 10m
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true

@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: roce-port-discovery
+  namespace: openshift-sriov-network-operator
+  labels:
+    app: roce-port-discovery
+spec:
+  selector:
+    matchLabels:
+      app: roce-port-discovery
+  template:
+    metadata:
+      labels:
+        app: roce-port-discovery
+    spec:
+      hostNetwork: true
+      hostPID: true
+      nodeSelector:
+        # Only run on nodes with Mellanox/NVIDIA NICs
+        feature.node.kubernetes.io/pci-15b3.present: 'true'
+      tolerations:
+        - operator: Exists
+      serviceAccountName: roce-discovery-sa
+      initContainers:
+        - name: discover-ports
+          image: registry.access.redhat.com/ubi9/ubi:latest
+          command:
+            - /bin/bash
+            - -c
+            - |
+              echo "Installing pciutils..."
+              yum install -y pciutils &>/dev/null || dnf install -y pciutils &>/dev/null
+              echo "Running discovery script..."
+              /bin/bash /scripts/discover-roce-ports.sh
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: discovery-script
+              mountPath: /scripts
+            - name: host-sys
+              mountPath: /sys
+              readOnly: true
+            - name: discovery-output
+              mountPath: /discovery
+      containers:
+        - name: sleeper
+          image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+          command: ["sh", "-c", "echo 'Discovery complete. Check /discovery for results.'; sleep infinity"]
+          volumeMounts:
+            - name: discovery-output
+              mountPath: /discovery
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+      volumes:
+        - name: discovery-script
+          configMap:
+            name: roce-port-discovery-script
+            defaultMode: 0755
+        - name: host-sys
+          hostPath:
+            path: /sys
+            type: Directory
+        - name: discovery-output
+          hostPath:
+            path: /var/lib/roce-discovery
+            type: DirectoryOrCreate

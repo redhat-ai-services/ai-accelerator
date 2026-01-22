@@ -1,0 +1,123 @@
+---
+# Job to patch SR-IOV operator Deployment to run on worker nodes
+# Removes master nodeSelector so operator runs on workers, not masters
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sriov-operator-patcher
+  namespace: openshift-sriov-network-operator
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: sriov-operator-patcher
+  namespace: openshift-sriov-network-operator
+rules:
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: sriov-operator-patcher
+  namespace: openshift-sriov-network-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: sriov-operator-patcher
+subjects:
+- kind: ServiceAccount
+  name: sriov-operator-patcher
+  namespace: openshift-sriov-network-operator
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: patch-sriov-operator-scheduling
+  namespace: openshift-sriov-network-operator
+spec:
+  backoffLimit: 10
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      serviceAccountName: sriov-operator-patcher
+      restartPolicy: OnFailure
+      containers:
+      - name: patcher
+        image: registry.redhat.io/openshift4/ose-cli:latest
+        command:
+        - /bin/bash
+        - -c
+        - |
+          set -e
+
+          echo "=========================================="
+          echo "SR-IOV Operator Scheduling Patcher"
+          echo "=========================================="
+          echo ""
+
+          DEPLOYMENT_NAME="sriov-network-operator"
+          NAMESPACE="openshift-sriov-network-operator"
+          MAX_WAIT=600  # 10 minutes
+          INTERVAL=10
+
+          elapsed=0
+
+          echo "Waiting for SR-IOV operator Deployment to exist..."
+          while [ $elapsed -lt $MAX_WAIT ]; do
+            if oc get deployment $DEPLOYMENT_NAME -n $NAMESPACE >/dev/null 2>&1; then
+              echo "✓ Deployment found!"
+              break
+            fi
+
+            echo "  Waiting... (${elapsed}s / ${MAX_WAIT}s)"
+            sleep $INTERVAL
+            elapsed=$((elapsed + INTERVAL))
+          done
+
+          if [ $elapsed -ge $MAX_WAIT ]; then
+            echo "✗ Timeout: Deployment not found after ${MAX_WAIT}s"
+            exit 1
+          fi
+
+          echo ""
+          echo "Checking current nodeSelector..."
+
+          current_selector=$(oc get deployment $DEPLOYMENT_NAME -n $NAMESPACE \
+            -o jsonpath='{.spec.template.spec.nodeSelector}' 2>/dev/null || echo "{}")
+
+          echo "Current nodeSelector: $current_selector"
+
+          # Check if master nodeSelector exists
+          if ! echo "$current_selector" | grep -q "node-role.kubernetes.io/master"; then
+            echo "✓ Master nodeSelector not present. Operator can run on workers."
+            exit 0
+          fi
+
+          echo ""
+          echo "⚠️  Master nodeSelector found - operator forced to run on master nodes"
+          echo "Patching Deployment to remove master nodeSelector..."
+          echo ""
+
+          # Remove the master nodeSelector to allow scheduling on worker nodes
+          oc patch deployment $DEPLOYMENT_NAME -n $NAMESPACE --type=json -p='[
+            {
+              "op": "remove",
+              "path": "/spec/template/spec/nodeSelector/node-role.kubernetes.io~1master"
+            }
+          ]'
+
+          if [ $? -eq 0 ]; then
+            echo "✓ Master nodeSelector removed successfully!"
+            echo ""
+            echo "New nodeSelector:"
+            oc get deployment $DEPLOYMENT_NAME -n $NAMESPACE \
+              -o jsonpath='{.spec.template.spec.nodeSelector}' | jq '.'
+            echo ""
+            echo "✓ SR-IOV operator can now schedule on worker nodes"
+          else
+            echo "✗ Failed to patch Deployment"
+            exit 1
+          fi
