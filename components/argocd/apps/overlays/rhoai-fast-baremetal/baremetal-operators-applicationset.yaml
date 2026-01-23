@@ -10,6 +10,12 @@ spec:
   generators:
     - list:
         elements:
+          - name: nfd-operator
+            path: components/operators/nfd/operator
+            wave: "0"
+          - name: nfd-instance
+            path: components/operators/nfd/instance
+            wave: "1"
           - name: nvidia-network-operator
             path: components/operators/nvidia-network-operator/operator
             wave: "2"
