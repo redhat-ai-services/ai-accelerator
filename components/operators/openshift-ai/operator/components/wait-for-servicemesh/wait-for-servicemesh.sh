@@ -18,6 +18,8 @@ wait_for_service_mesh(){
     oc wait --for="${CONDITION}" "${RESOURCE}" --timeout="${TIMEOUT_SECONDS}s"
 
   done
+
+  sleep 60
 }
 
 wait_for_service_mesh
