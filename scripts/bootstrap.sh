@@ -53,7 +53,7 @@ install_gitops(){
     echo "$INSTALL_PLAN_NAME was found in the namespace $OPERATOR_NS"
 
     echo -n "Retrieving the CSV name: "
-    CSV_NAME=$(oc get ip $INSTALL_PLAN_NAME -n ${OPERATOR_NS} -o jsonpath='{.spec.clusterServiceVersionNames[0]}')
+    CSV_NAME=$(oc get installplans $INSTALL_PLAN_NAME -n ${OPERATOR_NS} -o jsonpath='{.spec.clusterServiceVersionNames[0]}')
     echo "$CSV_NAME"
 
     echo "Waiting for the GitOps Operator installation to complete..."
