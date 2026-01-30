@@ -1,0 +1,146 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: nic-policy-updater
+  namespace: nvidia-network-operator-resources
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: nic-policy-updater
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+rules:
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get"]
+  resourceNames: ["nvidia-network-operator-controller-manager"]
+- apiGroups: ["mellanox.com"]
+  resources: ["nicclusterpolicies"]
+  verbs: ["get", "create", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: nic-policy-updater
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: nic-policy-updater
+subjects:
+- kind: ServiceAccount
+  name: nic-policy-updater
+  namespace: nvidia-network-operator-resources
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: discover-ofed-version
+  namespace: nvidia-network-operator-resources
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  template:
+    spec:
+      serviceAccountName: nic-policy-updater
+      restartPolicy: OnFailure
+      containers:
+      - name: version-discoverer
+        image: registry.redhat.io/openshift4/ose-cli:latest
+        command:
+        - /bin/bash
+        - -c
+        - |
+          set -e
+
+          echo "Discovering NVIDIA Network Operator default OFED version..."
+
+          # Wait for operator deployment to exist
+          timeout=60
+          while [ $timeout -gt 0 ]; do
+            if oc get deployment nvidia-network-operator-controller-manager -n nvidia-network-operator-resources &>/dev/null; then
+              echo "Operator deployment found"
+              break
+            fi
+            echo "Waiting for operator deployment... ($timeout seconds left)"
+            sleep 5
+            timeout=$((timeout - 5))
+          done
+
+          # Extract default OFED version from operator deployment
+          VERSION=$(oc get deployment nvidia-network-operator-controller-manager \
+            -n nvidia-network-operator-resources -o yaml | \
+            grep -A 50 '"ofedDriver"' | grep '"version"' | head -1 | \
+            sed 's/.*"version": "\([^"]*\)".*/\1/')
+
+          if [ -z "$VERSION" ]; then
+            echo "ERROR: Could not discover OFED version from operator"
+            exit 1
+          fi
+
+          echo "Discovered OFED version: $VERSION"
+
+          # Check if NicClusterPolicy already exists with this version
+          EXISTING_VERSION=$(oc get nicclusterpolicy nic-cluster-policy -n nvidia-network-operator-resources \
+            -o jsonpath='{.spec.ofedDriver.version}' 2>/dev/null || echo "")
+
+          if [ "$EXISTING_VERSION" = "$VERSION" ]; then
+            echo "NicClusterPolicy already exists with correct version $VERSION - skipping"
+            exit 0
+          fi
+
+          if [ -n "$EXISTING_VERSION" ]; then
+            echo "NicClusterPolicy exists with version $EXISTING_VERSION, updating to $VERSION"
+          else
+            echo "Creating new NicClusterPolicy with version $VERSION"
+          fi
+
+          # Create or update NicClusterPolicy with discovered version
+          cat <<POLICY | oc apply -f -
+          apiVersion: mellanox.com/v1alpha1
+          kind: NicClusterPolicy
+          metadata:
+            name: nic-cluster-policy
+            namespace: nvidia-network-operator-resources
+          spec:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                - matchExpressions:
+                  - key: node-role.kubernetes.io/worker
+                    operator: Exists
+                  - key: node-role.kubernetes.io/master
+                    operator: DoesNotExist
+            ofedDriver:
+              image: doca-driver
+              repository: nvcr.io/nvidia/mellanox
+              version: $VERSION
+              env:
+                - name: UNLOAD_STORAGE_MODULES
+                  value: 'true'
+              livenessProbe:
+                initialDelaySeconds: 30
+                periodSeconds: 30
+              readinessProbe:
+                initialDelaySeconds: 10
+                periodSeconds: 30
+              startupProbe:
+                initialDelaySeconds: 10
+                periodSeconds: 20
+              terminationGracePeriodSeconds: 300
+              upgradePolicy:
+                autoUpgrade: true
+                drain:
+                  enable: true
+                  force: true
+                  deleteEmptyDir: true
+                  timeoutSeconds: 300
+                  podSelector: ''
+                maxParallelUpgrades: 2
+          POLICY
+
+          echo "NicClusterPolicy successfully configured with version: $VERSION"

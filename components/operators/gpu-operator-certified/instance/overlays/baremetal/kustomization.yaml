@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: nvidia-gpu-operator
+
+bases:
+  - ../../base
+
+resources:
+  - 00-wait-for-mofed.yaml
+  - kernel-module-params-configmap.yaml
+
+patchesStrategicMerge:
+  - cluster-policy-baremetal-patch.yaml

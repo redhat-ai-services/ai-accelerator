@@ -1,0 +1,78 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: baremetal-operators
+  namespace: openshift-gitops
+  annotations:
+    source_repo_url: "PLACEHOLDER"
+    source_target_revision: "PLACEHOLDER"
+spec:
+  generators:
+    - list:
+        elements:
+          - name: nfd-operator
+            path: components/operators/nfd/operator
+            wave: "0"
+            repoURL: "PLACEHOLDER"
+            targetRevision: "PLACEHOLDER"
+          - name: nfd-instance
+            path: components/operators/nfd/instance
+            wave: "1"
+            repoURL: "PLACEHOLDER"
+            targetRevision: "PLACEHOLDER"
+          - name: nvidia-network-operator
+            path: components/operators/nvidia-network-operator/operator
+            wave: "2"
+            repoURL: "PLACEHOLDER"
+            targetRevision: "PLACEHOLDER"
+          - name: nvidia-network-operator-instance
+            path: components/operators/nvidia-network-operator/instance
+            wave: "3"
+            repoURL: "PLACEHOLDER"
+            targetRevision: "PLACEHOLDER"
+          - name: sriov-network-operator
+            path: components/operators/sriov-network-operator/operator
+            wave: "1"
+            repoURL: "PLACEHOLDER"
+            targetRevision: "PLACEHOLDER"
+          - name: sriov-network-operator-instance
+            path: components/operators/sriov-network-operator/instance
+            wave: "2"
+            repoURL: "PLACEHOLDER"
+            targetRevision: "PLACEHOLDER"
+          - name: gpu-operator-certified
+            path: components/operators/gpu-operator-certified/operator
+            wave: "3"
+            repoURL: "PLACEHOLDER"
+            targetRevision: "PLACEHOLDER"
+          - name: gpu-operator-certified-instance
+            path: components/operators/gpu-operator-certified/instance
+            wave: "4"
+            repoURL: "PLACEHOLDER"
+            targetRevision: "PLACEHOLDER"
+  template:
+    metadata:
+      name: 'baremetal-{{name}}'
+      annotations:
+        argocd.argoproj.io/sync-wave: '{{wave}}'
+    spec:
+      project: operators-config
+      source:
+        repoURL: '{{repoURL}}'
+        targetRevision: '{{targetRevision}}'
+        path: '{{path}}/overlays/baremetal'
+      destination:
+        server: 'https://kubernetes.default.svc'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 10m
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true

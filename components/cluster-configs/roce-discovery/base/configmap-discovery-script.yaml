@@ -1,0 +1,99 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: roce-port-discovery-script
+  namespace: openshift-sriov-network-operator
+data:
+  discover-roce-ports.sh: |
+    #!/bin/bash
+    set -euo pipefail
+
+    echo "=== RoCE/SR-IOV Port Discovery Script ==="
+    echo "Discovering Mellanox/NVIDIA network adapters..."
+
+    # Output file for discovered ports
+    OUTPUT_FILE="/discovery/ports.json"
+
+    # Initialize JSON array
+    echo "[" > "$OUTPUT_FILE"
+
+    FIRST_ENTRY=true
+
+    # Find all Mellanox/NVIDIA NICs (vendor ID: 15b3)
+    for pci_addr in $(lspci -D -d 15b3: | grep -i 'network\|ethernet' | awk '{print $1}'); do
+      echo "Found device at PCI address: $pci_addr"
+
+      # Get device ID
+      device_id=$(lspci -n -s "$pci_addr" | awk '{print $3}' | cut -d':' -f2)
+
+      # Get device name
+      device_name=$(lspci -s "$pci_addr" | cut -d':' -f3- | xargs)
+
+      # Find the network interface name for this PCI address
+      # This works for both physical functions and virtual functions
+      net_path="/sys/bus/pci/devices/$pci_addr/net"
+
+      if [ -d "$net_path" ]; then
+        for iface in "$net_path"/*; do
+          if [ -d "$iface" ]; then
+            ifname=$(basename "$iface")
+
+            # Check if this is a physical function (has sriov_numvfs file)
+            if [ -f "/sys/class/net/$ifname/device/sriov_numvfs" ]; then
+              echo "  Physical Function: $ifname"
+
+              # Get current SR-IOV capability
+              sriov_totalvfs=$(cat "/sys/class/net/$ifname/device/sriov_totalvfs" 2>/dev/null || echo "0")
+
+              # Check if RDMA device exists
+              rdma_device=""
+              if [ -d "/sys/class/net/$ifname/device/infiniband" ]; then
+                rdma_device=$(ls "/sys/class/net/$ifname/device/infiniband" | head -1)
+                echo "  RDMA device: $rdma_device"
+              fi
+
+              # Get link status
+              link_status=$(cat "/sys/class/net/$ifname/operstate" 2>/dev/null || echo "unknown")
+
+              # Get MAC address
+              mac_addr=$(cat "/sys/class/net/$ifname/address" 2>/dev/null || echo "unknown")
+
+              # Add comma if not first entry
+              if [ "$FIRST_ENTRY" = false ]; then
+                echo "," >> "$OUTPUT_FILE"
+              fi
+              FIRST_ENTRY=false
+
+              # Write JSON entry using printf to avoid YAML parsing issues
+              printf '  {\n' >> "$OUTPUT_FILE"
+              printf '    "pciAddress": "%s",\n' "$pci_addr" >> "$OUTPUT_FILE"
+              printf '    "deviceID": "%s",\n' "$device_id" >> "$OUTPUT_FILE"
+              printf '    "deviceName": "%s",\n' "$device_name" >> "$OUTPUT_FILE"
+              printf '    "pfName": "%s",\n' "$ifname" >> "$OUTPUT_FILE"
+              printf '    "sriovCapable": true,\n' >> "$OUTPUT_FILE"
+              printf '    "sriovTotalVfs": %s,\n' "$sriov_totalvfs" >> "$OUTPUT_FILE"
+              printf '    "rdmaDevice": "%s",\n' "$rdma_device" >> "$OUTPUT_FILE"
+              printf '    "linkStatus": "%s",\n' "$link_status" >> "$OUTPUT_FILE"
+              printf '    "macAddress": "%s",\n' "$mac_addr" >> "$OUTPUT_FILE"
+              printf '    "vendor": "15b3"\n' >> "$OUTPUT_FILE"
+              printf '  }\n' >> "$OUTPUT_FILE"
+            fi
+          fi
+        done
+      fi
+    done
+
+    # Close JSON array
+    echo "" >> "$OUTPUT_FILE"
+    echo "]" >> "$OUTPUT_FILE"
+
+    echo "=== Discovery Complete ==="
+    echo "Discovered ports saved to $OUTPUT_FILE"
+    cat "$OUTPUT_FILE"
+
+    # Also save to a node-specific location using NODE_NAME env var
+    if [ -n "${NODE_NAME:-}" ]; then
+      NODE_OUTPUT="/discovery/${NODE_NAME}-ports.json"
+      cp "$OUTPUT_FILE" "$NODE_OUTPUT"
+      echo "Also saved to $NODE_OUTPUT"
+    fi

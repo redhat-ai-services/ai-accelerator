@@ -1,0 +1,14 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: argocd-health-monitor
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: health-monitor
+            env:
+            - name: DISABLE_AUTO_CLEANUP
+              value: "true"

@@ -1,0 +1,8 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: nvidia-network-operator-group
+  namespace: nvidia-network-operator-resources
+spec:
+  targetNamespaces:
+    - nvidia-network-operator-resources

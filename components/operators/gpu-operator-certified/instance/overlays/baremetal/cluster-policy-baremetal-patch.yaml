@@ -1,0 +1,24 @@
+apiVersion: nvidia.com/v1
+kind: ClusterPolicy
+metadata:
+  name: gpu-cluster-policy
+spec:
+  driver:
+    # Enable RDMA support for GPU Direct
+    rdma:
+      enabled: true
+      useHostMofed: false  # Use Network Operator's MOFED
+    # Build drivers instead of using precompiled
+    usePrecompiled: false
+    # Reference kernel module params ConfigMap
+    kernelModuleConfig:
+      name: 'kernel-module-params'
+  # Enable GPUDirect Copy
+  gdrcopy:
+    enabled: true
+  # Set MIG strategy to none for baremetal (can be overridden per-cluster)
+  mig:
+    strategy: none
+  # Disable MIG manager for default baremetal deployment
+  migManager:
+    enabled: false

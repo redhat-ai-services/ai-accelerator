@@ -1,0 +1,237 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sriov-node-monitor-script
+  namespace: openshift-sriov-network-operator
+data:
+  monitor-nodes.sh: |
+    #!/bin/bash
+    set -euo pipefail
+
+    echo "========================================"
+    echo "SR-IOV Node Configuration Monitor"
+    echo "========================================"
+    echo ""
+    echo "Monitoring SR-IOV configuration progress across all nodes..."
+    echo "This process can take up to 60 minutes per node."
+    echo ""
+
+    # Configuration
+    CHECK_INTERVAL=${CHECK_INTERVAL:-10}
+    TIMEOUT=${TIMEOUT:-7200}  # 2 hours default timeout
+    START_TIME=$(date +%s)
+
+    # Function to get node state
+    get_node_state() {
+      local node=$1
+      oc get sriovnetworknodestate "$node" -n openshift-sriov-network-operator -o jsonpath='{.status.syncStatus}' 2>/dev/null || echo "Unknown"
+    }
+
+    # Function to get last sync error
+    get_sync_error() {
+      local node=$1
+      oc get sriovnetworknodestate "$node" -n openshift-sriov-network-operator -o jsonpath='{.status.lastSyncError}' 2>/dev/null || echo ""
+    }
+
+    # Function to check if node is draining
+    is_draining() {
+      local node=$1
+      oc get node "$node" -o jsonpath='{.spec.unschedulable}' 2>/dev/null || echo "false"
+    }
+
+    # Function to check if node is ready
+    is_ready() {
+      local node=$1
+      oc get node "$node" -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}' 2>/dev/null || echo "Unknown"
+    }
+
+    # Get all nodes with SR-IOV NICs
+    echo "📡 Discovering nodes with SR-IOV capable NICs..."
+    NODES=$(oc get nodes -l 'feature.node.kubernetes.io/pci-15b3.present=true' -o jsonpath='{.items[*].metadata.name}')
+
+    if [ -z "$NODES" ]; then
+      echo "⚠️  No nodes found with label 'feature.node.kubernetes.io/pci-15b3.present=true'"
+      echo "Waiting for Node Feature Discovery to label nodes..."
+      exit 1
+    fi
+
+    NODE_ARRAY=($NODES)
+    TOTAL_NODES=${#NODE_ARRAY[@]}
+
+    echo "✓ Found $TOTAL_NODES nodes with SR-IOV NICs:"
+    for node in "${NODE_ARRAY[@]}"; do
+      echo "  - $node"
+    done
+    echo ""
+
+    # Wait for policies to be created (they may not exist yet on first run)
+    echo "🔍 Checking for SriovNetworkNodePolicy resources..."
+    POLICY_COUNT=$(oc get sriovnetworknodepolicy -n openshift-sriov-network-operator --no-headers 2>/dev/null | wc -l || echo "0")
+
+    if [ "$POLICY_COUNT" -eq 0 ]; then
+      echo "⚠️  No SriovNetworkNodePolicy resources found yet."
+      echo "Waiting for SR-IOV resource generator to create policies..."
+      echo ""
+
+      POLICY_WAIT_TIMEOUT=600  # 10 minutes to wait for policies to be created
+      POLICY_WAIT_ELAPSED=0
+
+      while [ "$POLICY_COUNT" -eq 0 ] && [ $POLICY_WAIT_ELAPSED -lt $POLICY_WAIT_TIMEOUT ]; do
+        sleep 10
+        POLICY_WAIT_ELAPSED=$((POLICY_WAIT_ELAPSED + 10))
+        POLICY_COUNT=$(oc get sriovnetworknodepolicy -n openshift-sriov-network-operator --no-headers 2>/dev/null | wc -l || echo "0")
+
+        if [ $((POLICY_WAIT_ELAPSED % 60)) -eq 0 ]; then
+          echo "Still waiting for policies... ($((POLICY_WAIT_TIMEOUT - POLICY_WAIT_ELAPSED)) seconds remaining)"
+        fi
+      done
+
+      if [ "$POLICY_COUNT" -eq 0 ]; then
+        echo ""
+        echo "❌ ERROR: No policies were created after waiting $((POLICY_WAIT_TIMEOUT / 60)) minutes"
+        echo "This likely indicates the SR-IOV resource generator job failed."
+        echo "Check the generator job logs for details."
+        exit 1
+      fi
+
+      echo "✓ Policies have been created, proceeding with monitoring..."
+      echo ""
+    fi
+
+    echo "📋 Found $POLICY_COUNT SriovNetworkNodePolicy resources"
+    echo ""
+
+    # Monitoring loop
+    ITERATION=0
+    ALL_READY=false
+
+    while [ "$ALL_READY" = false ]; do
+      ITERATION=$((ITERATION + 1))
+      CURRENT_TIME=$(date +%s)
+      ELAPSED=$((CURRENT_TIME - START_TIME))
+      ELAPSED_MIN=$((ELAPSED / 60))
+
+      # Check timeout
+      if [ $ELAPSED -gt $TIMEOUT ]; then
+        echo ""
+        echo "❌ Timeout reached after $ELAPSED_MIN minutes"
+        echo "Not all nodes completed SR-IOV configuration."
+        exit 1
+      fi
+
+      # Clear screen for better readability (optional)
+      # clear
+
+      echo "========================================"
+      echo "SR-IOV Configuration Progress"
+      echo "Time elapsed: ${ELAPSED_MIN}m $(($ELAPSED % 60))s"
+      echo "Iteration: $ITERATION"
+      echo "========================================"
+      echo ""
+
+      READY_COUNT=0
+      IN_PROGRESS_COUNT=0
+      FAILED_COUNT=0
+      UNKNOWN_COUNT=0
+
+      # Table header
+      printf "%-30s %-15s %-12s %-10s %s\n" "NODE" "SYNC STATUS" "SCHEDULABLE" "READY" "LAST ERROR"
+      printf "%-30s %-15s %-12s %-10s %s\n" "----" "-----------" "-----------" "-----" "----------"
+
+      for node in "${NODE_ARRAY[@]}"; do
+        sync_status=$(get_node_state "$node")
+        draining=$(is_draining "$node")
+        ready=$(is_ready "$node")
+        last_error=$(get_sync_error "$node")
+
+        # Determine schedulable status
+        if [ "$draining" = "true" ]; then
+          schedulable="Draining"
+        else
+          schedulable="Schedulable"
+        fi
+
+        # Count status
+        case "$sync_status" in
+          Succeeded)
+            READY_COUNT=$((READY_COUNT + 1))
+            ;;
+          InProgress)
+            IN_PROGRESS_COUNT=$((IN_PROGRESS_COUNT + 1))
+            ;;
+          Failed)
+            FAILED_COUNT=$((FAILED_COUNT + 1))
+            ;;
+          *)
+            UNKNOWN_COUNT=$((UNKNOWN_COUNT + 1))
+            ;;
+        esac
+
+        # Format last error (truncate if too long)
+        if [ -n "$last_error" ]; then
+          error_display="${last_error:0:40}..."
+        else
+          error_display="-"
+        fi
+
+        # Print row
+        printf "%-30s %-15s %-12s %-10s %s\n" \
+          "${node:0:30}" \
+          "$sync_status" \
+          "$schedulable" \
+          "$ready" \
+          "$error_display"
+      done
+
+      echo ""
+      echo "Summary:"
+      echo "  ✓ Ready:       $READY_COUNT / $TOTAL_NODES"
+      echo "  ⏳ In Progress: $IN_PROGRESS_COUNT / $TOTAL_NODES"
+      echo "  ❌ Failed:      $FAILED_COUNT / $TOTAL_NODES"
+      echo "  ❓ Unknown:     $UNKNOWN_COUNT / $TOTAL_NODES"
+      echo ""
+
+      # Check if all nodes are ready
+      if [ $READY_COUNT -eq $TOTAL_NODES ]; then
+        ALL_READY=true
+        echo "✅ All nodes completed SR-IOV configuration successfully!"
+        echo ""
+        echo "Total time: ${ELAPSED_MIN}m $(($ELAPSED % 60))s"
+        echo ""
+
+        # Show final device state on each node
+        echo "Final SR-IOV device state:"
+        echo ""
+        for node in "${NODE_ARRAY[@]}"; do
+          echo "Node: $node"
+          oc get sriovnetworknodestate "$node" -n openshift-sriov-network-operator \
+            -o jsonpath='{range .status.interfaces[*]}  - {.name}: {.numVfs} VFs{"\n"}{end}' 2>/dev/null || echo "  Unable to get interface details"
+          echo ""
+        done
+
+        exit 0
+      fi
+
+      # Check for failures
+      if [ $FAILED_COUNT -gt 0 ]; then
+        echo "⚠️  Warning: $FAILED_COUNT node(s) failed SR-IOV configuration"
+        echo ""
+        echo "Failed nodes details:"
+        for node in "${NODE_ARRAY[@]}"; do
+          sync_status=$(get_node_state "$node")
+          if [ "$sync_status" = "Failed" ]; then
+            echo "  Node: $node"
+            last_error=$(get_sync_error "$node")
+            if [ -n "$last_error" ]; then
+              echo "  Error: $last_error"
+            fi
+            echo ""
+          fi
+        done
+      fi
+
+      # Wait before next check
+      echo "Next check in ${CHECK_INTERVAL} seconds..."
+      echo ""
+      sleep $CHECK_INTERVAL
+    done

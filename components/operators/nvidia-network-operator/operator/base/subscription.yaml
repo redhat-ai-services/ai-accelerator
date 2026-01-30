@@ -1,0 +1,11 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: nvidia-network-operator
+  namespace: nvidia-network-operator-resources
+spec:
+  channel: v25.10
+  name: nvidia-network-operator
+  source: certified-operators
+  sourceNamespace: openshift-marketplace
+  installPlanApproval: Automatic

@@ -1,0 +1,49 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sriov-node-monitor
+  namespace: openshift-sriov-network-operator
+  labels:
+    app: sriov-node-monitor
+spec:
+  template:
+    metadata:
+      labels:
+        app: sriov-node-monitor
+    spec:
+      restartPolicy: OnFailure
+      serviceAccountName: roce-discovery-sa
+      securityContext:
+        runAsUser: 0
+      containers:
+        - name: monitor
+          image: registry.access.redhat.com/ubi9/ubi:latest
+          command:
+            - /bin/bash
+            - -c
+            - |
+              dnf install -y wget tar gzip && \
+              wget -q https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz && \
+              tar -xzf openshift-client-linux.tar.gz -C /usr/local/bin/ oc kubectl && \
+              rm openshift-client-linux.tar.gz && \
+              /bin/bash /scripts/monitor-nodes.sh
+          env:
+            - name: CHECK_INTERVAL
+              value: "10"  # Check every 10 seconds
+            - name: TIMEOUT
+              value: "7200"  # 2 hour timeout
+          volumeMounts:
+            - name: monitor-script
+              mountPath: /scripts
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+      volumes:
+        - name: monitor-script
+          configMap:
+            name: sriov-node-monitor-script
+            defaultMode: 0755

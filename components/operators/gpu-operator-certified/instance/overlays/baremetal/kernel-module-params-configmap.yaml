@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kernel-module-params
+  namespace: nvidia-gpu-operator
+data:
+  nvidia.conf: |-
+    NVreg_RegistryDwords="PeerMappingOverride=1;"
+    NVreg_EnableStreamMemOPs=1

@@ -1,0 +1,774 @@
+---
+# ArgoCD Health Monitor - Self-Healing for Stuck Operations
+# Automatically detects and clears stuck sync operations to prevent deployment hangs
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argocd-health-monitor
+  namespace: openshift-gitops
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: argocd-health-monitor
+  namespace: openshift-gitops
+rules:
+- apiGroups: ["argoproj.io"]
+  resources: ["applications"]
+  verbs: ["get", "list", "patch"]
+- apiGroups: ["batch"]
+  resources: ["cronjobs"]
+  verbs: ["get", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: argocd-health-monitor-jobs
+rules:
+- apiGroups: ["batch"]
+  resources: ["jobs"]
+  verbs: ["get", "list", "patch"]
+- apiGroups: ["operators.coreos.com"]
+  resources: ["clusterserviceversions", "subscriptions", "installplans"]
+  verbs: ["get", "list", "delete", "patch"]
+- apiGroups: [""]
+  resources: ["pods", "namespaces"]
+  verbs: ["get", "list"]
+- apiGroups: ["sriovnetwork.openshift.io"]
+  resources: ["sriovoperatorconfigs", "sriovnetworknodepolicies", "sriovnetworks"]
+  verbs: ["get", "list", "patch"]
+- apiGroups: ["mellanox.com"]
+  resources: ["nicclusterpolicies"]
+  verbs: ["get", "list", "patch"]
+- apiGroups: ["nvidia.com"]
+  resources: ["clusterpolicies"]
+  verbs: ["get", "list", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: argocd-health-monitor
+  namespace: openshift-gitops
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: argocd-health-monitor
+subjects:
+- kind: ServiceAccount
+  name: argocd-health-monitor
+  namespace: openshift-gitops
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: argocd-health-monitor-jobs
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: argocd-health-monitor-jobs
+subjects:
+- kind: ServiceAccount
+  name: argocd-health-monitor
+  namespace: openshift-gitops
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: argocd-health-monitor
+  namespace: openshift-gitops
+spec:
+  schedule: "*/2 * * * *"  # Every 2 minutes
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      ttlSecondsAfterFinished: 300
+      template:
+        spec:
+          serviceAccountName: argocd-health-monitor
+          restartPolicy: Never
+          containers:
+          - name: health-monitor
+            image: registry.redhat.io/openshift4/ose-cli:latest
+            command:
+            - /bin/bash
+            - -c
+            - |
+              set -e
+
+              echo "========================================"
+              echo "ArgoCD Health Monitor"
+              echo "Checking for stuck sync operations..."
+              echo "========================================"
+              echo ""
+
+              # Helper function to convert ISO 8601 timestamp to Unix epoch
+              # Busybox date doesn't support -d flag, so use Python instead
+              iso_to_epoch() {
+                python3 -c "import datetime; print(int(datetime.datetime.strptime('$1', '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=datetime.timezone.utc).timestamp()))"
+              }
+
+              # Maximum age for a sync operation before considered stuck (3 minutes)
+              MAX_AGE_SECONDS=180
+              CURRENT_TIME=$(date +%s)
+
+              stuck_count=0
+              cleared_count=0
+
+              # Get all Applications
+              apps=$(oc get application -n openshift-gitops -o name 2>/dev/null || echo "")
+
+              if [ -z "$apps" ]; then
+                echo "No Applications found. Exiting."
+                exit 0
+              fi
+
+              for app in $apps; do
+                app_name=$(echo $app | cut -d'/' -f2)
+
+                # Check if operation is running
+                operation_phase=$(oc get $app -n openshift-gitops -o jsonpath='{.status.operationState.phase}' 2>/dev/null || echo "")
+
+                if [ "$operation_phase" = "Running" ]; then
+                  # Get operation start time
+                  start_time=$(oc get $app -n openshift-gitops -o jsonpath='{.status.operationState.startedAt}' 2>/dev/null || echo "")
+
+                  if [ -n "$start_time" ]; then
+                    # Convert ISO 8601 timestamp to epoch
+                    start_epoch=$(iso_to_epoch "$start_time" 2>/dev/null || echo "0")
+                    age=$((CURRENT_TIME - start_epoch))
+
+                    if [ $age -gt $MAX_AGE_SECONDS ]; then
+                      stuck_count=$((stuck_count + 1))
+                      echo "⚠️  STUCK: $app_name - Running for ${age}s (> ${MAX_AGE_SECONDS}s)"
+                      echo "   Start time: $start_time"
+
+                      # Get operation message for logging
+                      operation_msg=$(oc get $app -n openshift-gitops -o jsonpath='{.status.operationState.message}' 2>/dev/null || echo "")
+                      if [ -n "$operation_msg" ]; then
+                        echo "   Message: $operation_msg"
+                      fi
+
+                      # Clear the stuck operation
+                      echo "   → Clearing stuck operation..."
+                      if oc patch $app -n openshift-gitops --type json -p='[{"op": "remove", "path": "/status/operationState"}]' 2>/dev/null; then
+                        cleared_count=$((cleared_count + 1))
+                        echo "   ✓ Cleared successfully"
+                      else
+                        echo "   ✗ Failed to clear (application may have been deleted)"
+                      fi
+                      echo ""
+                    else
+                      echo "✓ OK: $app_name - Running for ${age}s (< ${MAX_AGE_SECONDS}s)"
+                    fi
+                  fi
+                fi
+              done
+
+              echo ""
+              echo "========================================"
+              echo "Checking for stuck ArgoCD hook Jobs..."
+              echo "========================================"
+              echo ""
+
+              stuck_hooks=0
+              cleared_hooks=0
+
+              # Find all Jobs with ArgoCD hook annotations across all namespaces
+              hook_jobs=$(oc get jobs -A -o jsonpath='{range .items[?(@.metadata.annotations.argocd\.argoproj\.io/hook)]}{.metadata.namespace}{"/"}{.metadata.name}{"\n"}{end}' 2>/dev/null || echo "")
+
+              if [ -n "$hook_jobs" ]; then
+                for job_ref in $hook_jobs; do
+                  namespace=$(echo $job_ref | cut -d'/' -f1)
+                  job_name=$(echo $job_ref | cut -d'/' -f2)
+
+                  # Check if Job has hook finalizer
+                  has_finalizer=$(oc get job $job_name -n $namespace -o jsonpath='{.metadata.finalizers}' 2>/dev/null | grep -c "argocd.argoproj.io/hook-finalizer" || echo "0")
+
+                  if [ "$has_finalizer" -gt 0 ]; then
+                    # Check Job status and age
+                    job_status=$(oc get job $job_name -n $namespace -o jsonpath='{.status.conditions[0].type}' 2>/dev/null || echo "")
+                    deletion_timestamp=$(oc get job $job_name -n $namespace -o jsonpath='{.metadata.deletionTimestamp}' 2>/dev/null || echo "")
+                    creation_timestamp=$(oc get job $job_name -n $namespace -o jsonpath='{.metadata.creationTimestamp}' 2>/dev/null || echo "")
+
+                    # If Job is terminating
+                    if [ -n "$deletion_timestamp" ]; then
+                      deletion_epoch=$(iso_to_epoch "$deletion_timestamp" 2>/dev/null || echo "0")
+                      age=$((CURRENT_TIME - deletion_epoch))
+
+                      if [ $age -gt $MAX_AGE_SECONDS ]; then
+                        stuck_hooks=$((stuck_hooks + 1))
+                        echo "⚠️  STUCK HOOK: $namespace/$job_name"
+                        echo "   Status: Terminating for ${age}s (> ${MAX_AGE_SECONDS}s)"
+                        echo "   Deletion timestamp: $deletion_timestamp"
+                        echo "   → Removing hook finalizer..."
+
+                        if oc patch job $job_name -n $namespace -p '{"metadata":{"finalizers":[]}}' --type=merge 2>/dev/null; then
+                          cleared_hooks=$((cleared_hooks + 1))
+                          echo "   ✓ Finalizer removed"
+                        else
+                          echo "   ✗ Failed to remove finalizer"
+                        fi
+                        echo ""
+                      fi
+
+                    # If Job is completed/failed but stuck with finalizer for > 5 min
+                    elif [ "$job_status" = "Complete" ] || [ "$job_status" = "Failed" ]; then
+                      if [ -n "$creation_timestamp" ]; then
+                        creation_epoch=$(iso_to_epoch "$creation_timestamp" 2>/dev/null || echo "0")
+                        age=$((CURRENT_TIME - creation_epoch))
+
+                        if [ $age -gt $MAX_AGE_SECONDS ]; then
+                          stuck_hooks=$((stuck_hooks + 1))
+                          echo "⚠️  STUCK HOOK: $namespace/$job_name"
+                          echo "   Status: $job_status with finalizer for ${age}s (> ${MAX_AGE_SECONDS}s)"
+                          echo "   → Removing hook finalizer to allow deletion..."
+
+                          if oc patch job $job_name -n $namespace -p '{"metadata":{"finalizers":[]}}' --type=merge 2>/dev/null; then
+                            cleared_hooks=$((cleared_hooks + 1))
+                            echo "   ✓ Finalizer removed"
+                          else
+                            echo "   ✗ Failed to remove finalizer"
+                          fi
+                          echo ""
+                        fi
+                      fi
+                    fi
+                  fi
+                done
+              else
+                echo "✓ No ArgoCD hook Jobs found"
+              fi
+
+              echo ""
+              echo "========================================"
+              echo "Checking for Applications with failed PreSync hooks..."
+              echo "========================================"
+              echo ""
+
+              failed_presync=0
+              retriggered=0
+
+              # Find Applications that are Synced but have SyncFailed resources (PreSync hook failure)
+              for app in $apps; do
+                app_name=$(echo $app | cut -d'/' -f2)
+
+                # Check if app is Synced and has SyncFailed resources
+                sync_status=$(oc get $app -n openshift-gitops -o jsonpath='{.status.sync.status}' 2>/dev/null || echo "")
+                has_sync_failed=$(oc get $app -n openshift-gitops -o jsonpath='{.status.resources[?(@.status=="SyncFailed")].name}' 2>/dev/null || echo "")
+
+                if [ "$sync_status" = "Synced" ] && [ -n "$has_sync_failed" ]; then
+                  failed_presync=$((failed_presync + 1))
+                  echo "⚠️  FAILED PRESYNC: $app_name has SyncFailed resources"
+                  echo "   → Retriggering sync to retry PreSync hooks..."
+
+                  if oc -n openshift-gitops patch $app --type merge -p '{"operation":{"initiatedBy":{"username":"health-monitor"},"sync":{"syncOptions":["ServerSideApply=true"],"prune":true}}}' 2>/dev/null; then
+                    retriggered=$((retriggered + 1))
+                    echo "   ✓ Sync retriggered"
+                  else
+                    echo "   ✗ Failed to retrigger sync"
+                  fi
+                  echo ""
+                fi
+              done
+
+              if [ $failed_presync -eq 0 ]; then
+                echo "✓ No failed PreSync hooks detected"
+              fi
+
+              echo ""
+              echo "========================================"
+              echo "Checking for pods stuck in Pending state..."
+              echo "========================================"
+              echo ""
+
+              # Check if SR-IOV nodes are being reconfigured (can take up to 60 min per node)
+              # This causes expected pod pending states during drain and should suppress warnings
+              SRIOV_RECONFIG_ACTIVE=false
+              if oc get namespace openshift-sriov-network-operator &>/dev/null; then
+                INPROGRESS_NODES=$(oc get sriovnetworknodestate -n openshift-sriov-network-operator -o jsonpath='{.items[?(@.status.syncStatus=="InProgress")].metadata.name}' 2>/dev/null || echo "")
+                if [ -n "$INPROGRESS_NODES" ]; then
+                  SRIOV_RECONFIG_ACTIVE=true
+                  NODE_COUNT=$(echo "$INPROGRESS_NODES" | wc -w)
+                  echo "ℹ️  SR-IOV node reconfiguration in progress ($NODE_COUNT node(s)):"
+                  for node in $INPROGRESS_NODES; do
+                    echo "   - $node"
+                  done
+                  echo ""
+                  echo "Pods may be pending during node drain (normal for up to 60 min per node)."
+                  echo "Suppressing stuck pod warnings during SR-IOV reconfiguration."
+                  echo ""
+                fi
+              fi
+
+              stuck_pods=0
+
+              # Find pods stuck in Pending for > 3 minutes
+              pending_pods=$(oc get pods -A -o jsonpath='{range .items[?(@.status.phase=="Pending")]}{.metadata.namespace}{"/"}{.metadata.name}{" "}{.metadata.creationTimestamp}{"\n"}{end}' 2>/dev/null || echo "")
+
+              if [ -n "$pending_pods" ]; then
+                while IFS= read -r pod_info; do
+                  if [ -z "$pod_info" ]; then continue; fi
+
+                  pod_ref=$(echo "$pod_info" | awk '{print $1}')
+                  creation_time=$(echo "$pod_info" | awk '{print $2}')
+                  namespace=$(echo "$pod_ref" | cut -d'/' -f1)
+                  pod_name=$(echo "$pod_ref" | cut -d'/' -f2)
+
+                  creation_epoch=$(iso_to_epoch "$creation_time" 2>/dev/null || echo "0")
+                  age=$((CURRENT_TIME - creation_epoch))
+
+                  if [ $age -gt $MAX_AGE_SECONDS ]; then
+                    # Skip warning if SR-IOV reconfiguration is active (pods pending during drain is expected)
+                    if [ "$SRIOV_RECONFIG_ACTIVE" = true ]; then
+                      continue
+                    fi
+
+                    stuck_pods=$((stuck_pods + 1))
+
+                    # Get scheduling failure reason
+                    reason=$(oc get pod $pod_name -n $namespace -o jsonpath='{.status.conditions[?(@.type=="PodScheduled")].message}' 2>/dev/null || echo "")
+
+                    echo "⚠️  STUCK POD: $namespace/$pod_name"
+                    echo "   Age: ${age}s (> ${MAX_AGE_SECONDS}s)"
+                    if [ -n "$reason" ]; then
+                      echo "   Reason: $reason"
+                    fi
+                    echo "   ⚠ Manual intervention may be required"
+                    echo ""
+                  fi
+                done <<< "$pending_pods"
+              fi
+
+              if [ $stuck_pods -eq 0 ]; then
+                if [ "$SRIOV_RECONFIG_ACTIVE" = true ]; then
+                  echo "✓ Stuck pod warnings suppressed during SR-IOV reconfiguration"
+                else
+                  echo "✓ No pods stuck in Pending state"
+                fi
+              fi
+
+              echo ""
+              echo "========================================"
+              echo "Checking for stuck OLM operators (CSVs)..."
+              echo "========================================"
+              echo ""
+
+              # Maximum age for CSV in Pending before auto-repair (5 minutes)
+              CSV_MAX_AGE_SECONDS=300
+              stuck_csvs=0
+              deleted_csvs=0
+
+              # Find all CSVs stuck in Pending phase across all namespaces
+              pending_csvs=$(oc get csv -A -o jsonpath='{range .items[?(@.status.phase=="Pending")]}{.metadata.namespace}{"/"}{.metadata.name}{" "}{.metadata.creationTimestamp}{"\n"}{end}' 2>/dev/null || echo "")
+
+              if [ -n "$pending_csvs" ]; then
+                while IFS= read -r csv_info; do
+                  if [ -z "$csv_info" ]; then continue; fi
+
+                  csv_ref=$(echo "$csv_info" | awk '{print $1}')
+                  creation_time=$(echo "$csv_info" | awk '{print $2}')
+                  namespace=$(echo "$csv_ref" | cut -d'/' -f1)
+                  csv_name=$(echo "$csv_ref" | cut -d'/' -f2)
+
+                  creation_epoch=$(iso_to_epoch "$creation_time" 2>/dev/null || echo "0")
+                  age=$((CURRENT_TIME - creation_epoch))
+
+                  if [ $age -gt $CSV_MAX_AGE_SECONDS ]; then
+                    stuck_csvs=$((stuck_csvs + 1))
+
+                    # Get CSV status reason
+                    reason=$(oc get csv $csv_name -n $namespace -o jsonpath='{.status.conditions[?(@.phase=="Pending")].reason}' 2>/dev/null || echo "")
+                    message=$(oc get csv $csv_name -n $namespace -o jsonpath='{.status.conditions[?(@.phase=="Pending")].message}' 2>/dev/null || echo "")
+
+                    echo "⚠️  STUCK CSV: $namespace/$csv_name"
+                    echo "   Age: ${age}s (> ${CSV_MAX_AGE_SECONDS}s)"
+                    echo "   Phase: Pending"
+                    if [ -n "$reason" ]; then
+                      echo "   Reason: $reason"
+                    fi
+                    if [ -n "$message" ]; then
+                      echo "   Message: $message"
+                    fi
+                    echo "   → Deleting CSV to force OLM to retry..."
+
+                    if oc delete csv $csv_name -n $namespace --ignore-not-found=true 2>/dev/null; then
+                      deleted_csvs=$((deleted_csvs + 1))
+                      echo "   ✓ CSV deleted. OLM will recreate from Subscription."
+                    else
+                      echo "   ✗ Failed to delete CSV"
+                    fi
+                    echo ""
+                  fi
+                done <<< "$pending_csvs"
+              fi
+
+              if [ $stuck_csvs -eq 0 ]; then
+                echo "✓ No CSVs stuck in Pending state"
+              fi
+
+              echo ""
+              echo "========================================"
+              echo "Checking for broken OLM Subscriptions..."
+              echo "========================================"
+              echo ""
+
+              broken_subs=0
+              fixed_subs=0
+
+              # Find Subscriptions in UpgradePending state referencing deleted InstallPlans
+              subscriptions=$(oc get subscription -A -o jsonpath='{range .items[?(@.status.state=="UpgradePending")]}{.metadata.namespace}{"/"}{.metadata.name}{" "}{.status.installPlanRef.name}{"\n"}{end}' 2>/dev/null || echo "")
+
+              if [ -n "$subscriptions" ]; then
+                while IFS= read -r sub_info; do
+                  if [ -z "$sub_info" ]; then continue; fi
+
+                  sub_ref=$(echo "$sub_info" | awk '{print $1}')
+                  installplan_name=$(echo "$sub_info" | awk '{print $2}')
+                  namespace=$(echo "$sub_ref" | cut -d'/' -f1)
+                  sub_name=$(echo "$sub_ref" | cut -d'/' -f2)
+
+                  # Check if referenced InstallPlan exists
+                  if [ -n "$installplan_name" ]; then
+                    ip_exists=$(oc get installplan $installplan_name -n $namespace 2>/dev/null || echo "")
+
+                    if [ -z "$ip_exists" ]; then
+                      broken_subs=$((broken_subs + 1))
+
+                      echo "⚠️  BROKEN SUBSCRIPTION: $namespace/$sub_name"
+                      echo "   State: UpgradePending"
+                      echo "   References deleted InstallPlan: $installplan_name"
+                      echo "   → Deleting Subscription to force fresh OLM reconciliation..."
+
+                      if oc delete subscription $sub_name -n $namespace 2>/dev/null; then
+                        fixed_subs=$((fixed_subs + 1))
+                        echo "   ✓ Subscription deleted. ArgoCD will recreate from Application."
+                      else
+                        echo "   ✗ Failed to delete Subscription"
+                      fi
+                      echo ""
+                    fi
+                  fi
+                done <<< "$subscriptions"
+              fi
+
+              if [ $broken_subs -eq 0 ]; then
+                echo "✓ No broken Subscriptions detected"
+              fi
+
+              echo ""
+              echo "========================================"
+              echo "Checking SR-IOV infrastructure health..."
+              echo "========================================"
+              echo ""
+
+              sriov_issues=0
+              sriov_fixed=0
+
+              # Check if SR-IOV operator is deployed
+              if oc get namespace openshift-sriov-network-operator &>/dev/null; then
+                echo "📡 SR-IOV operator namespace found, checking infrastructure..."
+                echo ""
+
+                # Check 1: Verify webhook is healthy
+                webhook_ready=false
+                webhook_endpoints=$(oc get endpoints operator-webhook-service -n openshift-sriov-network-operator -o jsonpath='{.subsets[*].addresses[*].ip}' 2>/dev/null || echo "")
+
+                if [ -n "$webhook_endpoints" ]; then
+                  webhook_ready=true
+                  echo "✓ SR-IOV webhook is healthy (endpoints: $webhook_endpoints)"
+                else
+                  sriov_issues=$((sriov_issues + 1))
+                  echo "⚠️  SR-IOV webhook has no endpoints"
+                  echo "   Checking webhook pod status..."
+
+                  webhook_pod_status=$(oc get pods -n openshift-sriov-network-operator -l app=operator-webhook -o jsonpath='{.items[0].status.phase}' 2>/dev/null || echo "NotFound")
+                  echo "   Webhook pod status: $webhook_pod_status"
+                fi
+
+                echo ""
+
+                # Check 2: Verify generator job completed successfully
+                generator_job_status=$(oc get job sriov-resource-generator -n openshift-sriov-network-operator -o jsonpath='{.status.conditions[?(@.type=="Complete")].status}' 2>/dev/null || echo "")
+                generator_job_failed=$(oc get job sriov-resource-generator -n openshift-sriov-network-operator -o jsonpath='{.status.conditions[?(@.type=="Failed")].status}' 2>/dev/null || echo "")
+
+                if [ "$generator_job_failed" = "True" ]; then
+                  sriov_issues=$((sriov_issues + 1))
+                  echo "⚠️  SR-IOV resource generator job failed"
+
+                  # Get failure reason from pod logs
+                  failed_pod=$(oc get pods -n openshift-sriov-network-operator -l job-name=sriov-resource-generator --sort-by=.metadata.creationTimestamp -o jsonpath='{.items[-1].metadata.name}' 2>/dev/null || echo "")
+
+                  if [ -n "$failed_pod" ]; then
+                    echo "   Checking failure reason from pod: $failed_pod"
+                    failure_logs=$(oc logs -n openshift-sriov-network-operator "$failed_pod" --tail=20 2>/dev/null | grep -i "error\|failed" | head -3 || echo "")
+                    if [ -n "$failure_logs" ]; then
+                      echo "   Last errors:"
+                      echo "$failure_logs" | sed 's/^/     /'
+                    fi
+                  fi
+
+                  echo "   → Deleting failed job to trigger retry..."
+                  if oc delete job sriov-resource-generator -n openshift-sriov-network-operator 2>/dev/null; then
+                    sriov_fixed=$((sriov_fixed + 1))
+                    echo "   ✓ Job deleted. ArgoCD will recreate it."
+                  else
+                    echo "   ✗ Failed to delete job"
+                  fi
+                  echo ""
+
+                elif [ "$generator_job_status" = "True" ]; then
+                  echo "✓ SR-IOV resource generator completed successfully"
+                  echo ""
+
+                  # Check 3: Verify policies were actually created
+                  policy_count=$(oc get sriovnetworknodepolicy -n openshift-sriov-network-operator --no-headers 2>/dev/null | wc -l)
+
+                  if [ "$policy_count" -eq 0 ]; then
+                    sriov_issues=$((sriov_issues + 1))
+                    echo "⚠️  Generator job completed but NO policies were created"
+                    echo "   This indicates a silent failure during policy creation"
+
+                    # Check if webhook was ready when job ran
+                    if [ "$webhook_ready" = false ]; then
+                      echo "   Root cause: Webhook was not ready when generator ran"
+                      echo "   → Deleting job to retry now that webhook is ready..."
+                    else
+                      echo "   → Deleting job to retry policy creation..."
+                    fi
+
+                    if oc delete job sriov-resource-generator -n openshift-sriov-network-operator 2>/dev/null; then
+                      sriov_fixed=$((sriov_fixed + 1))
+                      echo "   ✓ Job deleted. ArgoCD will recreate and retry."
+                    else
+                      echo "   ✗ Failed to delete job"
+                    fi
+                    echo ""
+                  else
+                    echo "✓ Found $policy_count SR-IOV node policies"
+                    echo ""
+                  fi
+                else
+                  echo "ℹ️  SR-IOV resource generator is still running or not yet started"
+                  echo ""
+                fi
+
+                # Check 4: Monitor node state sync status
+                failed_nodes=$(oc get sriovnetworknodestate -n openshift-sriov-network-operator -o jsonpath='{.items[?(@.status.syncStatus=="Failed")].metadata.name}' 2>/dev/null || echo "")
+
+                if [ -n "$failed_nodes" ]; then
+                  sriov_issues=$((sriov_issues + 1))
+                  echo "⚠️  SR-IOV node configuration failed on nodes:"
+                  for node in $failed_nodes; do
+                    echo "   - $node"
+                    last_error=$(oc get sriovnetworknodestate "$node" -n openshift-sriov-network-operator -o jsonpath='{.status.lastSyncError}' 2>/dev/null || echo "")
+                    if [ -n "$last_error" ]; then
+                      echo "     Error: $last_error"
+                    fi
+                  done
+                  echo "   ⚠ Manual intervention may be required"
+                  echo ""
+                fi
+
+              else
+                echo "ℹ️  SR-IOV operator not deployed, skipping checks"
+                echo ""
+              fi
+
+              echo ""
+              echo "========================================"
+              echo "Checking for stuck namespaces..."
+              echo "========================================"
+              echo ""
+
+              # Maximum age for namespace in Terminating before intervention (5 minutes)
+              NS_MAX_AGE_SECONDS=300
+              stuck_namespaces=0
+              cleared_namespaces=0
+
+              # Find all namespaces stuck in Terminating state
+              terminating_ns=$(oc get namespaces -o jsonpath='{range .items[?(@.status.phase=="Terminating")]}{.metadata.name}{" "}{.metadata.deletionTimestamp}{"\n"}{end}' 2>/dev/null || echo "")
+
+              if [ -n "$terminating_ns" ]; then
+                while IFS= read -r ns_info; do
+                  if [ -z "$ns_info" ]; then continue; fi
+
+                  ns_name=$(echo "$ns_info" | awk '{print $1}')
+                  deletion_time=$(echo "$ns_info" | awk '{print $2}')
+
+                  deletion_epoch=$(iso_to_epoch "$deletion_time" 2>/dev/null || echo "0")
+                  age=$((CURRENT_TIME - deletion_epoch))
+
+                  if [ $age -gt $NS_MAX_AGE_SECONDS ]; then
+                    stuck_namespaces=$((stuck_namespaces + 1))
+                    echo "⚠️  STUCK NAMESPACE: $ns_name"
+                    echo "   Status: Terminating for ${age}s (> ${NS_MAX_AGE_SECONDS}s)"
+                    echo "   Deletion timestamp: $deletion_time"
+                    echo ""
+
+                    # Check for resources with finalizers blocking deletion
+                    echo "   Checking for resources with finalizers..."
+
+                    # Check common custom resources that block namespace deletion
+                    for resource_type in sriovoperatorconfigs sriovnetworknodepolicies sriovnetworks nicclusterpolicies clusterpolicies; do
+                      resources=$(oc get $resource_type -n $ns_name -o name 2>/dev/null || echo "")
+
+                      if [ -n "$resources" ]; then
+                        for resource in $resources; do
+                          finalizers=$(oc get $resource -n $ns_name -o jsonpath='{.metadata.finalizers}' 2>/dev/null || echo "")
+
+                          if [ -n "$finalizers" ] && [ "$finalizers" != "[]" ]; then
+                            echo "   Found: $resource with finalizers: $finalizers"
+                            echo "   → Removing finalizers to unblock namespace deletion..."
+
+                            if oc patch $resource -n $ns_name -p '{"metadata":{"finalizers":[]}}' --type=merge 2>/dev/null; then
+                              cleared_namespaces=$((cleared_namespaces + 1))
+                              echo "   ✓ Finalizers removed from $resource"
+                            else
+                              echo "   ✗ Failed to remove finalizers from $resource"
+                            fi
+                          fi
+                        done
+                      fi
+                    done
+
+                    # Also check for any resources still in the namespace
+                    remaining=$(oc api-resources --verbs=list --namespaced -o name 2>/dev/null | \
+                      xargs -I {} sh -c "oc get {} -n $ns_name --ignore-not-found 2>/dev/null | grep -v 'No resources found' | tail -n +2" | \
+                      wc -l 2>/dev/null || echo "0")
+
+                    if [ "$remaining" -gt 0 ]; then
+                      echo "   Found $remaining resources still in namespace"
+                      echo "   Attempting to force-remove resources with finalizers..."
+
+                      # Try to patch any remaining resources with finalizers
+                      oc api-resources --verbs=list --namespaced -o name 2>/dev/null | \
+                        xargs -I {} sh -c "oc get {} -n $ns_name -o name 2>/dev/null | \
+                        xargs -I [] oc patch [] -n $ns_name -p '{\"metadata\":{\"finalizers\":[]}}' --type=merge 2>/dev/null" || true
+                    fi
+
+                    echo ""
+                  fi
+                done <<< "$terminating_ns"
+              fi
+
+              if [ $stuck_namespaces -eq 0 ]; then
+                echo "✓ No namespaces stuck in Terminating state"
+                echo ""
+              fi
+
+              echo ""
+              echo "========================================"
+              echo "Summary:"
+              echo "  Stuck operations found: $stuck_count"
+              echo "  Operations cleared: $cleared_count"
+              echo "  Stuck hook Jobs found: $stuck_hooks"
+              echo "  Hook finalizers removed: $cleared_hooks"
+              echo "  Failed PreSync hooks: $failed_presync"
+              echo "  Syncs retriggered: $retriggered"
+              echo "  Pods stuck in Pending: $stuck_pods"
+              echo "  CSVs stuck in Pending: $stuck_csvs"
+              echo "  CSVs deleted: $deleted_csvs"
+              echo "  Broken Subscriptions: $broken_subs"
+              echo "  Subscriptions fixed: $fixed_subs"
+              echo "  SR-IOV issues found: $sriov_issues"
+              echo "  SR-IOV issues fixed: $sriov_fixed"
+              echo "  Stuck Namespaces: $stuck_namespaces"
+              echo "  Namespace finalizers cleared: $cleared_namespaces"
+              echo "========================================"
+
+              total_issues=$((stuck_count + stuck_hooks + failed_presync + stuck_pods + stuck_csvs + broken_subs + sriov_issues + stuck_namespaces))
+
+              if [ $total_issues -gt 0 ]; then
+                echo ""
+                echo "✓ Self-healing completed. ArgoCD automated sync will retry."
+              else
+                echo ""
+                echo "✓ All operations, hooks, and pods healthy. No intervention needed."
+              fi
+
+              echo ""
+              echo "========================================"
+              echo "Checking if deployment is complete..."
+              echo "========================================"
+              echo ""
+
+              # Check if auto-cleanup is disabled via environment variable
+              if [ "${DISABLE_AUTO_CLEANUP:-false}" = "true" ]; then
+                echo "ℹ️  Auto-cleanup is disabled (DISABLE_AUTO_CLEANUP=true)"
+                echo "   Health monitor will continue running indefinitely."
+                exit 0
+              fi
+
+              # Check if all baremetal applications are Synced and Healthy
+              # If so, this monitor can safely remove itself
+
+              baremetal_apps=$(oc get application -n openshift-gitops -o name 2>/dev/null | grep "^application.argoproj.io/baremetal-" | grep -v "baremetal-gitops-health-monitor" || echo "")
+
+              if [ -z "$baremetal_apps" ]; then
+                echo "ℹ️  No baremetal applications found yet. Continuing to monitor..."
+                exit 0
+              fi
+
+              all_healthy=true
+              total_apps=0
+              healthy_apps=0
+
+              for app in $baremetal_apps; do
+                total_apps=$((total_apps + 1))
+                app_name=$(echo $app | cut -d'/' -f2)
+
+                sync_status=$(oc get $app -n openshift-gitops -o jsonpath='{.status.sync.status}' 2>/dev/null || echo "Unknown")
+                health_status=$(oc get $app -n openshift-gitops -o jsonpath='{.status.health.status}' 2>/dev/null || echo "Unknown")
+
+                if [ "$sync_status" = "Synced" ] && [ "$health_status" = "Healthy" ]; then
+                  healthy_apps=$((healthy_apps + 1))
+                  echo "✓ $app_name: Synced/Healthy"
+                else
+                  all_healthy=false
+                  echo "⏳ $app_name: $sync_status/$health_status (waiting...)"
+                fi
+              done
+
+              echo ""
+              echo "Deployment progress: $healthy_apps/$total_apps applications healthy"
+
+              if [ "$all_healthy" = true ] && [ $total_apps -gt 0 ]; then
+                echo ""
+                echo "========================================"
+                echo "🎉 All baremetal components are healthy!"
+                echo "========================================"
+                echo ""
+                echo "Deployment is complete. This health monitor is no longer needed."
+                echo "Auto-cleanup: Suspending CronJob to stop further executions..."
+                echo ""
+
+                # Suspend the CronJob to stop further executions
+                if oc patch cronjob argocd-health-monitor -n openshift-gitops \
+                  -p '{"spec":{"suspend":true}}' --type=merge 2>&1; then
+                  echo "✓ Health monitor CronJob suspended successfully"
+                  echo "✓ No further monitoring will occur"
+                  echo ""
+                  echo "========================================="
+                  echo "✓ Deployment complete!"
+                  echo "========================================="
+                  echo ""
+                  echo "All baremetal GPU/RDMA components are running and healthy."
+                  echo "The health monitor has been suspended and will not run again."
+                  echo ""
+                  echo "To remove the health monitor completely:"
+                  echo "  1. Remove gitops-health-monitor from your ApplicationSet configuration in git"
+                  echo "  2. Commit and push the changes"
+                  echo "  3. ArgoCD will automatically remove the health monitor Application and resources"
+                else
+                  echo "⚠️  Failed to suspend CronJob (may require manual intervention)"
+                fi
+                exit 0
+              else
+                echo ""
+                echo "ℹ️  Deployment still in progress. Health monitor will continue monitoring."
+                echo "   (Auto-cleanup will trigger when all components are Synced/Healthy)"
+              fi

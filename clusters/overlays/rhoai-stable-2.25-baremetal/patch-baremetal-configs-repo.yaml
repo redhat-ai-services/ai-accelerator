@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: baremetal-configs
+  annotations:
+    source_repo_url: "https://github.com/redhat-ai-services/ai-accelerator.git"
+    source_target_revision: "main"
+spec:
+  generators:
+    - list:
+        elements:
+          - name: gitops-health-monitor
+            path: components/cluster-configs/gitops-health-monitor
+            wave: "-2"
+            overlay: "all"
+            repoURL: "https://github.com/redhat-ai-services/ai-accelerator.git"
+            targetRevision: "main"
+          - name: node-preparation
+            path: components/cluster-configs/node-preparation
+            wave: "-1"
+            overlay: "baremetal"
+            repoURL: "https://github.com/redhat-ai-services/ai-accelerator.git"
+            targetRevision: "main"
+          - name: roce-discovery
+            path: components/cluster-configs/roce-discovery
+            wave: "4"
+            overlay: "baremetal"
+            repoURL: "https://github.com/redhat-ai-services/ai-accelerator.git"
+            targetRevision: "main"

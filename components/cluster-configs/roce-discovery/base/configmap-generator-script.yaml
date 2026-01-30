@@ -1,0 +1,401 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sriov-resource-generator-script
+  namespace: openshift-sriov-network-operator
+data:
+  generate_resources.py: |
+    import json
+    import sys
+    import os
+    import glob
+
+    discovery_dir = os.getenv('DISCOVERY_DIR', '/discovery')
+    output_dir = os.getenv('OUTPUT_DIR', '/output')
+    num_vfs = int(os.getenv('NUM_VFS', '1'))  # Default 1 VF (safe for all hardware)
+    mtu = int(os.getenv('MTU', '9000'))
+    ip_range_base = os.getenv('IP_RANGE_BASE', '10.0')
+    network_namespace = os.getenv('NETWORK_NAMESPACE', 'default')
+    route_dest_base = os.getenv('ROUTE_DEST', '192.168.75.0/24')
+    subnet_mode = os.getenv('SUBNET_MODE', 'separate').lower()  # 'shared' or 'separate'
+
+    print("\n=== Processing discovery files ===")
+
+    # Collect all ports from all nodes
+    all_ports = []
+    node_count = 0
+
+    for discovery_file in glob.glob(f"{discovery_dir}/*-ports.json"):
+        node_name = os.path.basename(discovery_file).replace('-ports.json', '')
+        node_count += 1
+
+        print(f"Reading discovery from node: {node_name}")
+
+        with open(discovery_file, 'r') as f:
+            ports = json.load(f)
+
+        for port in ports:
+            if port.get('sriovCapable'):
+                port['_node_name'] = node_name  # Track which node this came from
+                all_ports.append(port)
+                print(f"  Found: {port['pfName']} (device ID: {port['deviceID']})")
+
+    print(f"\nTotal ports discovered: {len(all_ports)} across {node_count} nodes")
+
+    # Deduplicate by (pfName, deviceID) - keep first occurrence
+    unique_ports = {}
+    for port in all_ports:
+        key = (port['pfName'], port['deviceID'])
+        if key not in unique_ports:
+            unique_ports[key] = port
+
+    print(f"Unique PF names (after deduplication): {len(unique_ports)}")
+
+    # Generate resources for each unique PF
+    print("\n=== Generating SR-IOV resources ===")
+
+    port_index = 0
+    for (pf_name, device_id), port in sorted(unique_ports.items()):
+        resource_name = f"{pf_name}rdma"
+
+        # Calculate IP range and route destination based on subnet mode
+        if subnet_mode == 'shared':
+            # All NICs share the same subnet (e.g., 10.0.100.0/24)
+            ip_range = f"{ip_range_base}.100.0/24"
+            # Shared mode: all NICs use the same route destination
+            route_dest = route_dest_base
+        else:
+            # Each NIC gets its own unique subnet (e.g., 10.0.101.0/24, 10.0.102.0/24, etc.)
+            subnet_third_octet = 101 + port_index
+            ip_range = f"{ip_range_base}.{subnet_third_octet}.0/24"
+            # Separate mode: each NIC gets its own route destination
+            # Extract base network and increment third octet
+            # E.g., 192.168.75.0/24 -> 192.168.75.0/24, 192.168.76.0/24, 192.168.77.0/24
+            route_base_parts = route_dest_base.split('/')
+            route_ip_parts = route_base_parts[0].split('.')
+            route_third_octet = int(route_ip_parts[2]) + port_index
+            route_dest = f"{route_ip_parts[0]}.{route_ip_parts[1]}.{route_third_octet}.0/{route_base_parts[1]}"
+
+        print(f"\nGenerating resources for PF: {pf_name}")
+        print(f"  Device ID: {device_id}")
+        print(f"  Resource Name: {resource_name}")
+        print(f"  IP Range: {ip_range} (mode: {subnet_mode})")
+        print(f"  Route Destination: {route_dest}")
+        print(f"  Will apply to all nodes with this PF")
+
+        # Generate SriovNetworkNodePolicy
+        policy_yaml = f"""---
+    apiVersion: sriovnetwork.openshift.io/v1
+    kind: SriovNetworkNodePolicy
+    metadata:
+      name: policy-{pf_name}
+      namespace: openshift-sriov-network-operator
+    spec:
+      deviceType: netdevice
+      isRdma: true
+      linkType: eth
+      mtu: {mtu}
+      nicSelector:
+        deviceID: "{device_id}"
+        pfNames:
+          - {pf_name}
+        vendor: "15b3"
+      nodeSelector:
+        feature.node.kubernetes.io/rdma.available: "true"
+        node-role.kubernetes.io/worker: ""
+      numVfs: {num_vfs}
+      priority: 99
+      resourceName: {resource_name}
+    """
+
+        # Generate SriovNetwork
+        network_yaml = f"""---
+    apiVersion: sriovnetwork.openshift.io/v1
+    kind: SriovNetwork
+    metadata:
+      name: {pf_name}-network
+      namespace: openshift-sriov-network-operator
+    spec:
+      ipam: |
+        {{
+          "type": "whereabouts",
+          "range": "{ip_range}",
+          "routes": [
+            {{
+              "dst": "{route_dest}"
+            }}
+          ]
+        }}
+      linkState: enable
+      networkNamespace: {network_namespace}
+      resourceName: {resource_name}
+      spoofChk: "off"
+      trust: "on"
+    """
+
+        # Write policy
+        policy_file = f"{output_dir}/policy-{pf_name}.yaml"
+        with open(policy_file, 'w') as f:
+            f.write(policy_yaml)
+        print(f"  Created: {policy_file}")
+
+        # Write network
+        network_file = f"{output_dir}/network-{pf_name}.yaml"
+        with open(network_file, 'w') as f:
+            f.write(network_yaml)
+        print(f"  Created: {network_file}")
+
+        port_index += 1
+
+    print(f"\nTotal networks created: {len(unique_ports)}")
+
+  generate-sriov-resources.sh: |
+    #!/bin/bash
+    set -euo pipefail
+
+    echo "=== SR-IOV Resource Generator ==="
+    echo "Collecting discovery results from all nodes..."
+
+    DISCOVERY_DIR="/discovery"
+    OUTPUT_DIR="/output"
+    mkdir -p "$DISCOVERY_DIR" "$OUTPUT_DIR"
+
+    # Configuration
+    NUM_VFS=${NUM_VFS:-1}  # Default 1 VF (safe for all hardware)
+    MTU=${MTU:-9000}
+    IP_RANGE_BASE=${IP_RANGE_BASE:-"10.0"}
+    NETWORK_NAMESPACE=${NETWORK_NAMESPACE:-"default"}
+    ROUTE_DEST=${ROUTE_DEST:-"192.168.75.0/24"}
+    SUBNET_MODE=${SUBNET_MODE:-"separate"}  # "shared" or "separate"
+
+    # Collect discovery results from all discovery pods
+    echo "Finding RoCE discovery pods..."
+    DISCOVERY_PODS=$(oc get pods -n openshift-sriov-network-operator -l app=roce-port-discovery -o jsonpath='{.items[*].metadata.name}')
+
+    if [ -z "$DISCOVERY_PODS" ]; then
+      echo "Error: No RoCE discovery pods found"
+      exit 1
+    fi
+
+    echo "Found discovery pods: $DISCOVERY_PODS"
+
+    # Collect discovery files from each pod
+    for pod in $DISCOVERY_PODS; do
+      echo "Collecting discovery results from pod: $pod"
+
+      # Get the node name for this pod
+      NODE_NAME=$(oc get pod "$pod" -n openshift-sriov-network-operator -o jsonpath='{.spec.nodeName}')
+      echo "  Node: $NODE_NAME"
+
+      # Copy the discovery file from the pod
+      DISCOVERY_FILE="${DISCOVERY_DIR}/${NODE_NAME}-ports.json"
+      if oc exec -n openshift-sriov-network-operator "$pod" -- cat /discovery/ports.json > "$DISCOVERY_FILE" 2>/dev/null; then
+        echo "  ✓ Collected discovery file: $DISCOVERY_FILE"
+      else
+        echo "  ⚠ Failed to collect from $pod, trying node-specific file..."
+        if oc exec -n openshift-sriov-network-operator "$pod" -- cat "/discovery/${NODE_NAME}-ports.json" > "$DISCOVERY_FILE" 2>/dev/null; then
+          echo "  ✓ Collected discovery file: $DISCOVERY_FILE"
+        else
+          echo "  ✗ Failed to collect from $pod"
+        fi
+      fi
+    done
+
+    # Check if any discovery files exist
+    if ! ls "$DISCOVERY_DIR"/*-ports.json 1> /dev/null 2>&1; then
+      echo "Error: No discovery files were collected"
+      exit 1
+    fi
+
+    echo ""
+    echo "Found discovery files:"
+    for file in "$DISCOVERY_DIR"/*-ports.json; do
+      echo "  - $(basename "$file")"
+    done
+
+    # Run Python script to generate resources
+    export DISCOVERY_DIR OUTPUT_DIR NUM_VFS MTU IP_RANGE_BASE NETWORK_NAMESPACE ROUTE_DEST SUBNET_MODE
+    python3 /scripts/generate_resources.py
+
+    echo ""
+    echo "=== Waiting for SR-IOV CRDs to be ready ==="
+
+    # Wait for SR-IOV CRDs to exist before applying resources
+    # This prevents "no matches for kind" errors when operator is still installing
+    REQUIRED_CRDS=("sriovnetworks.sriovnetwork.openshift.io" "sriovnetworknodepolicies.sriovnetwork.openshift.io")
+    MAX_WAIT=300  # 5 minutes max
+    WAIT_INTERVAL=5
+    ELAPSED=0
+
+    for crd in "${REQUIRED_CRDS[@]}"; do
+      echo "Waiting for CRD: $crd"
+      while ! oc get crd "$crd" &>/dev/null; do
+        if [ $ELAPSED -ge $MAX_WAIT ]; then
+          echo "❌ Timeout waiting for CRD $crd after ${MAX_WAIT}s"
+          echo "SR-IOV operator may not be installed correctly"
+          exit 1
+        fi
+        echo "  Still waiting... (${ELAPSED}s/${MAX_WAIT}s)"
+        sleep $WAIT_INTERVAL
+        ELAPSED=$((ELAPSED + WAIT_INTERVAL))
+      done
+      echo "✓ CRD $crd is ready"
+    done
+
+    echo ""
+    echo "=== Waiting for SR-IOV operator webhook to be ready ==="
+
+    # Wait for webhook service endpoints to be available
+    # This prevents "no endpoints available" errors during policy creation
+    WEBHOOK_SERVICE="operator-webhook-service"
+    MAX_WEBHOOK_WAIT=180  # 3 minutes max
+    WEBHOOK_ELAPSED=0
+
+    echo "Checking webhook service: $WEBHOOK_SERVICE"
+    while true; do
+      # Check if service exists
+      if ! oc get service "$WEBHOOK_SERVICE" -n openshift-sriov-network-operator &>/dev/null; then
+        if [ $WEBHOOK_ELAPSED -ge $MAX_WEBHOOK_WAIT ]; then
+          echo "❌ Timeout: Webhook service not found after ${MAX_WEBHOOK_WAIT}s"
+          echo "SR-IOV operator webhook may not be installed correctly"
+          exit 1
+        fi
+        echo "  Waiting for webhook service to be created... (${WEBHOOK_ELAPSED}s/${MAX_WEBHOOK_WAIT}s)"
+        sleep $WAIT_INTERVAL
+        WEBHOOK_ELAPSED=$((WEBHOOK_ELAPSED + WAIT_INTERVAL))
+        continue
+      fi
+
+      # Check if endpoints are ready
+      ENDPOINT_COUNT=$(oc get endpoints "$WEBHOOK_SERVICE" -n openshift-sriov-network-operator -o jsonpath='{.subsets[*].addresses[*].ip}' 2>/dev/null | wc -w)
+
+      if [ "$ENDPOINT_COUNT" -gt 0 ]; then
+        echo "✓ Webhook service is ready with $ENDPOINT_COUNT endpoint(s)"
+        break
+      fi
+
+      if [ $WEBHOOK_ELAPSED -ge $MAX_WEBHOOK_WAIT ]; then
+        echo "❌ Timeout: No webhook endpoints available after ${MAX_WEBHOOK_WAIT}s"
+        echo "SR-IOV operator webhook may not be running correctly"
+        exit 1
+      fi
+
+      echo "  Waiting for webhook endpoints... (${WEBHOOK_ELAPSED}s/${MAX_WEBHOOK_WAIT}s)"
+      sleep $WAIT_INTERVAL
+      WEBHOOK_ELAPSED=$((WEBHOOK_ELAPSED + WAIT_INTERVAL))
+    done
+
+    # Additional validation: Check if webhook pod is running
+    WEBHOOK_POD=$(oc get pods -n openshift-sriov-network-operator -l app=operator-webhook -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || echo "")
+    if [ -n "$WEBHOOK_POD" ]; then
+      WEBHOOK_STATUS=$(oc get pod "$WEBHOOK_POD" -n openshift-sriov-network-operator -o jsonpath='{.status.phase}' 2>/dev/null || echo "Unknown")
+      echo "  Webhook pod: $WEBHOOK_POD (Status: $WEBHOOK_STATUS)"
+    fi
+
+    echo "  Waiting additional 5 seconds for webhook to stabilize..."
+    sleep 5
+    echo "✓ Webhook is ready to accept requests"
+
+    echo ""
+    echo "=== Checking for ongoing node reconfigurations ==="
+
+    # Check if any nodes are currently being reconfigured (InProgress)
+    # This happens during VF changes when nodes are draining/rebooting
+    INPROGRESS_NODES=$(oc get sriovnetworknodestate -n openshift-sriov-network-operator -o jsonpath='{.items[?(@.status.syncStatus=="InProgress")].metadata.name}' 2>/dev/null || echo "")
+
+    if [ -n "$INPROGRESS_NODES" ]; then
+      NODE_COUNT=$(echo "$INPROGRESS_NODES" | wc -w)
+      echo "⚠️  WARNING: $NODE_COUNT node(s) currently being reconfigured:"
+      for node in $INPROGRESS_NODES; do
+        echo "   - $node (syncStatus: InProgress)"
+      done
+      echo ""
+      echo "This is normal if you recently changed VF configuration."
+      echo "Applying policies now will update the configuration, but changes"
+      echo "will only take effect after current reconfigurations complete."
+      echo ""
+      echo "SR-IOV operator processes nodes serially (one at a time)."
+      echo "Node reconfiguration includes: drain, NIC reconfiguration, and reboot."
+      echo "Estimated time: Up to 60 minutes per node (depending on hardware and drain time)."
+      echo ""
+      echo "Total estimated time for $NODE_COUNT node(s): ~$((NODE_COUNT * 60)) minutes"
+      echo ""
+    else
+      echo "✓ No nodes currently being reconfigured"
+      echo ""
+    fi
+
+    echo "=== Applying generated SR-IOV resources to cluster ==="
+
+    # Function to apply a resource with retries
+    apply_with_retry() {
+      local yaml_file="$1"
+      local max_retries=3
+      local retry_delay=10
+      local attempt=1
+
+      while [ $attempt -le $max_retries ]; do
+        echo "Applying: $(basename "$yaml_file") (attempt $attempt/$max_retries)"
+
+        # Capture both stdout and stderr
+        if output=$(oc apply -f "$yaml_file" 2>&1); then
+          echo "✓ Applied: $(basename "$yaml_file")"
+          return 0
+        else
+          # Check if error is webhook-related
+          if echo "$output" | grep -qi "webhook\|endpoint\|connection refused"; then
+            echo "⚠️  Webhook error detected on attempt $attempt:"
+            echo "$output" | head -3
+
+            if [ $attempt -lt $max_retries ]; then
+              echo "  Retrying in ${retry_delay}s..."
+              sleep $retry_delay
+              attempt=$((attempt + 1))
+            else
+              echo "❌ Failed after $max_retries attempts: $(basename "$yaml_file")"
+              echo "Error: $output"
+              return 1
+            fi
+          else
+            # Non-webhook error, show and fail immediately
+            echo "❌ Failed to apply $(basename "$yaml_file"):"
+            echo "$output"
+            return 1
+          fi
+        fi
+      done
+    }
+
+    # Apply all generated resources with retry logic
+    APPLIED_COUNT=0
+    FAILED_COUNT=0
+    FAILED_FILES=()
+
+    for yaml_file in "$OUTPUT_DIR"/*.yaml; do
+      if [ -f "$yaml_file" ]; then
+        if apply_with_retry "$yaml_file"; then
+          APPLIED_COUNT=$((APPLIED_COUNT + 1))
+        else
+          FAILED_COUNT=$((FAILED_COUNT + 1))
+          FAILED_FILES+=("$(basename "$yaml_file")")
+        fi
+      fi
+    done
+
+    echo ""
+    echo "=== Summary ==="
+    echo "Total resources applied: $APPLIED_COUNT"
+    if [ $FAILED_COUNT -gt 0 ]; then
+      echo "Failed resources: $FAILED_COUNT"
+      echo "Failed files:"
+      for file in "${FAILED_FILES[@]}"; do
+        echo "  - $file"
+      done
+      echo ""
+      echo "⚠️  Some resources failed to apply."
+      echo "Health monitor will detect and may retry if needed."
+    else
+      echo "✓ All resources applied successfully!"
+    fi
+    echo "SR-IOV resource generation complete!"
+    echo ""

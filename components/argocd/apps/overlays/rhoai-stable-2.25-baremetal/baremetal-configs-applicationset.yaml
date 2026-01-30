@@ -1,0 +1,56 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: baremetal-configs
+  namespace: openshift-gitops
+  annotations:
+    source_repo_url: "PLACEHOLDER"
+    source_target_revision: "PLACEHOLDER"
+spec:
+  generators:
+    - list:
+        elements:
+          - name: gitops-health-monitor
+            path: components/cluster-configs/gitops-health-monitor
+            wave: "-2"
+            overlay: "all"
+            repoURL: "PLACEHOLDER"
+            targetRevision: "PLACEHOLDER"
+          - name: node-preparation
+            path: components/cluster-configs/node-preparation
+            wave: "-1"
+            overlay: "baremetal"
+            repoURL: "PLACEHOLDER"
+            targetRevision: "PLACEHOLDER"
+          - name: roce-discovery
+            path: components/cluster-configs/roce-discovery
+            wave: "4"
+            overlay: "baremetal"
+            repoURL: "PLACEHOLDER"
+            targetRevision: "PLACEHOLDER"
+  template:
+    metadata:
+      name: 'baremetal-{{name}}'
+      annotations:
+        argocd.argoproj.io/sync-wave: '{{wave}}'
+    spec:
+      project: cluster-config
+      source:
+        repoURL: '{{repoURL}}'
+        targetRevision: '{{targetRevision}}'
+        path: '{{path}}/overlays/{{overlay}}'
+      destination:
+        server: 'https://kubernetes.default.svc'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 10m
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true

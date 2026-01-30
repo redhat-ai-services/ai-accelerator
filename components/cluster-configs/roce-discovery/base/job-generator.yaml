@@ -1,0 +1,166 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sriov-resource-generator
+  namespace: openshift-sriov-network-operator
+  labels:
+    app: sriov-resource-generator
+spec:
+  template:
+    metadata:
+      labels:
+        app: sriov-resource-generator
+    spec:
+      restartPolicy: OnFailure
+      serviceAccountName: roce-discovery-sa
+      securityContext:
+        runAsUser: 0
+      containers:
+        - name: generator
+          image: registry.access.redhat.com/ubi9/ubi:latest
+          command:
+            - /bin/bash
+            - -c
+            - |
+              dnf install -y wget tar gzip python3 && \
+              wget -q https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz && \
+              tar -xzf openshift-client-linux.tar.gz -C /usr/local/bin/ oc kubectl && \
+              rm openshift-client-linux.tar.gz && \
+              /bin/bash /scripts/generate-sriov-resources.sh
+          env:
+            # ==================================================================================
+            # SR-IOV Network Configuration
+            # ==================================================================================
+
+            # Number of Virtual Functions (VFs) to create per Physical Function (PF)
+            # Default: 1 VF per NIC
+            - name: NUM_VFS
+              value: "1"
+
+            # Maximum Transmission Unit (MTU) for SR-IOV networks
+            # 9000 = Jumbo frames (recommended for RDMA/RoCE performance)
+            # 1500 = Standard Ethernet
+            - name: MTU
+              value: "9000"
+
+            # ==================================================================================
+            # IP Address Management (IPAM) Configuration
+            # ==================================================================================
+
+            # SUBNET_MODE: Controls whether NICs share the same subnet or get separate subnets
+            #
+            # Options:
+            #   "separate" (DEFAULT) - Each NIC gets its own isolated /24 subnet
+            #   "shared"             - All NICs share the same /24 subnet
+            #
+            # ┌─────────────────────────────────────────────────────────────────────────────┐
+            # │ MODE: "separate" (DEFAULT - Recommended for most deployments)              │
+            # ├─────────────────────────────────────────────────────────────────────────────┤
+            # │ Behavior:                                                                   │
+            # │   - ens3f0np0 → 10.0.101.0/24 (IPs: 10.0.101.1 - 10.0.101.254)            │
+            # │   - ens3f1np1 → 10.0.102.0/24 (IPs: 10.0.102.1 - 10.0.102.254)            │
+            # │   - ens7f0np0 → 10.0.103.0/24 (IPs: 10.0.103.1 - 10.0.103.254)            │
+            # │                                                                             │
+            # │ Use Cases:                                                                  │
+            # │   ✓ Network isolation between different NICs/interfaces                    │
+            # │   ✓ Multi-tenant environments (different workloads on different NICs)      │
+            # │   ✓ Traffic segregation (e.g., storage traffic vs compute traffic)         │
+            # │   ✓ Maximum flexibility for routing and firewall policies                  │
+            # │   ✓ Prevents IP conflicts between NICs                                     │
+            # │                                                                             │
+            # │ Benefits:                                                                   │
+            # │   • Layer-3 isolation between NICs (no direct IP routing)                  │
+            # │   • Easier troubleshooting (subnet identifies which NIC traffic uses)      │
+            # │   • Supports 254 IPs per NIC (scales to large deployments)                 │
+            # │   • No risk of IP address conflicts between different NICs                 │
+            # └─────────────────────────────────────────────────────────────────────────────┘
+            #
+            # ┌─────────────────────────────────────────────────────────────────────────────┐
+            # │ MODE: "shared" (Use only if you need cross-NIC layer-2 communication)      │
+            # ├─────────────────────────────────────────────────────────────────────────────┤
+            # │ Behavior:                                                                   │
+            # │   - ens3f0np0 → 10.0.100.0/24 (shares pool with all NICs)                 │
+            # │   - ens3f1np1 → 10.0.100.0/24 (shares pool with all NICs)                 │
+            # │   - ens7f0np0 → 10.0.100.0/24 (shares pool with all NICs)                 │
+            # │   - Total IP pool: 10.0.100.1 - 10.0.100.254 (254 IPs shared across NICs) │
+            # │                                                                             │
+            # │ Use Cases:                                                                  │
+            # │   ✓ Pods on different NICs need to communicate at layer-2                  │
+            # │   ✓ Legacy applications expecting single flat network                      │
+            # │   ✓ High-availability pairs requiring same subnet                          │
+            # │                                                                             │
+            # │ Limitations:                                                                │
+            # │   ⚠ Limited IP pool (254 IPs total shared across ALL NICs and pods)        │
+            # │   ⚠ No network isolation between NICs                                      │
+            # │   ⚠ IP exhaustion if many pods across multiple NICs                        │
+            # │   ⚠ Harder to troubleshoot (can't identify NIC by IP)                      │
+            # └─────────────────────────────────────────────────────────────────────────────┘
+            #
+            - name: SUBNET_MODE
+              value: "separate"
+            #
+            # To switch to shared subnet mode, change to:
+            #   value: "shared"
+
+            # IP_RANGE_BASE: First two octets of IP addresses (default: "10.0")
+            #
+            # Examples:
+            #   "10.0"    → 10.0.x.x subnets (default)
+            #   "192.168" → 192.168.x.x subnets
+            #   "172.16"  → 172.16.x.x subnets
+            #
+            # Combined with SUBNET_MODE:
+            #   IP_RANGE_BASE="10.0" + SUBNET_MODE="separate"
+            #     → 10.0.101.0/24, 10.0.102.0/24, 10.0.103.0/24, ...
+            #
+            #   IP_RANGE_BASE="10.0" + SUBNET_MODE="shared"
+            #     → 10.0.100.0/24 (all NICs)
+            #
+            #   IP_RANGE_BASE="192.168" + SUBNET_MODE="separate"
+            #     → 192.168.101.0/24, 192.168.102.0/24, 192.168.103.0/24, ...
+            #
+            - name: IP_RANGE_BASE
+              value: "10.0"
+
+            # NETWORK_NAMESPACE: Kubernetes namespace where SR-IOV networks will be usable
+            # Default: "default" (networks available in default namespace)
+            # For multi-namespace access, create additional SriovNetwork resources
+            - name: NETWORK_NAMESPACE
+              value: "default"
+
+            # ROUTE_DEST: Default route destination for SR-IOV network traffic
+            #
+            # Behavior with SUBNET_MODE:
+            #   - "shared" mode: All NICs use the same route destination (value specified here)
+            #   - "separate" mode: Each NIC gets its own route destination (automatically incremented)
+            #     Example: 192.168.75.0/24 becomes:
+            #       NIC 1 (ens3f0np0): 192.168.75.0/24
+            #       NIC 2 (ens3f1np1): 192.168.76.0/24
+            #       NIC 3 (ens7f0np0): 192.168.77.0/24
+            #
+            # This avoids routing ambiguity when using separate subnets per NIC
+            - name: ROUTE_DEST
+              value: "192.168.75.0/24"
+          volumeMounts:
+            - name: generator-script
+              mountPath: /scripts
+            - name: output
+              mountPath: /output
+            - name: discovery-temp
+              mountPath: /discovery
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+      volumes:
+        - name: generator-script
+          configMap:
+            name: sriov-resource-generator-script
+            defaultMode: 0755
+        - name: output
+          emptyDir: {}
+        - name: discovery-temp
+          emptyDir: {}

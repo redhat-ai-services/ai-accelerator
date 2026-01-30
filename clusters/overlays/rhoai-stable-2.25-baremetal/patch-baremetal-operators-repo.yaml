@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: baremetal-operators
+  annotations:
+    source_repo_url: "https://github.com/redhat-ai-services/ai-accelerator.git"
+    source_target_revision: "main"
+spec:
+  generators:
+    - list:
+        elements:
+          - name: nvidia-network-operator
+            path: components/operators/nvidia-network-operator/operator
+            wave: "2"
+            repoURL: "https://github.com/redhat-ai-services/ai-accelerator.git"
+            targetRevision: "main"
+          - name: nvidia-network-operator-instance
+            path: components/operators/nvidia-network-operator/instance
+            wave: "3"
+            repoURL: "https://github.com/redhat-ai-services/ai-accelerator.git"
+            targetRevision: "main"
+          - name: sriov-network-operator
+            path: components/operators/sriov-network-operator/operator
+            wave: "1"
+            repoURL: "https://github.com/redhat-ai-services/ai-accelerator.git"
+            targetRevision: "main"
+          - name: sriov-network-operator-instance
+            path: components/operators/sriov-network-operator/instance
+            wave: "2"
+            repoURL: "https://github.com/redhat-ai-services/ai-accelerator.git"
+            targetRevision: "main"
+          - name: gpu-operator-certified
+            path: components/operators/gpu-operator-certified/operator
+            wave: "3"
+            repoURL: "https://github.com/redhat-ai-services/ai-accelerator.git"
+            targetRevision: "main"
+          - name: gpu-operator-certified-instance
+            path: components/operators/gpu-operator-certified/instance
+            wave: "4"
+            repoURL: "https://github.com/redhat-ai-services/ai-accelerator.git"
+            targetRevision: "main"

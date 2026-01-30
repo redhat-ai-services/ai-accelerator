@@ -1,0 +1,42 @@
+apiVersion: mellanox.com/v1alpha1
+kind: NicClusterPolicy
+metadata:
+  name: nic-cluster-policy
+  namespace: nvidia-network-operator-resources
+spec:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: node-role.kubernetes.io/worker
+          operator: Exists
+        - key: node-role.kubernetes.io/master
+          operator: DoesNotExist
+  ofedDriver:
+    image: doca-driver
+    repository: nvcr.io/nvidia/mellanox
+    # Version will be set to operator default if not specified
+    # To find current version: oc get deployment nvidia-network-operator-controller-manager -n nvidia-network-operator-resources -o yaml | grep -A 50 '"ofedDriver"' | grep '"version"'
+    version: ''
+    env:
+      - name: UNLOAD_STORAGE_MODULES
+        value: 'true'
+    livenessProbe:
+      initialDelaySeconds: 30
+      periodSeconds: 30
+    readinessProbe:
+      initialDelaySeconds: 10
+      periodSeconds: 30
+    startupProbe:
+      initialDelaySeconds: 10
+      periodSeconds: 20
+    terminationGracePeriodSeconds: 300
+    upgradePolicy:
+      autoUpgrade: true
+      drain:
+        enable: true
+        force: true
+        deleteEmptyDir: true
+        timeoutSeconds: 300
+        podSelector: ''
+      maxParallelUpgrades: 2

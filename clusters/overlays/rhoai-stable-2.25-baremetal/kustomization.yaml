@@ -1,0 +1,66 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: openshift-gitops
+
+resources:
+  - ../../base
+  - ../../../components/argocd/apps/overlays/rhoai-stable-2.25-baremetal
+
+patches:
+  - path: patch-repo-url.yaml
+    target:
+      kind: Application
+      name: cluster-config-app-of-apps
+  - path: patch-baremetal-configs-repo.yaml
+    target:
+      kind: ApplicationSet
+      name: baremetal-configs
+  - path: patch-baremetal-operators-repo.yaml
+    target:
+      kind: ApplicationSet
+      name: baremetal-operators
+
+replacements:
+  # copy the repo from the application to the standard applicationsets
+  - source:
+      kind: Application
+      name: cluster-config-app-of-apps
+      fieldPath: spec.source.repoURL
+    targets:
+      - select:
+          kind: ApplicationSet
+          name: cluster-.*
+        fieldPaths:
+          - spec.template.spec.source.repoURL
+        options:
+          delimiter: "-"
+      - select:
+          kind: ApplicationSet
+          name: baremetal-.*
+        fieldPaths:
+          - spec.template.spec.source.repoURL
+          - metadata.annotations.source_repo_url
+        options:
+          delimiter: "-"
+  # copy the branch from the application to the applicationsets
+  - source:
+      kind: Application
+      name: cluster-config-app-of-apps
+      fieldPath: spec.source.targetRevision
+    targets:
+      - select:
+          kind: ApplicationSet
+          name: cluster-.*
+        fieldPaths:
+          - spec.template.spec.source.targetRevision
+        options:
+          delimiter: "-"
+      - select:
+          kind: ApplicationSet
+          name: baremetal-.*
+        fieldPaths:
+          - spec.template.spec.source.targetRevision
+          - metadata.annotations.source_target_revision
+        options:
+          delimiter: "-"
