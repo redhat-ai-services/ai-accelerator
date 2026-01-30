@@ -6,4 +6,4 @@ commonAnnotations:
 
 resources:
   - ../../../operator/overlays/fast
-  - ../../../instance/overlays/fast
+  - ../../../instance-2.x/overlays/fast

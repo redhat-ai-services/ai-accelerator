@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+components:
+  - ../../components/components-aipipelines
+  - ../../components/components-feast
+  - ../../components/components-kserve
+  - ../../components/components-modelregistry
+  - ../../components/components-ray
+  - ../../components/components-trainingoperator
+  - ../../components/components-trustyai
+  - ../../components/components-workbenches
+  - ../../components/hardware-profiles-cpu
+  - ../../components/hardware-profiles-nvidia-gpu
+  - ../../components/idle-notebook-culling
+  - ../../components/inference-gateway
+  - ../../components/rhoai-auth

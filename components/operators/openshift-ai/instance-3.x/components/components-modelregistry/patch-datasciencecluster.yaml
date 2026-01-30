@@ -1,0 +1,9 @@
+apiVersion: datasciencecluster.opendatahub.io/v2
+kind: DataScienceCluster
+metadata:
+  name: default
+spec:
+  components:
+    modelregistry:
+      managementState: Managed
+      registriesNamespace: rhoai-model-registries
