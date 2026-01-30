@@ -9,3 +9,7 @@ spec:
   name: rhods-operator
   source: redhat-operators
   sourceNamespace: openshift-marketplace
+  config:
+    env:
+      - name: DISABLE_DSC_CONFIG
+        value: 'true'
