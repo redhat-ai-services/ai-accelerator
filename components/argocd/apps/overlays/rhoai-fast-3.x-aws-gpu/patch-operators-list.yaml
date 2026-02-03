@@ -54,8 +54,13 @@ spec:
       - cluster: local
         url: https://kubernetes.default.svc
         values:
+          name: kiali-operator
+          path: components/operators/kiali-operator/operator/overlays/stable
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
           name: redhat-openshift-servicemesh-3-operator
-          path: components/operators/redhat-openshift-servicemesh-3/operator/overlays/stable
+          path: components/operators/redhat-openshift-servicemesh-3/aggregate/overlays/stable
 
       # - cluster: local
       #   url: https://kubernetes.default.svc
