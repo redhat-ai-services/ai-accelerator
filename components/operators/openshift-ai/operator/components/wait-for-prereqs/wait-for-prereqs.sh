@@ -7,7 +7,7 @@ wait_for_service_mesh(){
   echo "Checking status of all pre-reqs"
   PREREQ_RESOURCES=(
     crd/istios.sailoperator.io:condition=established
-    crd/crd/kuadrants.kuadrant.io:condition=established
+    crd/kuadrants.kuadrant.io:condition=established
   )
 
   for field in "${PREREQ_RESOURCES[@]}"
