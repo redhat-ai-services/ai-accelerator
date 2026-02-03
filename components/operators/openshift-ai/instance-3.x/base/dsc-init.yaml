@@ -11,5 +11,3 @@ spec:
   trustedCABundle:
     customCABundle: ''
     managementState: Managed
-  serviceMesh:
-    managementState: Removed
