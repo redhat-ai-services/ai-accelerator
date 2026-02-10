@@ -4,7 +4,7 @@ kind: Component
 namespace: redhat-ods-operator
 
 resources:
-- wait-for-servicemesh-job.yaml
+- wait-for-prereqs-job.yaml
 
 generatorOptions:
   disableNameSuffixHash: true
@@ -12,7 +12,7 @@ generatorOptions:
     argocd.argoproj.io/hook: PreSync
 
 configMapGenerator:
-  - name: wait-for-servicemesh
+  - name: wait-for-prereqs
     namespace: redhat-ods-operator
     files:
-      - wait-for-servicemesh.sh
+      - wait-for-prereqs.sh
