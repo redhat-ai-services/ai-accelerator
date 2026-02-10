@@ -17,9 +17,6 @@ spec:
       rawDeploymentServiceConfig: Headed
       nim:
         managementState: Removed
-      serving:
-        managementState: Managed
-        name: knative-serving
     kueue:
       managementState: Removed
     llamastackoperator:
