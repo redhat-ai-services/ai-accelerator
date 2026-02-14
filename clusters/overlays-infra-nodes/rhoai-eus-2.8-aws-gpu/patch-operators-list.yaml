@@ -1,0 +1,54 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: cluster-operators
+spec:
+  generators:
+  - list:
+      elements:
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
+          name: nvidia-gpu-operator
+          path: components/operators/gpu-operator-certified/aggregate/overlays-infra-nodes/aws
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
+          name: nfd-operator
+          path: components/operators/nfd/aggregate/overlays-infra-nodes/default
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
+          name: openshift-ai-operator
+          path: components/operators/openshift-ai/aggregate/overlays-infra-nodes/eus-2.8
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
+          name: openshift-gitops-operator
+          path: components/operators/openshift-gitops/aggregate/overlays-infra-nodes/rhdp
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
+          name: openshift-pipelines-operator
+          path: components/operators/openshift-pipelines/operator/overlays-infra-nodes/latest
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
+          name: openshift-serverless-operator
+          path: components/operators/openshift-serverless/operator/overlays-infra-nodes/stable
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
+          name: openshift-servicemesh-operator
+          path: components/operators/openshift-servicemesh/operator/overlays-infra-nodes/stable
+
+      # - cluster: local
+      #   url: https://kubernetes.default.svc
+      #   values:
+      #     name: openshift-logging-operator
+      #     path: components/operators/openshift-logging/aggregate/overlays-infra-nodes/default
+      # - cluster: local
+      #   url: https://kubernetes.default.svc
+      #   values:
+      #     name: web-terminal-operator
+      #     path: components/operators/web-terminal-operator/operator/overlays-infra-nodes/fast

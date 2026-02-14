@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../../overlays/rhoai-fast
+
+patches:
+  - path: patch-operators-list.yaml
+    target:
+      kind: ApplicationSet
+      name: cluster-operators
+  - path: patch-cluster-config-app-of-apps.yaml
+    target:
+      kind: Application
+      name: cluster-config-app-of-apps
