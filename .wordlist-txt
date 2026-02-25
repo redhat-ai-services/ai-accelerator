@@ -19,6 +19,7 @@ Autoscaler
 Bitnami
 Buildpacks
 CICD
+CNI
 CRD
 CRDs
 CUDA
@@ -32,6 +33,7 @@ CodeFlare
 CodeReady
 ConfigMap
 Configs
+ConnectivityLink
 Contrib
 DCGM
 DNS
@@ -70,6 +72,8 @@ IgnoreExtraneous
 ImageSetConfiguration
 ImageStreams
 Infiniband
+installPlanApproval
+Istio
 Jaeger
 Jenkins
 Jupyter
@@ -94,6 +98,7 @@ MTA
 MachineConfig
 MachineSet
 MachineSets
+microservice
 MinIO
 ModelMesh
 MultiClusterHub
@@ -110,6 +115,7 @@ OCSInitialization
 ODH
 OLM
 ONNX
+observability
 Observability
 OpenDataHub
 OpenShift
@@ -117,6 +123,8 @@ OpenVino
 OperaterHub
 OperatorGroup
 OperatorHub
+OSSM
+param
 PCI
 PV
 PolicyReport
