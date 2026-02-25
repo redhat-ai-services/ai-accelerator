@@ -4,5 +4,5 @@ metadata:
   name: default
 spec:
   components:
-    aipipelines:
+    ray:
       managementState: Managed
