@@ -5,16 +5,20 @@ resources:
   - ../../base
 
 components:
+  - ../../components/anythingllm-image
   - ../../components/components-aipipelines
   - ../../components/components-feast
   - ../../components/components-kserve
+  - ../../components/components-llamastack
   - ../../components/components-modelregistry
   - ../../components/components-ray
   - ../../components/components-trainingoperator
   - ../../components/components-trustyai
   - ../../components/components-workbenches
+  - ../../components/default-notebook-pvc-size
   - ../../components/hardware-profiles-cpu
   - ../../components/hardware-profiles-nvidia-gpu
   - ../../components/idle-notebook-culling
   - ../../components/inference-gateway
+  - ../../components/make-kubeadmin-cluster-admin
   - ../../components/rhoai-auth
