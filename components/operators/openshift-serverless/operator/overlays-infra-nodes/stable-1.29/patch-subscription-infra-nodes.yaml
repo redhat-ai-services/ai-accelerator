@@ -1,0 +1,8 @@
+- op: add
+  path: /spec/config
+  value:
+    nodeSelector:
+      node-role.kubernetes.io/infra: ''
+    tolerations:
+      - key: node-role.kubernetes.io/infra
+        operator: Exists

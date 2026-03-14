@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base-infra-nodes
+  - ../../overlays/stable-2.13
+
+patches:
+  - path: patch-subscription-infra-nodes.yaml
+    target:
+      kind: Subscription
+  - path: patch-namespace-infra-nodes.yaml
+    target:
+      kind: Namespace
+      name: redhat-ods-applications

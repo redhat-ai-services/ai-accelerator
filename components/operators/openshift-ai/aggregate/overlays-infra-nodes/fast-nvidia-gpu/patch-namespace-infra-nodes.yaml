@@ -1,0 +1,6 @@
+- op: add
+  path: /metadata/annotations
+  value:
+    openshift.io/node-selector: "node-role.kubernetes.io/infra="
+    scheduler.alpha.kubernetes.io/defaultTolerations: >-
+      [{"operator": "Exists", "key": "node-role.kubernetes.io/infra"}]
