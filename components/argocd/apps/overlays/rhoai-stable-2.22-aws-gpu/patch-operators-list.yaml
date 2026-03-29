@@ -46,7 +46,11 @@ spec:
         values:
           name: openshift-servicemesh-operator
           path: components/operators/openshift-servicemesh/operator/overlays/stable
-
+      # - cluster: local
+      #   url: https://kubernetes.default.svc
+      #   values:
+      #     name: openshift-data-foundation-operator
+      #     path: components/operators/odf/aggregate/overlays/aws-node-labeler
       # - cluster: local
       #   url: https://kubernetes.default.svc
       #   values:
