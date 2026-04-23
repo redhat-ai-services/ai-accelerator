@@ -4,37 +4,55 @@ kind: Kustomization
 namespace: openshift-gitops
 
 resources:
-  - ../../base
   - ../../../components/argocd/apps/overlays/rhoai-eus-2.25-aws-gpu
-
+  - ../../base
 # patches:
-#   Uncomment patches to disable automatic sync
-#   - path: patch-applicationset-manual-sync.yaml
-#     target:
-#       group: argoproj.io
-#       version: v1alpha1
-#       kind: ApplicationSet
-#   - path: patch-application-manual-sync.yaml
-#     target:
-#       group: argoproj.io
-#       kind: Application
-#       version: v1alpha1
+# set the repo and branch for applications
+# Uncomment patches to disable automatic sync
+# - path: patch-applicationset-manual-sync.yaml
+#   target:
+#     group: argoproj.io
+#     version: v1alpha1
+#     kind: ApplicationSet
+# - path: patch-application-manual-sync.yaml
+#   target:
+#     group: argoproj.io
+#     kind: Application
+#     version: v1alpha1
+
+# Git repository configuration (single source of truth)
+
+configMapGenerator:
+  - name: gitops-repo-config
+    literals:
+      - repoURL=https://github.com/redhat-ai-services/ai-accelerator.git
+      - targetRevision=main
 
 replacements:
   # copy the repo from the application to the applicationsets
   - source:
-      kind: Application
-      fieldPath: spec.source.repoURL
+      kind: ConfigMap
+      fieldPath: data.repoURL
+      name: gitops-repo-config
     targets:
+      - select:
+          kind: Application
+        fieldPaths:
+          - spec.source.repoURL
       - select:
           kind: ApplicationSet
         fieldPaths:
           - spec.template.spec.source.repoURL
   # copy the branch from the application to the applicationsets
   - source:
-      kind: Application
-      fieldPath: spec.source.targetRevision
+      kind: ConfigMap
+      fieldPath: data.targetRevision
+      name: gitops-repo-config
     targets:
+      - select:
+          kind: Application
+        fieldPaths:
+          - spec.source.targetRevision
       - select:
           kind: ApplicationSet
         fieldPaths:

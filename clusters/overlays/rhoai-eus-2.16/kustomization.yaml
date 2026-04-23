@@ -29,11 +29,11 @@ configMapGenerator:
       - targetRevision=main
 
 replacements:
-  # Inject git repository URL from ConfigMap to all Applications and ApplicationSets
+  # copy the repo from the application to the applicationsets
   - source:
       kind: ConfigMap
-      name: gitops-repo-config
       fieldPath: data.repoURL
+      name: gitops-repo-config
     targets:
       - select:
           kind: Application
@@ -43,11 +43,11 @@ replacements:
           kind: ApplicationSet
         fieldPaths:
           - spec.template.spec.source.repoURL
-  # Inject git branch/revision from ConfigMap to all Applications and ApplicationSets
+  # copy the branch from the application to the applicationsets
   - source:
       kind: ConfigMap
-      name: gitops-repo-config
       fieldPath: data.targetRevision
+      name: gitops-repo-config
     targets:
       - select:
           kind: Application
