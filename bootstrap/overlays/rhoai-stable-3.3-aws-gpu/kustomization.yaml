@@ -2,5 +2,5 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - ../../base
   - ../../../clusters/overlays/rhoai-stable-3.3-aws-gpu
+  - ../../base
