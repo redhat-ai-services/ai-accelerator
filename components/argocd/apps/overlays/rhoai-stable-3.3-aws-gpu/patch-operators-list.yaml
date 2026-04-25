@@ -66,6 +66,11 @@ spec:
         values:
           name: redhat-openshift-servicemesh-3-operator
           path: components/operators/redhat-openshift-servicemesh-3/operator/overlays/stable
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
+          name: tempo-operator
+          path: components/operators/tempo-operator/operator/overlays/stable
 
       # - cluster: local
       #   url: https://kubernetes.default.svc
