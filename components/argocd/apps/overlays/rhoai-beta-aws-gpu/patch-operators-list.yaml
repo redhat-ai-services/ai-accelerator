@@ -6,11 +6,11 @@ spec:
   generators:
   - list:
       elements:
-      - cluster: local
-        url: https://kubernetes.default.svc
-        values:
-          name: cluster-observability-operator
-          path: components/operators/cluster-observability-operator/operator/overlays/stable
+      # - cluster: local
+      #   url: https://kubernetes.default.svc
+      #   values:
+      #     name: cluster-observability-operator
+      #     path: components/operators/cluster-observability-operator/operator/overlays/stable
       - cluster: local
         url: https://kubernetes.default.svc
         values:
