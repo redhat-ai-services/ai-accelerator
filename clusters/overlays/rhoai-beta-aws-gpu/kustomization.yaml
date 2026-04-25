@@ -26,7 +26,7 @@ configMapGenerator:
   - name: gitops-repo-config
     literals:
       - repoURL=https://github.com/redhat-ai-services/ai-accelerator.git
-      - targetRevision=main
+      - targetRevision=2.x-cleanup
 
 replacements:
   # copy the repo from the application to the applicationsets
