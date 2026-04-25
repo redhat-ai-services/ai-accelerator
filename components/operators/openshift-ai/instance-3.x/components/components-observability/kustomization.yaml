@@ -5,3 +5,6 @@ patches:
   - path: patch-dsc-init.yaml
     target:
       kind: DSCInitialization
+  - path: patch-odhDashboardConfig.yaml
+    target:
+      kind: OdhDashboardConfig
