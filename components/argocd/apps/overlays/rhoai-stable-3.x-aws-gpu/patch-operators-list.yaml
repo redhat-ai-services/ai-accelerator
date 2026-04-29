@@ -9,13 +9,23 @@ spec:
       - cluster: local
         url: https://kubernetes.default.svc
         values:
-          name: leader-worker-set-operator
-          path: components/operators/leader-worker-set/aggregate/overlays/default
+          name: cluster-observability-operator
+          path: components/operators/cluster-observability-operator/operator/overlays/stable-1.3.1-manual
       - cluster: local
         url: https://kubernetes.default.svc
         values:
-          name: nvidia-gpu-operator
-          path: components/operators/gpu-operator-certified/aggregate/overlays/aws
+          name: connectivity-link-operator
+          path: components/operators/redhat-connectivity-link/aggregate/overlays/auth
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
+          name: kiali-operator
+          path: components/operators/kiali-operator/operator/overlays/stable
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
+          name: leader-worker-set-operator
+          path: components/operators/leader-worker-set/aggregate/overlays/default
       - cluster: local
         url: https://kubernetes.default.svc
         values:
@@ -24,13 +34,18 @@ spec:
       - cluster: local
         url: https://kubernetes.default.svc
         values:
-          name: openshift-custom-metrics-autoscaler-operator
-          path: components/operators/openshift-custom-metrics-autoscaler/operator/overlays/stable
+          name: nvidia-gpu-operator
+          path: components/operators/gpu-operator-certified/aggregate/overlays/aws
       - cluster: local
         url: https://kubernetes.default.svc
         values:
           name: openshift-ai-operator
           path: components/operators/openshift-ai/aggregate/overlays/stable-3.x-nvidia-gpu
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
+          name: openshift-custom-metrics-autoscaler-operator
+          path: components/operators/openshift-custom-metrics-autoscaler/operator/overlays/stable
       - cluster: local
         url: https://kubernetes.default.svc
         values:
@@ -49,18 +64,18 @@ spec:
       - cluster: local
         url: https://kubernetes.default.svc
         values:
-          name: connectivity-link-operator
-          path: components/operators/redhat-connectivity-link/aggregate/overlays/auth
-      - cluster: local
-        url: https://kubernetes.default.svc
-        values:
-          name: kiali-operator
-          path: components/operators/kiali-operator/operator/overlays/stable
+          name: redhat-build-of-opentelemetry-operator
+          path: components/operators/redhat-build-of-opentelemetry/operator/overlays/stable
       - cluster: local
         url: https://kubernetes.default.svc
         values:
           name: redhat-openshift-servicemesh-3-operator
           path: components/operators/redhat-openshift-servicemesh-3/operator/overlays/stable
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
+          name: tempo-operator
+          path: components/operators/tempo-operator/operator/overlays/stable
 
       # - cluster: local
       #   url: https://kubernetes.default.svc
