@@ -6,4 +6,4 @@ resources:
 
 components:
   - ../../components/schedule-on-tainted-nodes
-  - ../../components/time-sliced-2
+  - ../../components/time-sliced

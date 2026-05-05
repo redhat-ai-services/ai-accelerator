@@ -1,11 +1,12 @@
-# time-sliced
+# aws-gpu-machineset
 
 ## Purpose
 
-This component is designed to enable to enable time slicing on GPUs.
+This component is designed to setup a MachineSet with GPUs on an AWS based OpenShift cluster.
 
-To learn more about the monitoring dashboard, please refer to the official [docs](
-https://docs.nvidia.com/datacenter/cloud-native/openshift/latest/time-slicing-gpus-in-openshift.html)
+This component triggers a job that creates a MachineSet based on your current MachineSet.
+
+This component has been tested using AWS based OpenShift instances provisioned by demo.redhat.com.
 
 ## Usage
 
@@ -22,6 +23,5 @@ components:
   - ../../components/time-sliced
 ```
 
-This component is intended to be used with additional configurations to set the number of replicas.
 
-Please refer to [time-sliced-2](../time-sliced-2) and [time-sliced-4](../time-sliced-4) for complete implementations of the time slicing configuration.
+You can customize the taint applied to the GPU nodes by updating [machineset-patch.yaml](./machineset-patch.yaml) file.
