@@ -6,6 +6,7 @@ resources:
 
 components:
   - ../../components/anythingllm-image
+  - ../../components/cleanup-on-delete
   - ../../components/components-kserve-rawdeployments-only
   - ../../components/components-llamastack
   - ../../components/components-modelregistry
