@@ -20,13 +20,10 @@ rules:
       - ""
     resources:
       - namespaces
-      - pods
     verbs:
       - delete
       - get
       - list
-      - patch
-      - watch
   - apiGroups:
       - admissionregistration.k8s.io
     resources:
@@ -44,23 +41,50 @@ rules:
       - delete
       - get
       - list
-      - patch
-  - apiGroups:
-      - opendatahub.io
-    resources:
-      - datascienceclusters
-      - dscinitializations
-    verbs:
-      - delete
-      - get
-      - list
-      - patch
   - apiGroups:
       - operators.coreos.com
     resources:
       - clusterserviceversions
+      - installplans
       - operatorgroups
       - subscriptions
+    verbs:
+      - delete
+      - get
+      - list
+  - apiGroups:
+      - components.platform.opendatahub.io
+      - dashboard.opendatahub.io
+      - datasciencecluster.opendatahub.io
+      - datasciencepipelinesapplications.opendatahub.io
+      - dscinitialization.opendatahub.io
+      - features.opendatahub.io
+      - infrastructure.opendatahub.io
+      - modelregistry.opendatahub.io
+      - nim.opendatahub.io
+      - opendatahub.io
+      - services.platform.opendatahub.io
+      - trustyai.opendatahub.io
+    resources:
+      - "*"
+    verbs:
+      - delete
+      - get
+      - list
+  - apiGroups:
+      - app.k8s.io
+      - argoproj.io
+      - console.openshift.io
+      - feast.dev
+      - inference.networking.x-k8s.io
+      - kubeflow.org
+      - kueue.x-k8s.io
+      - llamastack.io
+      - ray.io
+      - serving.kserve.io
+      - workload.codeflare.dev
+    resources:
+      - "*"
     verbs:
       - delete
       - get
@@ -93,6 +117,7 @@ metadata:
   name: delete-rhoai-resources
   namespace: openshift-gitops
 spec:
+  backoffLimit: 0
   template:
     metadata:
       name: delete-rhoai-resources
@@ -100,225 +125,17 @@ spec:
       containers:
         - command:
             - /bin/bash
-            - -c
-            - |
-              set -e
-
-              echo "================================================"
-              echo "Red Hat OpenShift AI Cleanup - Official Procedure"
-              echo "================================================"
-              echo ""
-              echo "Following Red Hat documentation:"
-              echo "docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed"
-              echo ""
-              echo "This PreDelete hook runs BEFORE ArgoCD deletes Application resources,"
-              echo "ensuring proper RHOAI deletion order per Red Hat documentation."
-              echo ""
-
-              # Step 1: Delete the DataScienceCluster CR
-              # Per Red Hat docs: "Delete the DataScienceCluster instance"
-              echo "Step 1: Deleting DataScienceCluster CR..."
-              if oc get datasciencecluster.opendatahub.io default-dsc &>/dev/null; then
-                oc delete datasciencecluster.opendatahub.io default-dsc --timeout=120s --ignore-not-found 2>&1 || {
-                  echo "  ⚠️  Deletion timed out, removing finalizers..."
-                  oc patch datasciencecluster.opendatahub.io default-dsc --type=json \
-                    -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true
-                  oc delete datasciencecluster.opendatahub.io default-dsc \
-                    --ignore-not-found --grace-period=0 --force 2>/dev/null || true
-                }
-                echo "  ✅ DataScienceCluster deleted"
-              else
-                echo "  ℹ️  DataScienceCluster not found"
-              fi
-              echo ""
-
-              # Step 2: Wait for operator cleanup
-              echo "Step 2: Waiting for RHOAI operator cleanup (60s grace period)..."
-              sleep 60
-              echo "  ✅ Grace period completed"
-              echo ""
-
-              # Step 3: Delete RHOAI operator Subscription
-              # Per Red Hat docs: "Delete the Subscription object"
-              echo "Step 3: Deleting RHOAI operator Subscription..."
-              if oc get subscription.operators.coreos.com rhods-operator -n redhat-ods-operator &>/dev/null; then
-                oc delete subscription.operators.coreos.com rhods-operator \
-                  -n redhat-ods-operator --ignore-not-found --timeout=30s 2>&1 || true
-                echo "  ✅ Subscription deleted"
-              else
-                echo "  ℹ️  Subscription not found"
-              fi
-              echo ""
-
-              # Step 4: Delete ClusterServiceVersion
-              # Per Red Hat docs: "Delete the ClusterServiceVersion object"
-              echo "Step 4: Deleting RHOAI CSV..."
-              CSV_NAME=$(oc get csv.operators.coreos.com -n redhat-ods-operator \
-                -o name 2>/dev/null | grep rhods-operator || echo "")
-              if [ -n "$CSV_NAME" ]; then
-                oc delete "$CSV_NAME" -n redhat-ods-operator --ignore-not-found --timeout=60s 2>&1 || true
-                echo "  ✅ CSV deleted: $CSV_NAME"
-              else
-                echo "  ℹ️  CSV not found"
-              fi
-              echo ""
-
-              # Step 5: Wait for operator pods to terminate
-              echo "Step 5: Waiting for RHOAI operator pods to terminate..."
-              if oc get namespace redhat-ods-operator &>/dev/null; then
-                oc wait --for=delete pod --all -n redhat-ods-operator --timeout=120s 2>/dev/null || {
-                  echo "  ⚠️  Timeout waiting for pods, force deleting..."
-                  oc delete pod --all -n redhat-ods-operator --grace-period=0 --force 2>/dev/null || true
-                }
-                echo "  ✅ Operator pods terminated"
-              else
-                echo "  ℹ️  No operator pods found"
-              fi
-              echo ""
-
-              # Step 6: Delete OperatorGroup
-              echo "Step 6: Deleting OperatorGroup..."
-              if oc get operatorgroup.operators.coreos.com rhods-operator -n redhat-ods-operator &>/dev/null; then
-                oc delete operatorgroup.operators.coreos.com rhods-operator \
-                  -n redhat-ods-operator --ignore-not-found --timeout=30s 2>&1 || true
-                echo "  ✅ OperatorGroup deleted"
-              else
-                echo "  ℹ️  OperatorGroup not found"
-              fi
-              echo ""
-
-              # Step 7: Delete webhooks (prevents namespace termination deadlock)
-              echo "Step 7: Deleting RHOAI webhooks..."
-
-              VALIDATING_WEBHOOKS=$(oc get validatingwebhookconfiguration -o name 2>/dev/null \
-                | grep -E "opendatahub|kserve|rhoai" || echo "")
-              if [ -n "$VALIDATING_WEBHOOKS" ]; then
-                for webhook in $VALIDATING_WEBHOOKS; do
-                  oc delete "$webhook" --ignore-not-found 2>&1 || true
-                  echo "  ✅ Deleted: $webhook"
-                done
-              else
-                echo "  ℹ️  No validating webhooks found"
-              fi
-
-              MUTATING_WEBHOOKS=$(oc get mutatingwebhookconfiguration -o name 2>/dev/null \
-                | grep -E "opendatahub|kserve|rhoai" || echo "")
-              if [ -n "$MUTATING_WEBHOOKS" ]; then
-                for webhook in $MUTATING_WEBHOOKS; do
-                  oc delete "$webhook" --ignore-not-found 2>&1 || true
-                  echo "  ✅ Deleted: $webhook"
-                done
-              else
-                echo "  ℹ️  No mutating webhooks found"
-              fi
-              echo ""
-
-              # Step 8: Delete RHOAI namespaces
-              echo "Step 8: Deleting RHOAI namespaces..."
-
-              NAMESPACES=(
-                "redhat-ods-applications"
-                "redhat-ods-monitoring"
-                "redhat-ods-operator"
-              )
-
-              for ns in "${NAMESPACES[@]}"; do
-                if oc get namespace "$ns" &>/dev/null; then
-                  echo "  Deleting namespace: $ns"
-                  oc delete namespace "$ns" --timeout=120s 2>&1 || {
-                    echo "    ⚠️  Timeout, removing finalizers..."
-                    oc patch namespace "$ns" --type=json \
-                      -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true
-                    oc patch namespace "$ns" --type=json \
-                      -p='[{"op": "remove", "path": "/spec/finalizers"}]' 2>/dev/null || true
-                    oc delete namespace "$ns" --grace-period=0 --force 2>/dev/null || true
-                  }
-                  for i in {1..30}; do
-                    if ! oc get namespace "$ns" &>/dev/null; then
-                      echo "    ✅ Namespace $ns deleted"
-                      break
-                    fi
-                    if [ "$i" -eq 30 ]; then
-                      echo "    ⚠️  Namespace $ns still exists after cleanup attempts"
-                    fi
-                    sleep 2
-                  done
-                else
-                  echo "  ℹ️  Namespace $ns not found"
-                fi
-              done
-              echo ""
-
-              # Step 9: Delete RHOAI CRDs
-              # Per Red Hat docs: "Delete the CRDs"
-              echo "Step 9: Deleting RHOAI CRDs..."
-
-              safe_delete_crd() {
-                local crd_name=$1
-                if oc get crd "$crd_name" &>/dev/null; then
-                  echo "  Deleting CRD: $crd_name"
-                  oc delete crd "$crd_name" --timeout=60s --ignore-not-found 2>&1 || {
-                    echo "    ⚠️  Timeout, removing finalizers..."
-                    oc patch crd "$crd_name" --type=json \
-                      -p='[{"op": "remove", "path": "/metadata/finalizers"}]' 2>/dev/null || true
-                    oc delete crd "$crd_name" --ignore-not-found --grace-period=0 --force 2>/dev/null || true
-                  }
-                  echo "    ✅ CRD $crd_name deleted"
-                fi
-              }
-
-              RHOAI_CRDS=$(oc get crd -o name 2>/dev/null \
-                | grep -E "opendatahub.io|kubeflow.org" || echo "")
-              if [ -n "$RHOAI_CRDS" ]; then
-                for crd in $RHOAI_CRDS; do
-                  crd_name=$(echo "$crd" | sed 's|customresourcedefinition.apiextensions.k8s.io/||')
-                  safe_delete_crd "$crd_name"
-                done
-              else
-                echo "  ℹ️  No RHOAI CRDs found"
-              fi
-              echo ""
-
-              # Step 10: Verification
-              echo "Step 10: Verifying cleanup..."
-              CLEANUP_SUCCESS=true
-
-              for ns in "${NAMESPACES[@]}"; do
-                if oc get namespace "$ns" &>/dev/null; then
-                  echo "  ⚠️  Namespace $ns still exists"
-                  CLEANUP_SUCCESS=false
-                fi
-              done
-
-              if [ "$CLEANUP_SUCCESS" = true ]; then
-                echo "  ✅ All namespaces removed"
-              fi
-
-              REMAINING_WEBHOOKS=$(oc get validatingwebhookconfiguration,mutatingwebhookconfiguration \
-                -o name 2>/dev/null | grep -E "opendatahub|kserve|rhoai" || echo "")
-              if [ -n "$REMAINING_WEBHOOKS" ]; then
-                echo "  ⚠️  Some webhooks still exist:"
-                echo "$REMAINING_WEBHOOKS" | sed 's/^/      /'
-                CLEANUP_SUCCESS=false
-              else
-                echo "  ✅ All webhooks removed"
-              fi
-
-              echo ""
-
-              if [ "$CLEANUP_SUCCESS" = true ]; then
-                echo "================================================"
-                echo "✅ RHOAI cleanup completed successfully"
-                echo "================================================"
-              else
-                echo "================================================"
-                echo "⚠️  RHOAI cleanup completed with warnings"
-                echo "   Manual verification recommended"
-                echo "================================================"
-                exit 0  # Warnings are non-fatal; ArgoCD continues deletion
-              fi
+            - /scripts/delete-rhoai-resources.sh
           image: registry.redhat.io/openshift4/ose-cli:latest
           name: delete-rhoai-resources
+          volumeMounts:
+            - mountPath: /scripts
+              name: scripts
       restartPolicy: Never
       serviceAccountName: rhoai-cleanup
-  backoffLimit: 0
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - configMap:
+            defaultMode: 0755
+            name: rhoai-cleanup-script
+          name: scripts
