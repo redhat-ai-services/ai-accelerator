@@ -22,6 +22,7 @@ CICD
 CNI
 CRD
 CRDs
+CRs
 CUDA
 CheCluster
 CloudEvents
@@ -73,6 +74,7 @@ ITMS
 IgnoreExtraneous
 ImageSetConfiguration
 ImageStreams
+InferenceServices
 Infiniband
 Istio
 Jaeger
@@ -137,6 +139,7 @@ README
 RHACM
 RHOAI
 RawDeployments
+RayJobs
 Rebasing
 RoleBinding
 Rollout
