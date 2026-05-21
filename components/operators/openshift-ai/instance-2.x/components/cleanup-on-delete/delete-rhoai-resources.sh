@@ -110,6 +110,7 @@ oc delete modelregistries.components.platform.opendatahub.io -A --all --ignore-n
 oc delete monitorings.services.platform.opendatahub.io -A --all --ignore-not-found 2>/dev/null || true
 oc delete rays.components.platform.opendatahub.io -A --all --ignore-not-found 2>/dev/null || true
 oc delete servicemeshes.services.platform.opendatahub.io -A --all --ignore-not-found 2>/dev/null || true
+oc delete sparkoperators.components.platform.opendatahub.io -A --all --ignore-not-found 2>/dev/null || true
 oc delete trainingoperators.components.platform.opendatahub.io -A --all --ignore-not-found 2>/dev/null || true
 oc delete trustyais.components.platform.opendatahub.io -A --all --ignore-not-found 2>/dev/null || true
 oc delete workbenches.components.platform.opendatahub.io -A --all --ignore-not-found 2>/dev/null || true
@@ -273,6 +274,7 @@ oc delete crd \
   monitorings.services.platform.opendatahub.io \
   rays.components.platform.opendatahub.io \
   servicemeshes.services.platform.opendatahub.io \
+  sparkoperators.components.platform.opendatahub.io \
   trainingoperators.components.platform.opendatahub.io \
   trainers.components.platform.opendatahub.io \
   trustyais.components.platform.opendatahub.io \
