@@ -171,6 +171,8 @@ TLS
 TODO
 TaskRun
 Tekton
+TempoMonolithic
+TempoStack
 Thanos
 TrustyAI
 UI
@@ -178,6 +180,7 @@ Uncomment
 VolSync
 Workspaces
 XAI
+Zipkin
 ack
 acm
 ai
@@ -200,6 +203,7 @@ auth
 authorino
 autocompletion
 aws
+backend
 backticks
 buildah
 canada
@@ -324,6 +328,7 @@ operatorGroups
 parallelize
 param
 patchesJson
+performant
 pgvector
 postgres
 pre
