@@ -6,4 +6,4 @@ spec:
   components:
     kserve:
       modelsAsService:
-        managementState: Managed
+        managementState: Removed
