@@ -4,7 +4,7 @@ metadata:
   name: servicemeshoperator
 spec:
   channel: patch-me-see-overlays-dir
-  installPlanApproval: Automatic
+  installPlanApproval: Manual
   name: servicemeshoperator
   source: redhat-operators
   sourceNamespace: openshift-marketplace
