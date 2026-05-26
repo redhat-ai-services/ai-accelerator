@@ -6,6 +6,7 @@ APIs
 APM
 ARN
 AdoptedResource
+Alertmanager
 AmazonS
 AmazonSageMakerFullAccess
 Ansible
@@ -123,6 +124,7 @@ OSSM
 Observability
 OpenDataHub
 OpenShift
+OpenTelemetry
 OpenVino
 OperaterHub
 OperatorGroup
@@ -132,6 +134,7 @@ PV
 PolicyReport
 Prometheus
 Quarkus
+Querier
 RBAC
 README
 RHACM
@@ -142,6 +145,7 @@ RoleBinding
 Rollout
 Route
 SAR
+SDKs
 SNO
 SSO
 SaaS
