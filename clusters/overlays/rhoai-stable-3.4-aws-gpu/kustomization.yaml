@@ -25,7 +25,7 @@ resources:
 configMapGenerator:
   - name: gitops-repo-config
     literals:
-      - repoURL=https://github.com/vladi-rh/ai-accelerator.git
+      - repoURL=https://github.com/redhat-ai-services/ai-accelerator.git
       - targetRevision=main
 
 replacements:
