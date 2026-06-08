@@ -8,3 +8,4 @@ resources:
   - datasciencecluster.yaml
   - dsc-init.yaml
   - namespace.yaml
+  - odhdashboardconfig.yaml

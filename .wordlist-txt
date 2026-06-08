@@ -6,6 +6,7 @@ APIs
 APM
 ARN
 AdoptedResource
+Alertmanager
 AmazonS
 AmazonSageMakerFullAccess
 Ansible
@@ -123,6 +124,7 @@ OSSM
 Observability
 OpenDataHub
 OpenShift
+OpenTelemetry
 OpenVino
 OperaterHub
 OperatorGroup
@@ -132,6 +134,7 @@ PV
 PolicyReport
 Prometheus
 Quarkus
+Querier
 RBAC
 README
 RHACM
@@ -142,6 +145,7 @@ RoleBinding
 Rollout
 Route
 SAR
+SDKs
 SNO
 SSO
 SaaS
@@ -167,6 +171,8 @@ TLS
 TODO
 TaskRun
 Tekton
+TempoMonolithic
+TempoStack
 Thanos
 TrustyAI
 UI
@@ -174,6 +180,7 @@ Uncomment
 VolSync
 Workspaces
 XAI
+Zipkin
 ack
 acm
 ai
@@ -196,6 +203,7 @@ auth
 authorino
 autocompletion
 aws
+backend
 backticks
 buildah
 canada
@@ -320,6 +328,7 @@ operatorGroups
 parallelize
 param
 patchesJson
+performant
 pgvector
 postgres
 pre
