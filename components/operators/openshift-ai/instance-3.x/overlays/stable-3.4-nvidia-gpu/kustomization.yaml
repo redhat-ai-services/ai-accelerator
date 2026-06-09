@@ -9,6 +9,7 @@ components:
   - ../../components/components-feast
   - ../../components/components-kserve
   # - ../../components/components-kserve-maas # disabled since maas needs postgres db deployed
+  - ../../components/components-mlflow
   - ../../components/components-modelregistry
   - ../../components/components-observability
   - ../../components/components-ray
