@@ -1,4 +1,4 @@
-# components-feast
+# components-mlflow
 
 ## Purpose
 
