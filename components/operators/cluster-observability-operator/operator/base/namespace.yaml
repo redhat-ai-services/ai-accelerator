@@ -1,0 +1,6 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: openshift-cluster-observability-operator
+  labels:
+    openshift.io/cluster-monitoring: 'true'

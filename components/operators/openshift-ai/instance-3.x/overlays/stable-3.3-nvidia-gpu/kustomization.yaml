@@ -11,6 +11,7 @@ components:
   - ../../components/components-kserve
   # - ../../components/components-kserve-maas # disabled since maas needs postgres db deployed
   - ../../components/components-modelregistry
+  - ../../components/components-observability
   - ../../components/components-ray
   - ../../components/components-trainingoperator
   - ../../components/components-trustyai
