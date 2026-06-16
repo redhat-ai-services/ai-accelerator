@@ -1,0 +1,17 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+    argocd.argoproj.io/sync-wave: "10"
+  name: authorino
+spec:
+  template:
+    spec:
+      containers:
+        - name: authorino
+          env:
+            - name: SSL_CERT_FILE
+              value: /etc/ssl/certs/openshift-service-ca/service-ca-bundle.crt
+            - name: REQUESTS_CA_BUNDLE
+              value: /etc/ssl/certs/openshift-service-ca/service-ca-bundle.crt
