@@ -12,6 +12,7 @@ components:
   - ../../components/components-llamastack
   - ../../components/components-mlflow
   - ../../components/components-mlflow-basic-instance
+  - ../../components/components-kserve-maas
   - ../../components/components-modelregistry
   - ../../components/components-observability
   - ../../components/components-ray
