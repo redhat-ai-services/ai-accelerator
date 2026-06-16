@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-patch-route-host
+  namespace: openshift-ingress
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  template:
+    spec:
+      containers:
+        - name: minion
+          image: registry.redhat.io/openshift4/ose-cli
+          command:
+            - /bin/bash
+            - -c
+            - /scripts/patch-route-host.sh
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+      volumes:
+        - name: scripts
+          configMap:
+            name: job-patch-route-host
+            defaultMode: 0755
+      restartPolicy: Never
+      serviceAccount: job-patch-route-host
+      serviceAccountName: job-patch-route-host
+  backoffLimit: 4
