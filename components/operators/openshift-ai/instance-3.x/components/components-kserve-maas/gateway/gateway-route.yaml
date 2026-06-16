@@ -13,7 +13,7 @@ spec:
     # The Gateway controller creates a Service whose name is derived from the
     # Gateway name and GatewayClass name. Verify with:
     #   kubectl get svc -n openshift-ingress | grep maas-default-gateway
-    name: maas-default-gateway-openshift-default
+    name: maas-default-gateway-data-science-gateway-class
     weight: 100
   port:
     targetPort: https
