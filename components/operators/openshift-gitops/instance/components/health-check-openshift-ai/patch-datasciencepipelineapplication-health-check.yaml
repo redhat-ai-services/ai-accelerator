@@ -12,7 +12,7 @@
           degraded = false
           for i, condition in pairs(obj.status.conditions) do
 
-            if condition.status == "False" then
+            if condition.status == "False" and condition.reason ~= "NotApplicable" then
               progressing = true
               msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. condition.reason .. " | " .. condition.message .. "\n"
             end

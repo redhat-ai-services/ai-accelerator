@@ -1,0 +1,46 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: lasagna-rag
+  namespace: openshift-gitops
+  labels:
+    gitops.ownedBy: cluster-config
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  destination:
+    namespace: lasagna-rag
+    server: https://kubernetes.default.svc
+  project: cluster-config
+  source:
+    repoURL: https://github.com/DevoteamNL/sovereign-ai-rag.git
+    targetRevision: main
+    path: deploy/helm/rag
+    helm:
+      valuesObject:
+        global:
+          models:
+            llama-3-2-3b-instruct:
+              enabled: true
+              tolerations:
+                - key: nvidia.com/gpu
+                  effect: NoSchedule
+                  operator: Exists
+            llama-guard-3-8b:
+              enabled: true
+              tolerations:
+                - key: nvidia.com/gpu
+                  effect: NoSchedule
+                  operator: Exists
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - SkipDryRunOnMissingResource=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 20m

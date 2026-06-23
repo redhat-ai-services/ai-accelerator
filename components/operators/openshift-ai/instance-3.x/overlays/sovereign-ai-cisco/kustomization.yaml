@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+# DataScienceCluster component selection for this overlay, mapped from the
+# 2.x sovereign-ai-rhdp set to 3.x equivalents:
+#   2.x components-datasciencepipelines        -> 3.x components-aipipelines
+#   2.x components-kserve-rawdeployments-only   -> 3.x components-kserve (raw is the 3.x default)
+#   2.x components-llamastack / -modelregistry  -> unchanged
+#   2.x make-kubeadmin-cluster-admin            -> not present in 3.x, dropped
+# Intentionally omitted vs the full stable-3.x-nvidia-gpu overlay (add if
+# needed): components-feast, -ray, -trainingoperator, -trustyai,
+# -workbenches, -kserve-maas, inference-gateway.
+components:
+  - ../../components/components-aipipelines
+  - ../../components/components-kserve
+  - ../../components/components-llamastack
+  - ../../components/components-modelregistry
+  - ../../components/hardware-profiles-nvidia-gpu
+  - ../../components/idle-notebook-culling
+  - ../../components/rhoai-auth
