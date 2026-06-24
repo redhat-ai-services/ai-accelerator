@@ -2,8 +2,8 @@ apiVersion: kustomize.config.k8s.io/v1alpha1
 kind: Component
 
 resources:
-  - rbac.yaml
   - patch-route-host-job.yaml
+  - rbac.yaml
 
 generatorOptions:
   disableNameSuffixHash: true
