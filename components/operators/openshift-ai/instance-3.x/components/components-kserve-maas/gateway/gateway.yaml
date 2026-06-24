@@ -15,7 +15,7 @@ spec:
     parametersRef:
       group: ""
       kind: ConfigMap
-      name: gw-options
+      name: maas-gw-options
   listeners:
     - name: https
       port: 443
