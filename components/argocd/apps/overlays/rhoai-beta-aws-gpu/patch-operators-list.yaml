@@ -19,6 +19,11 @@ spec:
       - cluster: local
         url: https://kubernetes.default.svc
         values:
+          name: cloudnative-pg
+          path: components/operators/cloudnative-pg/operator/overlays/stable-v1
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
           name: kiali-operator
           path: components/operators/kiali-operator/operator/overlays/stable
       - cluster: local
