@@ -22,4 +22,5 @@ components:
   - ../../components/hardware-profiles-nvidia-gpu
   - ../../components/idle-notebook-culling
   - ../../components/inference-gateway
+  - ../../components/maas-postgres-cnpg
   - ../../components/rhoai-auth

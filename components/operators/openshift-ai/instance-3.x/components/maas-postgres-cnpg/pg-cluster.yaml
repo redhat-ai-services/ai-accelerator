@@ -1,0 +1,28 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: openshift-ai-maas
+  namespace: maas-db
+spec:
+  bootstrap:
+    initdb:
+      database: maas
+      owner: maas
+  certificates:
+    serverCASecret: openshift-ai-maas-certificate
+    serverTLSSecret: openshift-ai-maas-certificate
+  instances: 1
+  managed:
+    roles:
+      - login: true
+        name: maas
+  resources:
+    limits:
+      cpu: '1'
+      memory: 2Gi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+  storage:
+    size: 2Gi
+    storageClass: gp3-csi
