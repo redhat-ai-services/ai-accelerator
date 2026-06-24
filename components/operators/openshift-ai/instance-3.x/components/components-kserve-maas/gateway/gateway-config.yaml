@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: gw-options
+  name: maas-gw-options
   namespace: openshift-ingress
 data:
   service: |
