@@ -54,6 +54,11 @@ spec:
       - cluster: local
         url: https://kubernetes.default.svc
         values:
+          name: openshift-external-secrets-operator
+          path: components/operators/openshift-external-secrets-operator/aggregate/overlays/stable-v1
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
           name: openshift-gitops-operator
           path: components/operators/openshift-gitops/aggregate/overlays/rhdp
       - cluster: local
