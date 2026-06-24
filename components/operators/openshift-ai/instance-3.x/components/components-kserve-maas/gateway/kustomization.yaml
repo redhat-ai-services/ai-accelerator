@@ -5,6 +5,6 @@ components:
   - ./route-hostname-job
 
 resources:
-  - gateway.yaml
   - gateway-config.yaml
   - gateway-route.yaml
+  - gateway.yaml
