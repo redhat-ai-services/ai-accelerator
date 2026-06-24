@@ -1,0 +1,26 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: openshift-ai-maas
+  namespace: maas-db
+spec:
+  dnsNames:
+    - openshift-ai-maas-rw
+    - openshift-ai-maas-rw.maas-db
+    - openshift-ai-maas-rw.maas-db.svc
+    - openshift-ai-maas-rw.maas-db.svc.cluster.local
+    - openshift-ai-maas-ro
+    - openshift-ai-maas-ro.maas-db
+    - openshift-ai-maas-ro.maas-db.svc
+    - openshift-ai-maas-ro.maas-db.svc.cluster.local
+    - openshift-ai-maas-r
+    - openshift-ai-maas-r.maas-db
+    - openshift-ai-maas-r.maas-db.svc
+    - openshift-ai-maas-r.maas-db.svc.cluster.local
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: ca-issuer
+  secretName: openshift-ai-maas-certificate
+  usages:
+    - server auth
