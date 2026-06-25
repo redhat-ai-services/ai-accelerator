@@ -11,11 +11,16 @@ spec:
         values:
           name: cluster-autoscaling
           path: components/cluster-configs/autoscaling/overlays/default
+        - cluster: local
+          url: https://kubernetes.default.svc
+          values:
+            name: htpasswd
+            path: components/cluster-configs/htpasswd/overlays/maas
       - cluster: local
         url: https://kubernetes.default.svc
         values:
-          name: htpasswd
-          path: components/cluster-configs/htpasswd/overlays/maas
+          name: selfsigned-internal-ca
+          path: components/cluster-configs/self-signed-internal-ca/overlays/default
       - cluster: local
         url: https://kubernetes.default.svc
         values:
