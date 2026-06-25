@@ -8,7 +8,7 @@ components:
   - ../../components/components-aipipelines
   - ../../components/components-feast
   - ../../components/components-kserve
-  # - ../../components/components-kserve-maas # disabled since maas needs postgres db deployed
+  - ../../components/components-kserve-maas
   - ../../components/components-llamastack
   - ../../components/components-mlflow
   - ../../components/components-kserve-maas
