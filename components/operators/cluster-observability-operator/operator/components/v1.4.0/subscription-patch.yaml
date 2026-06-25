@@ -4,4 +4,4 @@ metadata:
   name: cluster-observability-operator
 spec:
   installPlanApproval: Manual
-  startingCSV: cluster-observability-operator.v1.5.0
+  startingCSV: cluster-observability-operator.v1.4.0
