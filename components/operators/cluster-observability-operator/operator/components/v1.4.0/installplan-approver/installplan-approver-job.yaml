@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: installplan-approver
+spec:
+  template:
+    spec:
+      containers:
+        - name: installplan-approver
+          image: registry.redhat.io/openshift4/ose-cli-rhel9
+          imagePullPolicy: Always
+          env:
+            - name: SLEEP
+              value: "20"
+          command:
+            - /bin/bash
+            - -c
+            - /scripts/installplan-approver.sh
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+      volumes:
+        - name: scripts
+          configMap:
+            name: job-installplan-approver
+            defaultMode: 0755
+      dnsPolicy: ClusterFirst
+      restartPolicy: OnFailure
+      serviceAccount: installplan-approver-job
+      serviceAccountName: installplan-approver-job
+      terminationGracePeriodSeconds: 30
