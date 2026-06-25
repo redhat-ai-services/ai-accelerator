@@ -9,10 +9,10 @@ spec:
       - cluster: local
         url: https://kubernetes.default.svc
         values:
-          name: user-workload-monitoring
-          path: components/cluster-configs/user-workload-monitoring/overlays/default
+          name: cluster-autoscaling
+          path: components/cluster-configs/autoscaling/overlays/default
       - cluster: local
         url: https://kubernetes.default.svc
         values:
-          name: cluster-autoscaling
-          path: components/cluster-configs/autoscaling/overlays/default
+          name: user-workload-monitoring
+          path: components/cluster-configs/user-workload-monitoring/overlays/default
