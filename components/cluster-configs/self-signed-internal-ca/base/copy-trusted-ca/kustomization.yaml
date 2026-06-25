@@ -1,0 +1,106 @@
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+
+resources:
+  - copy-trusted-ca-job.yaml
+  - rbac.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+configMapGenerator:
+  - name: job-copy-trusted-ca-settings
+    literals:
+      - SOURCE_SECRET_NAMESPACE=cert-manager
+      - SOURCE_SECRET_NAME=cert-manager-ca
+      - SOURCE_SECRET_KEY=tls.crt
+      - TARGET_CONFIGMAP_NAMESPACE=openshift-config
+      - TARGET_CONFIGMAP_NAME=user-ca-bundle
+      - TARGET_CONFIGMAP_KEY=ca-bundle.crt
+      - JOB_NAMESPACE=cert-manager
+  - name: job-copy-trusted-ca
+    namespace: cert-manager
+    files:
+      - copy-trusted-ca.sh
+
+replacements:
+  - source:
+      kind: ConfigMap
+      name: job-copy-trusted-ca-settings
+      fieldPath: data.JOB_NAMESPACE
+    targets:
+      - select:
+          kind: ServiceAccount
+          name: job-copy-trusted-ca
+        fieldPaths:
+          - metadata.namespace
+      - select:
+          kind: Job
+          name: job-copy-trusted-ca
+        fieldPaths:
+          - metadata.namespace
+      - select:
+          kind: ConfigMap
+          name: job-copy-trusted-ca
+        fieldPaths:
+          - metadata.namespace
+      - select:
+          kind: RoleBinding
+          name: job-copy-trusted-ca-secret-reader
+        fieldPaths:
+          - subjects.0.namespace
+      - select:
+          kind: RoleBinding
+          name: job-copy-trusted-ca-configmap-writer
+        fieldPaths:
+          - subjects.0.namespace
+  - source:
+      kind: ConfigMap
+      name: job-copy-trusted-ca-settings
+      fieldPath: data.SOURCE_SECRET_NAMESPACE
+    targets:
+      - select:
+          kind: Role
+          name: job-copy-trusted-ca-secret-reader
+        fieldPaths:
+          - metadata.namespace
+      - select:
+          kind: RoleBinding
+          name: job-copy-trusted-ca-secret-reader
+        fieldPaths:
+          - metadata.namespace
+  - source:
+      kind: ConfigMap
+      name: job-copy-trusted-ca-settings
+      fieldPath: data.SOURCE_SECRET_NAME
+    targets:
+      - select:
+          kind: Role
+          name: job-copy-trusted-ca-secret-reader
+        fieldPaths:
+          - rules.0.resourceNames.0
+  - source:
+      kind: ConfigMap
+      name: job-copy-trusted-ca-settings
+      fieldPath: data.TARGET_CONFIGMAP_NAMESPACE
+    targets:
+      - select:
+          kind: Role
+          name: job-copy-trusted-ca-configmap-writer
+        fieldPaths:
+          - metadata.namespace
+      - select:
+          kind: RoleBinding
+          name: job-copy-trusted-ca-configmap-writer
+        fieldPaths:
+          - metadata.namespace
+  - source:
+      kind: ConfigMap
+      name: job-copy-trusted-ca-settings
+      fieldPath: data.TARGET_CONFIGMAP_NAME
+    targets:
+      - select:
+          kind: Role
+          name: job-copy-trusted-ca-configmap-writer
+        fieldPaths:
+          - rules.1.resourceNames.0
