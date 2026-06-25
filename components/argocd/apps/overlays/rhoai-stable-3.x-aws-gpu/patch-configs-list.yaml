@@ -19,5 +19,10 @@ spec:
       - cluster: local
         url: https://kubernetes.default.svc
         values:
+          name: selfsigned-internal-ca
+          path: components/cluster-configs/self-signed-internal-ca/overlays/default
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
           name: user-workload-monitoring
           path: components/cluster-configs/user-workload-monitoring/overlays/default
