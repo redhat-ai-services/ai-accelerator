@@ -9,3 +9,4 @@ resources:
 
 components:
   - ../../components/maas-tls
+  - ../../components/observability
