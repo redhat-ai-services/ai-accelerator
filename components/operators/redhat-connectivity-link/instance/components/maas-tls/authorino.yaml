@@ -14,6 +14,7 @@ spec:
         name: authorino-server-cert
   oidcServer:
     tls:
-      enabled: true
-      certSecretRef:
-        name: authorino-server-cert
+      enabled: false
+      # enabled: true
+      # certSecretRef:
+      #   name: authorino-server-cert
