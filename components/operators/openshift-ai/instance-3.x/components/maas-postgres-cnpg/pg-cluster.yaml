@@ -2,7 +2,7 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: openshift-ai-maas
-  namespace: maas-db
+  namespace: models-as-a-service-db
 spec:
   bootstrap:
     initdb:
