@@ -2,8 +2,6 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: installplan-approver
-  annotations:
-    argocd.argoproj.io/sync-wave: "10"
 spec:
   template:
     spec:
