@@ -5,13 +5,14 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-options: ServerSideApply=true
     service.beta.openshift.io/serving-cert-secret-name: authorino-server-cert
-spec:
-  ports:
-    - name: grpc
-      protocol: TCP
-      port: 50051
-      targetPort: 50051
-    - name: http
-      protocol: TCP
-      port: 5001
-      targetPort: 5001
+    argocd.argoproj.io/sync-wave: "10"
+# spec:
+#   ports:
+#     - name: grpc
+#       protocol: TCP
+#       port: 50051
+#       targetPort: 50051
+#     - name: http
+#       protocol: TCP
+#       port: 5001
+#       targetPort: 5001

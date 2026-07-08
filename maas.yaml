@@ -1,0 +1,68 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+    service.beta.openshift.io/serving-cert-secret-name: authorino-server-cert
+  name: authorino-authorino-authorization
+  namespace: kuadrant-system
+spec:
+  ports:
+  - name: grpc
+    port: 50051
+    protocol: TCP
+    targetPort: 50051
+  - name: http
+    port: 5001
+    protocol: TCP
+    targetPort: 5001
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+    argocd.argoproj.io/sync-wave: "10"
+  name: authorino
+  namespace: kuadrant-system
+spec:
+  template:
+    spec:
+      containers:
+      - env:
+        - name: SSL_CERT_FILE
+          value: /etc/ssl/certs/openshift-service-ca/service-ca-bundle.crt
+        - name: REQUESTS_CA_BUNDLE
+          value: /etc/ssl/certs/openshift-service-ca/service-ca-bundle.crt
+        name: authorino
+---
+apiVersion: kuadrant.io/v1beta1
+kind: Kuadrant
+metadata:
+  name: kuadrant
+  namespace: kuadrant-system
+spec:
+  observability:
+    enable: true
+---
+apiVersion: operator.authorino.kuadrant.io/v1beta1
+kind: Authorino
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+  name: authorino
+  namespace: kuadrant-system
+spec:
+  clusterWide: true
+  listener:
+    tls:
+      certSecretRef:
+        name: authorino-server-cert
+      enabled: true
+  oidcServer:
+    tls:
+      certSecretRef:
+        name: authorino-server-cert
+      enabled: true
+  replicas: 1
