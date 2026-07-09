@@ -1,4 +1,3 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
@@ -6,4 +5,4 @@ resources:
 
 components:
   - ../../components/schedule-on-tainted-nodes
-  - ../../components/time-sliced-2
+  - ../../components/time-sliced
