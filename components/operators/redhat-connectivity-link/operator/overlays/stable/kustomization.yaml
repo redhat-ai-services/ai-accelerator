@@ -4,8 +4,8 @@ kind: Kustomization
 
 namespace: kuadrant-system
 
-# components:
-#   - ../../components/v1.3.4 # pin to v1.3.4 due to issues with 1.4.0
+components:
+  - ../../components/v1.3.4 # pin to v1.3.4 due to issues with 1.4.0
 
 resources:
   - ../../base
