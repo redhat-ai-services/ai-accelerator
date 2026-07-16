@@ -1,0 +1,141 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    argocd.argoproj.io/hook: PreDelete
+    argocd.argoproj.io/sync-wave: "-1"
+  name: rhoai-cleanup
+  namespace: openshift-gitops
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    argocd.argoproj.io/hook: PreDelete
+    argocd.argoproj.io/sync-wave: "-1"
+  name: rhoai-cleanup
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - delete
+      - get
+      - list
+  - apiGroups:
+      - admissionregistration.k8s.io
+    resources:
+      - mutatingwebhookconfigurations
+      - validatingwebhookconfigurations
+    verbs:
+      - delete
+      - get
+      - list
+  - apiGroups:
+      - apiextensions.k8s.io
+    resources:
+      - customresourcedefinitions
+    verbs:
+      - delete
+      - get
+      - list
+  - apiGroups:
+      - operators.coreos.com
+    resources:
+      - clusterserviceversions
+      - installplans
+      - operatorgroups
+      - subscriptions
+    verbs:
+      - delete
+      - get
+      - list
+  - apiGroups:
+      - components.platform.opendatahub.io
+      - dashboard.opendatahub.io
+      - datasciencecluster.opendatahub.io
+      - datasciencepipelinesapplications.opendatahub.io
+      - dscinitialization.opendatahub.io
+      - features.opendatahub.io
+      - infrastructure.opendatahub.io
+      - modelregistry.opendatahub.io
+      - nim.opendatahub.io
+      - opendatahub.io
+      - services.platform.opendatahub.io
+      - trustyai.opendatahub.io
+    resources:
+      - "*"
+    verbs:
+      - delete
+      - get
+      - list
+  - apiGroups:
+      - app.k8s.io
+      - argoproj.io
+      - console.openshift.io
+      - feast.dev
+      - inference.networking.x-k8s.io
+      - kubeflow.org
+      - kueue.x-k8s.io
+      - llamastack.io
+      - ray.io
+      - serving.kserve.io
+      - workload.codeflare.dev
+    resources:
+      - "*"
+    verbs:
+      - delete
+      - get
+      - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  annotations:
+    argocd.argoproj.io/hook: PreDelete
+    argocd.argoproj.io/sync-wave: "-1"
+  name: rhoai-cleanup
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: rhoai-cleanup
+subjects:
+  - kind: ServiceAccount
+    name: rhoai-cleanup
+    namespace: openshift-gitops
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    argocd.argoproj.io/hook: PreDelete
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded,HookFailed
+    argocd.argoproj.io/sync-options: Force=true
+    argocd.argoproj.io/sync-wave: "0"
+  name: delete-rhoai-resources
+  namespace: openshift-gitops
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      name: delete-rhoai-resources
+    spec:
+      containers:
+        - command:
+            - /bin/bash
+            - /scripts/delete-rhoai-resources.sh
+          image: registry.redhat.io/openshift4/ose-cli:latest
+          name: delete-rhoai-resources
+          volumeMounts:
+            - mountPath: /scripts
+              name: scripts
+      restartPolicy: Never
+      serviceAccountName: rhoai-cleanup
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - configMap:
+            defaultMode: 0755
+            name: rhoai-cleanup-script
+          name: scripts
