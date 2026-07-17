@@ -99,6 +99,7 @@ Lifecycle
 LlamaStack
 Logstash
 MLOps
+MLflow
 MTA
 MaaS
 MachineConfig
@@ -301,6 +302,7 @@ microservice
 microservices
 mig
 minio
+mlflow
 modelregistry
 na
 namespace
