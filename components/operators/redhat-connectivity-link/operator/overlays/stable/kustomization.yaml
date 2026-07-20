@@ -5,6 +5,9 @@ kind: Kustomization
 resources:
   - ../../base
 
+components:
+  - ../../components/enable-console-plugin
+
 patches:
   - path: patch-channel.yaml
     target:
