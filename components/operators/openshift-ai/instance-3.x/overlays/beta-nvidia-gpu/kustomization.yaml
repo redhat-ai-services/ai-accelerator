@@ -11,6 +11,7 @@ components:
   # - ../../components/components-kserve-maas # disabled since maas needs postgres db deployed
   - ../../components/components-llamastack
   - ../../components/components-mlflow
+  - ../../components/components-mlflow-basic-instance
   - ../../components/components-modelregistry
   - ../../components/components-observability
   - ../../components/components-ray
