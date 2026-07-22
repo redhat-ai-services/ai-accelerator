@@ -9,7 +9,7 @@ generatorOptions:
   disableNameSuffixHash: true
 
 configMapGenerator:
-  - name: job-kuardrant-console-plugin
+  - name: job-kuadrant-console-plugin
     namespace: kuadrant-system
     files:
       - console-plugin-job.sh
