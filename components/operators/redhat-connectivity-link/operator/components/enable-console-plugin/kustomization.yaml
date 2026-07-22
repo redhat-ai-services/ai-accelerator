@@ -10,5 +10,6 @@ generatorOptions:
 
 configMapGenerator:
   - name: job-kuardrant-console-plugin
+    namespace: kuadrant-system
     files:
       - console-plugin-job.sh
