@@ -119,6 +119,7 @@ OADP
 OAuth
 OCSInitialization
 ODH
+OGX
 OLM
 ONNX
 OSSM
@@ -184,6 +185,7 @@ XAI
 Zipkin
 ack
 acm
+agentic
 ai
 aipipelines
 aiservices
@@ -320,6 +322,7 @@ oc
 ocp
 ocs
 odf
+ogx
 olm
 openAPI
 opendatahub
