@@ -2,12 +2,13 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: job-kuardrant-console-plugin
+  name: job-kuadrant-console-plugin
+  namespace: kuadrant-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: job-kuardrant-console-plugin
+  name: job-kuadrant-console-plugin
 rules:
   - apiGroups:
       - operator.openshift.io
@@ -22,19 +23,21 @@ rules:
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: job-kuardrant-console-plugin
+  name: job-kuadrant-console-plugin
 subjects:
   - kind: ServiceAccount
-    name: job-kuardrant-console-plugin
+    name: job-kuadrant-console-plugin
+    namespace: kuadrant-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: job-kuardrant-console-plugin
+  name: job-kuadrant-console-plugin
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: job-kuardrant-console-plugin
+  name: job-kuadrant-console-plugin
+  namespace: kuadrant-system
   annotations:
     argocd.argoproj.io/sync-wave: "10"
 spec:
@@ -56,9 +59,9 @@ spec:
       volumes:
         - name: scripts
           configMap:
-            name: job-kuardrant-console-plugin
+            name: job-kuadrant-console-plugin
             defaultMode: 0755
       restartPolicy: Never
-      serviceAccount: job-kuardrant-console-plugin
-      serviceAccountName: job-kuardrant-console-plugin
+      serviceAccount: job-kuadrant-console-plugin
+      serviceAccountName: job-kuadrant-console-plugin
   backoffLimit: 4
