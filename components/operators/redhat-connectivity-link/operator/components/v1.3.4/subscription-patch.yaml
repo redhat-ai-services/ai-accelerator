@@ -1,0 +1,9 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: rhcl-operator
+  annotations:
+    argocd.argoproj.io/ignore-healthcheck: "true"
+spec:
+  installPlanApproval: Manual
+  startingCSV: rhcl-operator.v1.3.4

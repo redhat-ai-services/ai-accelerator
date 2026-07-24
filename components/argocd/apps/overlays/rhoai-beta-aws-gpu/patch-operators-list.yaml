@@ -15,7 +15,12 @@ spec:
         url: https://kubernetes.default.svc
         values:
           name: connectivity-link-operator
-          path: components/operators/redhat-connectivity-link/aggregate/overlays/auth
+          path: components/operators/redhat-connectivity-link/aggregate/overlays/maas
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
+          name: cloudnative-pg
+          path: components/operators/cloudnative-pg/operator/overlays/stable-v1
       - cluster: local
         url: https://kubernetes.default.svc
         values:
@@ -46,6 +51,11 @@ spec:
         values:
           name: openshift-custom-metrics-autoscaler-operator
           path: components/operators/openshift-custom-metrics-autoscaler/operator/overlays/stable
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
+          name: openshift-external-secrets-operator
+          path: components/operators/openshift-external-secrets-operator/aggregate/overlays/stable-v1
       - cluster: local
         url: https://kubernetes.default.svc
         values:

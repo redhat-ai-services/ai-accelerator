@@ -1,0 +1,24 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: maas-gateway-route
+  namespace: openshift-ingress
+  annotations:
+    router.openshift.io/service-ca-certificate: 'true'
+spec:
+  # Replace with your actual hostname.
+  #host: maas.apps.<cluster-url>
+  to:
+    kind: Service
+    # The Gateway controller creates a Service whose name is derived from the
+    # Gateway name and GatewayClass name. Verify with:
+    #   kubectl get svc -n openshift-ingress | grep maas-default-gateway
+    name: maas-default-gateway-data-science-gateway-class
+    weight: 100
+  port:
+    targetPort: https
+  tls:
+    # Re-encrypt: the Router terminates the client TLS session and opens a new
+    # TLS connection to the Gateway Service using the service-ca certificate.
+    termination: reencrypt
+    insecureEdgeTerminationPolicy: Redirect
