@@ -263,8 +263,24 @@ get_git_basename(){
     REPO_URL=$1
   fi
 
-  QUERY='s#(git@|https://)github.com[:/]([a-zA-Z0-9_.-]+/[a-zA-Z0-9_.-]+)\.git#\2#'
-  REPO_BASENAME=$(echo ${REPO_URL} | sed -E  ${QUERY})
+  # Normalize the URL before parsing so we handle all the ways people
+  # clone a repo: with/without a trailing slash, and with/without a
+  # trailing ".git" suffix (e.g. "org/repo/", "org/repo/.git", "org/repo.git", "org/repo").
+  NORMALIZED_URL=${REPO_URL%/}
+  NORMALIZED_URL=${NORMALIZED_URL%.git}
+  NORMALIZED_URL=${NORMALIZED_URL%/}
+
+  QUERY='s#^(git@|https://)github\.com[:/]([a-zA-Z0-9_.-]+/[a-zA-Z0-9_.-]+)$#\2#'
+  REPO_BASENAME=$(echo "${NORMALIZED_URL}" | sed -E "${QUERY}")
+
+  # If the pattern didn't match (e.g. an unexpected/malformed URL), sed
+  # returns the input unchanged. Detect that instead of silently passing
+  # a bogus value back to callers who will build a new URL out of it.
+  if [[ "${REPO_BASENAME}" == "${NORMALIZED_URL}" ]] || [[ ! "${REPO_BASENAME}" =~ ^[a-zA-Z0-9_.-]+/[a-zA-Z0-9_.-]+$ ]]; then
+    echo "Unable to parse '${REPO_URL}' as a github.com org/repo URL." >&2
+    return 1
+  fi
+
   echo ${REPO_BASENAME}
 }
 
@@ -364,11 +380,17 @@ check_repo(){
   else
 
     GIT_REPO=$(git config --get remote.origin.url)
-    GIT_REPO_BASENAME=$(get_git_basename ${GIT_REPO})
+    if ! GIT_REPO_BASENAME=$(get_git_basename ${GIT_REPO}); then
+      print_warning "Unable to parse your git remote (${GIT_REPO}). Skipping repo URL check."
+      return
+    fi
 
     # Extract repoURL from configMapGenerator literal
     OVERLAY_REPO=$(yq -r '.configMapGenerator[] | select(.name == "gitops-repo-config") | .literals[]' ${CLUSTER_KUSTOMIZATION} | grep "^repoURL=" | cut -d= -f2)
-    OVERLAY_REPO_BASENAME=$(get_git_basename ${OVERLAY_REPO})
+    if ! OVERLAY_REPO_BASENAME=$(get_git_basename ${OVERLAY_REPO}); then
+      print_warning "Unable to parse the repo URL in ${CLUSTER_KUSTOMIZATION} (${OVERLAY_REPO}). Skipping repo URL check."
+      return
+    fi
 
     if [[ ${GIT_REPO_BASENAME} == ${OVERLAY_REPO_BASENAME} ]] ; then
       echo "Your working repo ${GIT_REPO}, matches your cluster overlay repo ${OVERLAY_REPO}"
