@@ -43,6 +43,13 @@ ocp_aws_create_gpu_machineset(){
   oc -n openshift-machine-api \
     patch "${MACHINE_SET_TYPE}" \
     --type=merge --patch '{"spec":{"template":{"spec":{"providerSpec":{"value":{"instanceType":"'"${INSTANCE_TYPE}"'"}}}}}}'
+
+  NODE_VOLUME_SIZE=${NODE_VOLUME_SIZE:-100}
+  echo "Patching ${MACHINE_SET_TYPE} blockDevices volumeSize to ${NODE_VOLUME_SIZE}."
+  oc -n openshift-machine-api \
+    patch "${MACHINE_SET_TYPE}" \
+    --type=json \
+    --patch '[{"op":"replace","path":"/spec/template/spec/providerSpec/value/blockDevices/0/ebs/volumeSize","value":'"${NODE_VOLUME_SIZE}"'}]'
 }
 
 ocp_aws_clone_machineset(){

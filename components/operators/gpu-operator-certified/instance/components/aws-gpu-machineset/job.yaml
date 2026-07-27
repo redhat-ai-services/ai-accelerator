@@ -18,6 +18,8 @@ spec:
           env:
             - name: INSTANCE_TYPE
               value: "g6e.4xlarge"
+            - name: NODE_VOLUME_SIZE
+              value: "250"
             - name: NAMESPACE
               valueFrom:
                 fieldRef:
