@@ -1,0 +1,6 @@
+- op: replace
+  path: /spec/installPlanApproval
+  value: Manual
+- op: add
+  path: /spec/startingCSV
+  value: cluster-observability-operator.v1.4.0
