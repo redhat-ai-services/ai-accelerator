@@ -13,3 +13,15 @@ configMapGenerator:
     namespace: kuadrant-system
     files:
       - console-plugin-job.sh
+
+replacements:
+  - source:
+      kind: Subscription
+      name: rhcl-operator
+      fieldPath: metadata.namespace
+    targets:
+      - select:
+          kind: ConsolePlugin
+          name: kuadrant-console-plugin
+        fieldPaths:
+          - spec.backend.service.namespace
