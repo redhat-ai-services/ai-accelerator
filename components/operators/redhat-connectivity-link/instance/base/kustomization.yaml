@@ -7,6 +7,3 @@ namespace: kuadrant-system
 resources:
   - kuadrant-system-namespace.yaml
   - kuadrant.yaml
-
-components:
-  - ../components/wait-for-servicemesh
