@@ -1,7 +1,7 @@
 .DS_Store
 
 .idea/
-manifest.yaml
+manifest*.yaml
 venv/
 dictionary.dic
 tmp/
