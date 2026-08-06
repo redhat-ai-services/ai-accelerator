@@ -1,0 +1,12 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  labels:
+    operators.coreos.com/job-set.openshift-jobset-operator: ''
+  name: job-set
+spec:
+  channel: patch-me-see-overlays-dir
+  installPlanApproval: Automatic
+  name: job-set
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
