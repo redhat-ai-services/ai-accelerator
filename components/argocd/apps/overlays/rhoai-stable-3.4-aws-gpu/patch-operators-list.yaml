@@ -54,6 +54,11 @@ spec:
       - cluster: local
         url: https://kubernetes.default.svc
         values:
+          name: openshift-jobset-operator
+          path: components/operators/openshift-jobset/operator/overlays/stable-v1.0
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
           name: openshift-pipelines-operator
           path: components/operators/openshift-pipelines/operator/overlays/latest
       - cluster: local
