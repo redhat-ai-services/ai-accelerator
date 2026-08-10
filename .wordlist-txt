@@ -59,6 +59,7 @@ Eventing
 FullAccess
 GPUs
 GatewayClass
+Gaudi
 GenAI
 Gi
 GitOps
@@ -142,6 +143,7 @@ RBAC
 README
 RHACM
 RHOAI
+ROCm
 RawDeployments
 Rebasing
 RoleBinding
@@ -162,6 +164,7 @@ ServingRuntime
 Skupper
 SonarQube
 SpringBoot
+Spyre
 Stackrox
 StorageClass
 StorageCluster
@@ -190,6 +193,7 @@ agentic
 ai
 aipipelines
 aiservices
+amd
 amq
 anythingllm
 api
@@ -249,6 +253,7 @@ eus
 eventing
 explainability
 finalizer
+gaudi
 generatorOptions
 github
 githubusercontent
