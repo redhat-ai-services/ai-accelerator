@@ -4,6 +4,8 @@ kind: Kustomization
 namespace: openshift-config
 
 resources:
+  - cluster-admins-group.yaml
+  - cluster-admins-rolebinding.yaml
   - oauth.yaml
 
 generatorOptions:
