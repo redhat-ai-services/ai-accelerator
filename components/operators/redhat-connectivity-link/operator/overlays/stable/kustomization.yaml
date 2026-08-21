@@ -10,6 +10,18 @@ resources:
 components:
   - ../../components/enable-console-plugin
 
+replacements:
+  - source:
+      kind: Subscription
+      name: rhcl-operator
+      fieldPath: metadata.namespace
+    targets:
+      - select:
+          kind: ConsolePlugin
+          name: kuadrant-console-plugin
+        fieldPaths:
+          - spec.backend.service.namespace
+
 patches:
   - path: patch-channel.yaml
     target:
