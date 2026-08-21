@@ -1,1 +1,1 @@
-Pins the install to v1.3.4 of RHCL due to issues with 1.4.0.
+Pins the install to v1.4.0 of COO due to issues with 1.5.0.
