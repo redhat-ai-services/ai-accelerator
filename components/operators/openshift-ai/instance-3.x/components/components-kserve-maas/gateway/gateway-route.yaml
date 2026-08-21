@@ -7,7 +7,7 @@ metadata:
     router.openshift.io/service-ca-certificate: 'true'
 spec:
   # Replace with your actual hostname.
-  #host: maas.apps.<cluster-url>
+  # host: maas.apps.<cluster-url>
   to:
     kind: Service
     # The Gateway controller creates a Service whose name is derived from the
