@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: openshift-cluster-observability-operator
 
 components:
-  - ../../components/v1.4.0 # pin to v1.4.0 due to issues with 1.5.0  
+  - ../../components/v1.4.0 # pin to v1.4.0 due to issues with 1.5.0
 
 resources:
   - ../../base
