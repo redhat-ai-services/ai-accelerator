@@ -4,6 +4,6 @@ kind: Kustomization
 namespace: cloudnative-pg-operator
 
 resources:
-  - subscription.yaml
-  - operatorgroup.yaml
   - namespace.yaml
+  - operatorgroup.yaml
+  - subscription.yaml

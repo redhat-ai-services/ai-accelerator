@@ -7,6 +7,5 @@ components:
 resources:
   - ca-clusterissuer.yaml
   - cluster-proxy.yaml
-  - selfsigned-clusterissuer.yaml
   - selfsigned-certificate.yaml
-
+  - selfsigned-clusterissuer.yaml

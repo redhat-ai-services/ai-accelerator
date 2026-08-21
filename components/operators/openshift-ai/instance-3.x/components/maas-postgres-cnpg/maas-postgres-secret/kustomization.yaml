@@ -3,5 +3,5 @@ kind: Component
 
 resources:
   - externalsecret.yaml
-  - secretstore.yaml
   - rbac.yaml
+  - secretstore.yaml
