@@ -15,7 +15,7 @@ configMapGenerator:
       - SOURCE_SECRET_NAME=cert-manager-ca
       - SOURCE_SECRET_KEY=tls.crt
       - TARGET_CONFIGMAP_NAMESPACE=openshift-config
-      - TARGET_CONFIGMAP_NAME=user-ca-bundle
+      - TARGET_CONFIGMAP_NAME=selfsigned-ca-bundle
       - TARGET_CONFIGMAP_KEY=ca-bundle.crt
       - JOB_NAMESPACE=cert-manager
   - name: job-copy-trusted-ca
@@ -46,12 +46,8 @@ replacements:
           - metadata.namespace
       - select:
           kind: RoleBinding
-          name: job-copy-trusted-ca-secret-reader
-        fieldPaths:
-          - subjects.0.namespace
-      - select:
-          kind: RoleBinding
-          name: job-copy-trusted-ca-configmap-writer
+          name: job-copy-trusted-ca
+          namespace: cert-manager
         fieldPaths:
           - subjects.0.namespace
   - source:
@@ -61,12 +57,14 @@ replacements:
     targets:
       - select:
           kind: Role
-          name: job-copy-trusted-ca-secret-reader
+          name: job-copy-trusted-ca
+          namespace: cert-manager
         fieldPaths:
           - metadata.namespace
       - select:
           kind: RoleBinding
-          name: job-copy-trusted-ca-secret-reader
+          name: job-copy-trusted-ca
+          namespace: cert-manager
         fieldPaths:
           - metadata.namespace
   - source:
@@ -76,7 +74,8 @@ replacements:
     targets:
       - select:
           kind: Role
-          name: job-copy-trusted-ca-secret-reader
+          name: job-copy-trusted-ca
+          namespace: cert-manager
         fieldPaths:
           - rules.0.resourceNames.0
   - source:
@@ -86,12 +85,14 @@ replacements:
     targets:
       - select:
           kind: Role
-          name: job-copy-trusted-ca-configmap-writer
+          name: job-copy-trusted-ca
+          namespace: openshift-config
         fieldPaths:
           - metadata.namespace
       - select:
           kind: RoleBinding
-          name: job-copy-trusted-ca-configmap-writer
+          name: job-copy-trusted-ca
+          namespace: openshift-config
         fieldPaths:
           - metadata.namespace
   - source:
@@ -101,6 +102,7 @@ replacements:
     targets:
       - select:
           kind: Role
-          name: job-copy-trusted-ca-configmap-writer
+          name: job-copy-trusted-ca
+          namespace: openshift-config
         fieldPaths:
-          - rules.1.resourceNames.0
+          - rules.0.resourceNames.0

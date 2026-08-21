@@ -44,6 +44,8 @@ rules:
       - ""
     resources:
       - configmaps
+    resourceNames:
+      - selfsigned-ca-bundle
     verbs:
       - create
       - get

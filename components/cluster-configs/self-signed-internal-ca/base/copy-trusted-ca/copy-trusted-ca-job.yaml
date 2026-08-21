@@ -11,6 +11,9 @@ spec:
       containers:
         - name: minion
           image: registry.redhat.io/openshift4/ose-cli
+          envFrom:
+            - configMapRef:
+                name: job-copy-trusted-ca-settings
           command:
             - /bin/bash
             - -c
