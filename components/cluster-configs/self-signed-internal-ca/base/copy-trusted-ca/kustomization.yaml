@@ -10,6 +10,7 @@ generatorOptions:
 
 configMapGenerator:
   - name: job-copy-trusted-ca-settings
+    namespace: cert-manager
     literals:
       - SOURCE_SECRET_NAMESPACE=cert-manager
       - SOURCE_SECRET_NAME=cert-manager-ca
