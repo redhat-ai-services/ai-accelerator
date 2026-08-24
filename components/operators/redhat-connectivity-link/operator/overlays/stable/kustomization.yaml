@@ -2,11 +2,25 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
+namespace: kuadrant-system
+
 resources:
   - ../../base
 
 components:
   - ../../components/enable-console-plugin
+
+replacements:
+  - source:
+      kind: Subscription
+      name: rhcl-operator
+      fieldPath: metadata.namespace
+    targets:
+      - select:
+          kind: ConsolePlugin
+          name: kuadrant-console-plugin
+        fieldPaths:
+          - spec.backend.service.namespace
 
 patches:
   - path: patch-channel.yaml

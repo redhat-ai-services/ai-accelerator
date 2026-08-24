@@ -7,9 +7,5 @@ resources:
 patches:
   - target:
       kind: Subscription
-      name: cluster-observability-operator
+      name: cloudnative-pg
     path: patch-channel.yaml
-  - target:
-      kind: Subscription
-      name: cluster-observability-operator
-    path: patch-version-pinning.yaml

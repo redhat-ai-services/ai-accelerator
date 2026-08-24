@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+components:
+  - ./copy-trusted-ca
+
+resources:
+  - ca-clusterissuer.yaml
+  - cluster-proxy.yaml
+  - selfsigned-certificate.yaml
+  - selfsigned-clusterissuer.yaml
+
+replacements:
+  - source:
+      kind: ConfigMap
+      name: job-copy-trusted-ca-settings
+      fieldPath: data.TARGET_CONFIGMAP_NAME
+    targets:
+      - select:
+          kind: Proxy
+          name: cluster
+        fieldPaths:
+          - spec.trustedCA.name

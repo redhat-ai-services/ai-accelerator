@@ -1,0 +1,16 @@
+apiVersion: maas.opendatahub.io/v1alpha1
+kind: Tenant
+metadata:
+  name: default-tenant
+  namespace: models-as-a-service
+spec:
+  gatewayRef:
+    name: maas-default-gateway
+    namespace: openshift-ingress
+  telemetry:
+    enabled: true
+    metrics:
+      captureGroup: false
+      captureModelUsage: true
+      captureOrganization: true
+      captureUser: true

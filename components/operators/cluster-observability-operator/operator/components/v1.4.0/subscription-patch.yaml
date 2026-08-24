@@ -1,0 +1,10 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: cluster-observability-operator
+  annotations:
+    argocd.argoproj.io/sync-options: ServerSideApply=true
+    argocd.argoproj.io/ignore-healthcheck: "true"
+spec:
+  installPlanApproval: Manual
+  startingCSV: cluster-observability-operator.v1.4.0

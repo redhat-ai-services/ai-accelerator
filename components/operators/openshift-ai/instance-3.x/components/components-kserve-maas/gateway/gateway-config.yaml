@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: maas-gw-options
+  namespace: openshift-ingress
+data:
+  service: |
+    metadata:
+      annotations:
+        # OpenShift service-ca-operator auto-provisions a TLS certificate into this Secret.
+        # The Secret name here MUST match the certificateRefs in the Gateway listener.
+        service.beta.openshift.io/serving-cert-secret-name: "maas-gw-service-tls"
+    spec:
+      # ClusterIP avoids provisioning an external LoadBalancer; the OpenShift Route
+      # handles external ingress instead.
+      type: ClusterIP

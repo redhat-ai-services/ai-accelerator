@@ -26,6 +26,7 @@ CRDs
 CUDA
 CheCluster
 CloudEvents
+CloudNativePG
 ClusterIssuer
 ClusterRole
 ClusterRoleBinding
@@ -56,6 +57,7 @@ Elasticsearch
 Elyra
 Eval
 Eventing
+ExternalSecret
 FullAccess
 GPUs
 GatewayClass
@@ -65,6 +67,7 @@ Gi
 GitOps
 Gitea
 HTPasswd
+HashiCorp
 Hashicorp
 HuggingFace
 IAM
@@ -142,6 +145,7 @@ Querier
 RBAC
 README
 RHACM
+RHCL
 RHOAI
 ROCm
 RawDeployments
@@ -157,6 +161,7 @@ SaaS
 Sagemaker
 SealedSecret
 SecretManager
+SecretStore
 SecureCluster
 Service
 ServiceMesh
@@ -221,8 +226,10 @@ checluster
 cicd
 cli
 cloner
+cloudnative
 clusterissuer
 clusterrolebinding
+cnpg
 composable
 config
 configmap
