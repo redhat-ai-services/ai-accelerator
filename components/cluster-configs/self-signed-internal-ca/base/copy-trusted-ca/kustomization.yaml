@@ -106,4 +106,4 @@ replacements:
           name: job-copy-trusted-ca
           namespace: openshift-config
         fieldPaths:
-          - rules.0.resourceNames.0
+          - rules.1.resourceNames.0

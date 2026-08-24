@@ -44,10 +44,15 @@ rules:
       - ""
     resources:
       - configmaps
+    verbs:
+      - create
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
     resourceNames:
       - selfsigned-ca-bundle
     verbs:
-      - create
       - get
       - update
       - patch
