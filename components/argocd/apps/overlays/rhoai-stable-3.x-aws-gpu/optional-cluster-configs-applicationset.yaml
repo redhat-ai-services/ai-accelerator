@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: cluster-configs
+  name: optional-cluster-configs
   namespace: openshift-gitops
   annotations:
     argocd.argoproj.io/compare-options: IgnoreExtraneous
@@ -22,9 +22,9 @@ spec:
         argocd.argoproj.io/compare-options: IgnoreExtraneous
         argocd.argoproj.io/sync-options: Prune=false
       labels:
-        gitops: cluster-config
+        gitops: optional-cluster-config
     spec:
-      project: cluster-config
+      project: optional-cluster-config
       syncPolicy: {}
       source:
         repoURL: patch-me-see-clusters-overlays
