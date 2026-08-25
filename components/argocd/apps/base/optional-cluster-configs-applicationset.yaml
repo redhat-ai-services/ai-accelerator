@@ -17,14 +17,14 @@ spec:
               path: components/cluster-configs/htpasswd/overlays/default
   template:
     metadata:
-      name: '{{values.name}}'
+      name: 'optional-{{values.name}}'
       annotations:
         argocd.argoproj.io/compare-options: IgnoreExtraneous
         argocd.argoproj.io/sync-options: Prune=false
       labels:
         gitops: optional-cluster-config
     spec:
-      project: optional-cluster-config
+      project: cluster-config
       syncPolicy: {}
       source:
         repoURL: patch-me-see-clusters-overlays
