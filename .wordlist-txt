@@ -23,6 +23,7 @@ CICD
 CNI
 CRD
 CRDs
+CRs
 CUDA
 CheCluster
 CloudEvents
@@ -78,6 +79,7 @@ ITMS
 IgnoreExtraneous
 ImageSetConfiguration
 ImageStreams
+InferenceServices
 Infiniband
 Istio
 Jaeger
@@ -149,6 +151,7 @@ RHCL
 RHOAI
 ROCm
 RawDeployments
+RayJobs
 Rebasing
 RoleBinding
 Rollout
@@ -359,6 +362,7 @@ rawdeployments
 rbac
 rebase
 redhat
+reinstalls
 redistributions
 repo
 repo's
@@ -411,6 +415,7 @@ vSphere
 vllm
 vscode
 vsphere
+webhooks
 wordlist
 workspaces
 xlarge
