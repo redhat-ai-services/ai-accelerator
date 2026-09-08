@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+
+resources:
+  - patch-route-host-job.yaml
+  - rbac.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+configMapGenerator:
+  - name: job-patch-route-host
+    namespace: openshift-ingress
+    files:
+      - patch-route-host.sh

@@ -1,7 +1,13 @@
 apiVersion: kustomize.config.k8s.io/v1alpha1
 kind: Component
 
+resources:
+  - maastenantconfig.yaml
+
 patches:
   - path: patch-datasciencecluster.yaml
     target:
       kind: DataScienceCluster
+  - path: patch-odhDashboardConfig.yaml
+    target:
+      kind: OdhDashboardConfig

@@ -4,5 +4,7 @@ metadata:
   name: default
 spec:
   components:
-    aipipelines:
+    aigateway:
       managementState: Managed
+      modelsAsAService:
+        managementState: Managed

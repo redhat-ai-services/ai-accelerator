@@ -1,0 +1,37 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: maas-default-gateway
+  namespace: openshift-ingress
+  labels:
+    kuadrant.io/gateway: "true"
+    app.kubernetes.io/name: maas-gateway
+    istio.io/rev: openshift-gateway
+  annotations:
+    opendatahub.io/managed: "false"
+    security.opendatahub.io/authorino-tls-bootstrap: "true"
+spec:
+  gatewayClassName: data-science-gateway-class
+  infrastructure:
+    parametersRef:
+      group: ""
+      kind: ConfigMap
+      name: maas-gw-options
+  listeners:
+    - name: https
+      # Hostname is set by route-hostname-job/patch-route-host.sh
+      # hostname: maas.apps.cluster-p9dq2.p9dq2.sandbox2790.opentlc.com      port: 443
+      port: 443
+      protocol: HTTPS
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              maas.opendatahub.io/gateway-access: "true"
+      tls:
+        certificateRefs:
+          - group: ""
+            kind: Secret
+            name: cert-manager-ingress-cert
+        mode: Terminate
