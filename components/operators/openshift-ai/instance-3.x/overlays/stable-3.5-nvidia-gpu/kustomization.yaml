@@ -21,9 +21,9 @@ components:
   - ../../components/disable-amd-runtimes
   - ../../components/disable-gaudi-runtimes
   - ../../components/disable-ibm-runtimes
-  - ../../components/hardware-profiles-nvidia-gpu
-  - ../../components/idle-notebook-culling
   - ../../components/gateway-inference
   - ../../components/gateway-maas
+  - ../../components/hardware-profiles-nvidia-gpu
+  - ../../components/idle-notebook-culling
   - ../../components/maas-postgres-cnpg
   - ../../components/rhoai-auth
