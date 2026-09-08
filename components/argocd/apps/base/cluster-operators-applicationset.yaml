@@ -21,6 +21,13 @@ spec:
         gitops: operator
     spec:
       project: cluster-config
+      ignoreDifferences:
+        - group: gateway.networking.k8s.io
+          kind: Gateway
+          name: maas-default-gateway
+          namespace: openshift-ingress
+          jqPathExpressions:
+            - '.spec.listeners[].hostname'
       syncPolicy:
         automated:
           prune: false
