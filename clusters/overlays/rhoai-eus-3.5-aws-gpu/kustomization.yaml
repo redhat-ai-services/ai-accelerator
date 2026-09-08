@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: openshift-gitops
 
 resources:
-  - ../../../components/argocd/apps/overlays/rhoai-stable-3.5-aws-gpu
+  - ../../../components/argocd/apps/overlays/rhoai-eus-3.5-aws-gpu
   - ../../base
 # patches:
 # set the repo and branch for applications

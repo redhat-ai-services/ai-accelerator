@@ -5,5 +5,5 @@ commonAnnotations:
   argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 
 resources:
-  - ../../../instance-3.x/overlays/stable-3.5-nvidia-gpu
-  - ../../../operator/overlays/stable-3.5
+  - ../../../instance-3.x/overlays/eus-3.5-nvidia-gpu
+  - ../../../operator/overlays/eus-3.5
