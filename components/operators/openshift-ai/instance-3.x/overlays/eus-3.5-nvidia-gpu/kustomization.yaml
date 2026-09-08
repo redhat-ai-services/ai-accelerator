@@ -9,6 +9,7 @@ components:
   - ../../components/components-aipipelines
   - ../../components/components-feast
   - ../../components/components-kserve
+  - ../../components/components-kserve-wva
   - ../../components/components-kueue
   - ../../components/components-mlflow
   - ../../components/components-mlflow-basic-instance
