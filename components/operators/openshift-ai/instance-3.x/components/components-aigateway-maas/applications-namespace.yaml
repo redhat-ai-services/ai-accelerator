@@ -1,8 +1,0 @@
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: redhat-ods-applications
-  annotations:
-    argocd.argoproj.io/sync-options: ServerSideApply=true
-  labels:
-    maas.opendatahub.io/gateway-access: 'true'
