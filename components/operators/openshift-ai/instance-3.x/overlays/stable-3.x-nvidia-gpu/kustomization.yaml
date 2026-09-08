@@ -5,15 +5,16 @@ resources:
   - ../../base
 
 components:
+  - ../../components/components-aigateway-maas
   - ../../components/components-aipipelines
   - ../../components/components-feast
   - ../../components/components-kserve
-  - ../../components/components-kserve-maas
-  - ../../components/components-llamastack
+  - ../../components/components-kueue
   - ../../components/components-mlflow
   - ../../components/components-mlflow-basic-instance
   - ../../components/components-modelregistry
   - ../../components/components-observability
+  - ../../components/components-ogx
   - ../../components/components-ray
   - ../../components/components-trainingoperator
   - ../../components/components-trustyai
@@ -22,6 +23,7 @@ components:
   - ../../components/disable-gaudi-runtimes
   - ../../components/disable-ibm-runtimes
   - ../../components/gateway-inference
+  - ../../components/gateway-maas
   - ../../components/hardware-profiles-nvidia-gpu
   - ../../components/idle-notebook-culling
   - ../../components/maas-postgres-cnpg
