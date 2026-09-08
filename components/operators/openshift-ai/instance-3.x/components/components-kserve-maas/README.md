@@ -8,6 +8,8 @@ This component includes:
 - Enables `kserve.modelsAsService` in the DataScienceCluster
 - Creates a Gateway resource in the `openshift-ingress` namespace using the `data-science-gateway-class`
 
+This component is only used for MaaS with RHOAI 3.4.  For RHOAI 3.5, use the `components-aigateway-maas` option.
+
 ## Prerequisites
 
 This component requires the `data-science-gateway-class` GatewayClass to be configured.
