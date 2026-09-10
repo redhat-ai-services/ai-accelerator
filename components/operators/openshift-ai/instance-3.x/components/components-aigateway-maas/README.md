@@ -1,14 +1,12 @@
-# components-kserve-maas
+# components-aigateway-maas
 
 ## Purpose
 
-This component enables KServe Models-as-a-Service (MaaS) in the DataScienceCluster. MaaS provides a simplified model serving experience with automatic Gateway configuration for inference endpoints.
+This component enables AI Gateway Models-as-a-Service (MaaS) in the DataScienceCluster. MaaS provides a simplified model serving experience with automatic Gateway configuration for inference endpoints.
 
 This component includes:
-- Enables `kserve.modelsAsService` in the DataScienceCluster
+- Enables `aigateway.modelsAsAService` in the DataScienceCluster
 - Creates a Gateway resource in the `openshift-ingress` namespace using the `data-science-gateway-class`
-
-This component is only used for MaaS with RHOAI 3.4.  For RHOAI 3.5, use the `components-aigateway-maas` option.
 
 ## Prerequisites
 
@@ -26,5 +24,5 @@ resources:
   - ../../base
 
 components:
-  - ../../components/components-kserve-maas
+  - ../../components/components-aigateway-maas
 ```

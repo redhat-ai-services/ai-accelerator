@@ -5,6 +5,3 @@ patches:
   - path: patch-datasciencecluster.yaml
     target:
       kind: DataScienceCluster
-  - path: patch-odhDashboardConfig.yaml
-    target:
-      kind: OdhDashboardConfig

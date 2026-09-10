@@ -1,0 +1,11 @@
+apiVersion: datasciencecluster.opendatahub.io/v2
+kind: DataScienceCluster
+metadata:
+  name: default
+spec:
+  components:
+    kueue:
+      managementState: Unmanaged
+      autoCreateQueues: false
+      defaultClusterQueueName: default
+      defaultLocalQueueName: default

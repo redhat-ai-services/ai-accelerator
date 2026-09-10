@@ -98,6 +98,7 @@ Kueue
 Kyverno
 LDAP
 LLM
+LLMInferenceServices
 LM
 LVM
 Lifecycle
@@ -196,6 +197,7 @@ ack
 acm
 agentic
 ai
+aigateway
 aipipelines
 aiservices
 amd
@@ -215,6 +217,7 @@ arn
 auth
 authorino
 autocompletion
+autoscaling
 aws
 backend
 backticks
@@ -364,6 +367,7 @@ repo
 repo's
 resourceNames
 rh
+rhcl
 rhel
 rhoai
 rhpds
@@ -405,6 +409,7 @@ truly
 trustyai
 txt
 un
+unmanaged
 url
 vLLM
 vSphere
@@ -413,6 +418,7 @@ vscode
 vsphere
 wordlist
 workspaces
+wva
 xlarge
 yaml
 yq

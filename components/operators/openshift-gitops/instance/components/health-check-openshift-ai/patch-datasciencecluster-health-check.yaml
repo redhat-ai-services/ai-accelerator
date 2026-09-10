@@ -19,18 +19,18 @@
               elseif condition.type == "Progressing" then
                 if condition.status == "True" then
                   progressing = true
-                  msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. (condition.reason or "") .. " | " .. condition.message .. "\n"
+                  msg = msg .. i .. ": " .. (condition.type or "") .. " | " .. (condition.status or "") .. " | " .. (condition.reason or "") .. " | " .. (condition.message or "") .. "\n"
                 end
               elseif condition.type == "Degraded" then
                 if condition.status == "True" then
                   degraded = true
-                  msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. (condition.reason or "") .. " | " .. condition.message .. "\n"
+                  msg = msg .. i .. ": " .. (condition.type or "") .. " | " .. (condition.status or "") .. " | " .. (condition.reason or "") .. " | " .. (condition.message or "") .. "\n"
                 end
               elseif condition.status == "False" then
                 if condition.reason ~= nil and condition.reason ~= "Removed" then
                   componentsDegraded = componentsDegraded + 1
                 end
-                msg = msg .. i .. ": " .. condition.type .. " | " .. condition.status .. " | " .. (condition.reason or "") .. " | " .. condition.message .. "\n"
+                msg = msg .. i .. ": " .. (condition.type or "") .. " | " .. (condition.status or "") .. " | " .. (condition.reason or "") .. " | " .. (condition.message or "") .. "\n"
               end
             end
 
