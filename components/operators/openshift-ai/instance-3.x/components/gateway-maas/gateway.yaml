@@ -10,6 +10,7 @@ metadata:
   annotations:
     opendatahub.io/managed: "false"
     security.opendatahub.io/authorino-tls-bootstrap: "true"
+    argocd.argoproj.io/sync-options: ServerSideApply=true
 spec:
   gatewayClassName: data-science-gateway-class
   infrastructure:

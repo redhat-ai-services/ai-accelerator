@@ -50,7 +50,7 @@ spec:
         url: https://kubernetes.default.svc
         values:
           name: openshift-custom-metrics-autoscaler-operator
-          path: components/operators/openshift-custom-metrics-autoscaler/operator/overlays/stable
+          path: components/operators/openshift-custom-metrics-autoscaler/aggregate/overlays/default
       - cluster: local
         url: https://kubernetes.default.svc
         values:
