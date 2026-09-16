@@ -22,19 +22,34 @@ rules:
   - machineautoscalers
   verbs:
   - '*'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: job-aws-gpu-machineset
+  namespace: openshift-machine-api
+rules:
 - apiGroups:
   - ''
   resources:
   - secrets
-  resourceNames:
-  - aws-creds
   verbs:
   - get
   - list
-# - nonResourceURLs:
-#   - '*'
-#   verbs:
-#   - '*'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: job-aws-gpu-machineset
+  namespace: openshift-machine-api
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: job-aws-gpu-machineset
+subjects:
+  - kind: ServiceAccount
+    name: job-aws-gpu-machineset
+    namespace: nvidia-gpu-operator
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
