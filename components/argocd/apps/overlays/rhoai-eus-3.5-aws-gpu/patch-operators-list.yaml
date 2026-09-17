@@ -34,6 +34,11 @@ spec:
       - cluster: local
         url: https://kubernetes.default.svc
         values:
+          name: mcp-gateway-operator
+          path: components/operators/mcp-gateway-operator/operator/overlays/preview
+      - cluster: local
+        url: https://kubernetes.default.svc
+        values:
           name: nfd-operator
           path: components/operators/nfd/aggregate/overlays/default
       - cluster: local
