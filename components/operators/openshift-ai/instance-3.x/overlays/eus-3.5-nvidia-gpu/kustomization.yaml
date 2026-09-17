@@ -11,6 +11,7 @@ components:
   - ../../components/components-kserve
   - ../../components/components-kserve-wva
   - ../../components/components-kueue
+  - ../../components/components-mcplifecycle
   - ../../components/components-mlflow
   - ../../components/components-mlflow-basic-instance
   - ../../components/components-modelregistry
