@@ -9,4 +9,5 @@ spec:
     name: mcp-gateway
     namespace: mcp-gateway
     sectionName: mcp
+    privateHost: http://mcp-gateway-mcp-gateway-class.mcp-gateway.svc.cluster.local:8080
   httpRouteManagement: Enabled
