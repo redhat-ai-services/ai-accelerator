@@ -1,0 +1,15 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: mcp-gateway
+spec:
+  # Replace with your actual hostname.
+  # host: mcp.apps.<cluster-url>
+  to:
+    kind: Service
+    name: mcp-gateway-mcp-gateway-class
+  port:
+    targetPort: 8080
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

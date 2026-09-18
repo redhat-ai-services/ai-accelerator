@@ -1,0 +1,23 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: mcp-gateway
+  namespace: mcp-gateway
+spec:
+  gatewayClassName: mcp-gateway-class
+  listeners:
+    - name: mcp
+      # Hostname is set by route-hostname-job/patch-route-host.sh
+      # hostname: mcp.apps.cluster-p9dq2.p9dq2.sandbox2790.opentlc.com      port: 443
+      port: 8080
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: mcps
+      hostname: "*.mcp.local"
+      port: 8080
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: All
