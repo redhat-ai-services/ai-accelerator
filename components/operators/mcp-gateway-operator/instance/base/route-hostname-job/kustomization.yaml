@@ -3,8 +3,6 @@ kind: Component
 
 namespace: mcp-gateway
 
-namePrefix: mcp-gateway-
-
 resources:
   - patch-route-host-job.yaml
   - rbac.yaml
