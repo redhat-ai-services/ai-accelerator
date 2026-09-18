@@ -35,7 +35,7 @@ spec:
         url: https://kubernetes.default.svc
         values:
           name: mcp-gateway-operator
-          path: components/operators/mcp-gateway-operator/operator/overlays/preview
+          path: components/operators/mcp-gateway-operator/aggregate/overlays/default
       - cluster: local
         url: https://kubernetes.default.svc
         values:
