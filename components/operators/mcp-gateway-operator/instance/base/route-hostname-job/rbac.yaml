@@ -47,7 +47,7 @@ metadata:
   name: mcp-gateway-job-patch-route-host
 subjects:
   - kind: ServiceAccount
-    name: mcp-gateway-job-patch-route-host
+    name: job-patch-route-host
     namespace: mcp-gateway
 roleRef:
   apiGroup: rbac.authorization.k8s.io
