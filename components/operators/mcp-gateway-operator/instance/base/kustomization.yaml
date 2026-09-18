@@ -4,6 +4,9 @@ kind: Kustomization
 namespace: mcp-gateway
 
 resources:
-  - gatewayclass.yaml
   - gateway.yaml
+  - gatewayclass.yaml
   - route.yaml
+
+components:
+  - ./route-hostname-job
