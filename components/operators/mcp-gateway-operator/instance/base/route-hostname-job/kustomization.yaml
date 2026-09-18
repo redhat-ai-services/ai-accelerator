@@ -3,6 +3,8 @@ kind: Component
 
 namespace: mcp-gateway
 
+namePrefix: mcp-gateway-
+
 resources:
   - patch-route-host-job.yaml
   - rbac.yaml
@@ -12,6 +14,6 @@ generatorOptions:
 
 configMapGenerator:
   - name: job-patch-route-host
-    namespace: openshift-ingress
+    namespace: mcp-gateway
     files:
       - patch-route-host.sh
