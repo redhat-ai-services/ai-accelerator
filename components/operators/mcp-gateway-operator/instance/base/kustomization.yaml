@@ -6,6 +6,8 @@ namespace: mcp-gateway
 resources:
   - gateway.yaml
   - gatewayclass.yaml
+  - mcpgatewayextension.yaml
+  - referencegrant.yaml
   - route.yaml
 
 components:
