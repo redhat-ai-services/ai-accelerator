@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
         - name: installplan-approver
-          image: registry.redhat.io/openshift4/ose-cli-rhel9
+          image: registry.redhat.io/openshift4/ose-cli-rhel9-rhel9
           imagePullPolicy: Always
           env:
             - name: SLEEP
