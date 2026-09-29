@@ -8,6 +8,7 @@ resources:
 
 components:
   - ../../components/auth-with-authorino
+  - ../../components/cleanup-on-delete
   - ../../components/components-kserve
   - ../../components/components-modelmesh
   - ../../components/components-training
