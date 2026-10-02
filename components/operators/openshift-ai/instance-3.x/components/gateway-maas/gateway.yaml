@@ -34,5 +34,5 @@ spec:
         certificateRefs:
           - group: ""
             kind: Secret
-            name: cert-manager-ingress-cert
+            name: maas-gw-service-tls
         mode: Terminate
