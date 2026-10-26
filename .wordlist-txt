@@ -358,6 +358,7 @@ prometheus
 provisioner
 psql
 pvc
+queueing
 rawdeployments
 rbac
 rebase

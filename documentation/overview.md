@@ -15,10 +15,12 @@ This project structure is based on the opinionated configuration found [here](ht
 │   ├── cluster-configs                   # cluster level configurations
 │   └── operators                         # operator subscriptions and configurations
 ├── documentation                         # various documentation, software groups
+│   ├── diagrams
+│   ├── disconnected-notes
 │   ├── images
-│   └── operators
-├── scripts                               # scripts to automate maintence tasks
-└── tenants                               # configurations for end user namespaces and resources
+│   ├── operators
+│   └── training_and_learning
+└── scripts                               # scripts to automate maintence tasks
 ```
 
 ## Bootstrap
