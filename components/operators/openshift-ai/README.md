@@ -6,14 +6,14 @@ Do not use the `base` directory directly, as you will need to patch the `channel
 
 The current *overlays* available are for the following channels:
 
-* [alpha](operator/overlays/alpha)
 * [beta](operator/overlays/beta)
-* [embedded](operator/overlays/embedded)
 * [eus-2.16](operator/overlays/eus-2.16)
-* [fast](operator/overlays/fast)
+* [eus-2.25](operator/overlays/eus-2.25)
+* [eus-3.5](operator/overlays/eus-3.5)
 * [stable](operator/overlays/stable)
-* [stable-2.16](operator/overlays/stable-2.16)
-* [stable-2.19](operator/overlays/stable-2.19)
+* [stable-3.3](operator/overlays/stable-3.3)
+* [stable-3.4](operator/overlays/stable-3.4)
+* [stable-3.x](operator/overlays/stable-3.x)
 
 ## Usage
 
@@ -37,3 +37,11 @@ kind: Kustomization
 resources:
   - https://github.com/redhat-cop/gitops-catalog/openshift-ai/operator/overlays/<channel>?ref=main
 ```
+
+## Instance and Aggregation Overlays
+
+Beyond the operator subscriptions, this component also contains the following folders:
+
+* [instance-2.x](instance-2.x/) - configuration for the RHOAI 2.x `DataScienceCluster` and related resources
+* [instance-3.x](instance-3.x/) - configuration for the RHOAI 3.x `DataScienceCluster`, `DSCInitialization` and related resources, including a set of composable components for enabling and configuring each part of the stack
+* [aggregate](aggregate/) - overlays that combine the operator and instance configurations for a specific RHOAI release, such as `eus-3.5-nvidia-gpu`

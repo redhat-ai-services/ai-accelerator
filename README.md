@@ -16,17 +16,28 @@ Once the initial components are deployed, several ArgoCD Application objects are
 ### Operators
 
 * [Authorino Operator](components/operators/authorino-operator/)
+* [CloudNativePG Operator](components/operators/cloudnative-pg/)
+* [Cluster Observability Operator](components/operators/cluster-observability-operator/)
+* [Kiali Operator](components/operators/kiali-operator/)
+* [Leader Worker Set Operator](components/operators/leader-worker-set/)
 * [NVIDIA GPU Operator](components/operators/gpu-operator-certified/)
 * [Node Feature Discovery Operator](components/operators/nfd/)
 * [OpenShift AI](components/operators/openshift-ai/)
+* [OpenShift Custom Metrics Autoscaler](components/operators/openshift-custom-metrics-autoscaler/)
+* [OpenShift External Secrets Operator](components/operators/openshift-external-secrets-operator/)
+* [OpenShift GitOps](components/operators/openshift-gitops/)
+* [OpenShift Jobset](components/operators/openshift-jobset/)
 * [OpenShift Pipelines](components/operators/openshift-pipelines/)
 * [OpenShift Serverless](components/operators/openshift-serverless/)
 * [OpenShift ServiceMesh](components/operators/openshift-servicemesh/)
+* [Red Hat Build of Kueue](components/operators/redhat-build-of-kueue/)
+* [Red Hat Build of OpenTelemetry](components/operators/redhat-build-of-opentelemetry/)
+* [Red Hat Connectivity Link](components/operators/redhat-connectivity-link/)
+* [Tempo Operator](components/operators/tempo-operator/)
 
 ### Applications
 
 * OpenShift GitOps: [ArgoCD](components/argocd/)
-* S3 compatible storage: [MinIO](components/apps/minio)
 
 ### Configuration
 
