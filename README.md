@@ -26,7 +26,7 @@ Once the initial components are deployed, several ArgoCD Application objects are
 * [OpenShift Custom Metrics Autoscaler](components/operators/openshift-custom-metrics-autoscaler/)
 * [OpenShift External Secrets Operator](components/operators/openshift-external-secrets-operator/)
 * [OpenShift GitOps](components/operators/openshift-gitops/)
-* [OpenShift Jobset](components/operators/openshift-jobset/)
+* [OpenShift JobSet](components/operators/openshift-jobset/)
 * [OpenShift Pipelines](components/operators/openshift-pipelines/)
 * [OpenShift Serverless](components/operators/openshift-serverless/)
 * [OpenShift ServiceMesh](components/operators/openshift-servicemesh/)
