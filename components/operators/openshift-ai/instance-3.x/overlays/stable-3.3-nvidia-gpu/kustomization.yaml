@@ -5,6 +5,7 @@ resources:
   - ../../base
 
 components:
+  - ../../components/cleanup-on-delete
   - ../../components/components-aipipelines
   - ../../components/components-feast
   - ../../components/components-kserve

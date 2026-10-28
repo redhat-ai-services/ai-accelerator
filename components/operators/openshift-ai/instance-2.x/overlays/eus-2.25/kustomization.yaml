@@ -5,6 +5,7 @@ resources:
   - ../../base
 
 components:
+  - ../../components/cleanup-on-delete
   - ../../components/components-kserve-rawdeployments-only
   - ../../components/components-llamastack
   - ../../components/components-modelregistry
