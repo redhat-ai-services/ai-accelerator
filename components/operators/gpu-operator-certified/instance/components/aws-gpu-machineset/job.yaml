@@ -17,7 +17,7 @@ spec:
           image: registry.redhat.io/openshift4/ose-cli-rhel9
           env:
             - name: INSTANCE_TYPE
-              value: "g6e.4xlarge"
+              value: "g6.24xlarge"
             - name: NODE_VOLUME_SIZE
               value: "250"
             - name: NAMESPACE
